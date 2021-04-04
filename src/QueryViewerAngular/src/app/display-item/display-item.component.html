@@ -1,0 +1,50 @@
+<a mat-list-item routerLink="/AllItems">All Items</a>
+
+<h1>Queries for {{ item }}</h1>
+
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let itQ of queries">
+    <mat-expansion-panel-header>
+      <mat-panel-title> {{ itQ }} </mat-panel-title>
+      <mat-panel-description> Click me </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div *ngIf="(this.FieldsForQuery.get(itQ)?.length || 0) > 0">
+      <table style="width: auto;">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Criteria</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fd of this.FieldsForQuery.get(itQ)">
+            <td title="{{ fd.fieldType }}">{{ fd.defaultValue.fieldName }}</td>
+            <td>
+              <mat-form-field appearance="fill">
+                <mat-label>Search </mat-label>
+                <mat-select [(value)]="fd.defaultValue.criteria">
+                  <mat-option
+                    *ngFor="let s of fd.possibleSearches"
+                    [value]="s.key"
+                  >
+                    {{ s.value }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field appearance="fill">
+                <mat-label>Value</mat-label>
+                <input matInput [(ngModel)]="fd.defaultValue.value" />
+              </mat-form-field>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button mat-raised-button color="primary" (click)="DisplayQuery(itQ)">
+        Display {{ itQ }}
+      </button>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

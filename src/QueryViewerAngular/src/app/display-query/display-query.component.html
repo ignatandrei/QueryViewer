@@ -1,0 +1,50 @@
+<span>
+<a mat-list-item  routerLink="/AllItems">All Items</a> /  <a mat-list-item  routerLink="/DisplayItem/{{item}}">{{item}}</a> / {{ query}} 
+</span>
+
+<br />
+
+Search : 
+<span *ngFor="let fd of fdArr">{{fd.fieldName }} {{fd.defaultValue.criteriaString}} {{fd.defaultValue.value}} ;</span>
+
+<br />
+<br />
+<br />
+
+<input
+type="text"
+style="padding:8px;margin:15px auto;width:30%;"
+placeholder="Type to filter the table..."
+(keyup)="updateFilter($event)"
+/>
+
+
+<div>
+<ngx-datatable [rows]="rows"  class="material fullscreen server-scrolling-demo"
+[headerHeight]="50"
+[footerHeight]="50"
+[reorderable]="true"
+[selectionType]="SelectionType.single"
+[sortType]="SortType.multi"
+[columnMode]="ColumnMode.force"
+rowHeight="auto"
+[loadingIndicator]="false"
+
+>
+
+<ngx-datatable-column name="index" prop="" editable="false">
+    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+        {{rowIndex+1}}
+    </ng-template>
+</ngx-datatable-column>
+
+<ngx-datatable-column  *ngFor="let c of columns"  [name]="c.name||''" [prop]="c.name||''" [sortable]="true" >
+    <ng-template ngx-datatable-cell-template  let-value="value" let-rowIndex="rowIndex" let-row="row">
+        {{value }}
+    </ng-template>
+</ngx-datatable-column>
+
+</ngx-datatable>
+</div>
+  
+
