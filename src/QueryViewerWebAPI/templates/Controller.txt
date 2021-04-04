@@ -1,0 +1,109 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using {{ namespaceName }}.Classes;
+//using {{ namespaceName }}.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using RoslynQueryGenerator;
+namespace {{ namespaceName }}.Controllers
+{
+    [ApiController]
+    [Route("[controller]/[action]")]
+    
+    public partial class MetadataController : Controller
+    {
+        [HttpGet]
+        public string[] ControllerNames(){
+            return QueryControllers.Names;
+        }
+
+        [HttpGet("{controllerName}")]
+        public string[] ActionsNames(string controllerName){
+            return QueryControllers.ActionsFor(controllerName);
+        }
+        [HttpGet("{controllerName}/{queryName}")]
+        public FieldDescription[] Fields(string controllerName,string queryName){
+            return QueryControllers.Fields(controllerName,queryName);
+        }
+        [HttpGet("{typeField}")]
+        public KeyValuePair<SearchCriteria,string>[] GetSearch(string typeField){
+            var lst=new List<KeyValuePair<SearchCriteria,string>>();
+            lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.None,SearchCriteria.None.ToString()));
+            lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Equal,SearchCriteria.Equal.ToString()));
+            lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Different,SearchCriteria.Different.ToString()));
+            var compare= new string[]{ "System.Int32"  ,"System.Double","System.DateTime"};
+            if(compare.Contains(typeField)){
+                lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Less,SearchCriteria.Less.ToString()));
+                lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.LessOrEqual,SearchCriteria.LessOrEqual.ToString()));
+                lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Greater,SearchCriteria.Greater.ToString()));
+                lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.GreaterOrEqual,SearchCriteria.GreaterOrEqual.ToString()));
+            }
+            return lst.ToArray();
+        }
+    }
+    {{ for item in root.itemData }}
+    
+    [ApiController]
+    [Route("[controller]/[action]")]
+    
+    public partial class {{item.Name}}Controller : Controller
+    {
+        public string[] ActionNames = new string[]
+        {
+            {{ for query in item.queries }}
+                "{{query.Name}}" {{ if ! for.last  }} , {{end}}
+            {{ end }}
+        };
+        private readonly ILogger<{{item.Name}}Controller> _logger;
+        [HttpGet]
+        public async Task<string[]> DisplayIDs()
+        {
+            return ActionNames;
+        }
+        {{ for query in item.queries }}
+        /* 
+        [HttpGet]
+        public async Task<ActionResult<DisplayData>> DisplayDataFor{{query.Name}}([FromServices] IDbContextFactory<ApplicationDbContext{{item.Name}}> context, string idSearch)
+        {
+            try{
+                //System.Diagnostics.Debug.Assert(false);
+                if(System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
+                using var db = context.CreateDbContext();
+                var data = await db.DisplayDataFor("{{query.Name}}",idSearch,0);
+                Console.WriteLine(data.Values.Length);
+                return data;
+            }
+            catch(Exception ex){
+                //System.Diagnostics.Debug.Assert(false);
+                throw;
+            };
+        }
+        */
+        [HttpPost]
+        public async Task<DisplayData> DisplayDataFor{{query.Name}}([FromServices] IDbContextFactory<ApplicationDbContext{{item.Name}}> context, Find_{{item.Name}}_{{query.Name}} find)
+        {
+            try{
+                //System.Diagnostics.Debug.Assert(false);
+                if(System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
+                
+                using var db = context.CreateDbContext();
+                var data = await db.DisplayDataFind{{query.Name}}(find);
+                return data;
+
+            }
+            catch(Exception ex){
+                //System.Diagnostics.Debug.Assert(false);
+                
+                throw;
+            };
+        }
+        {{end}}
+    }
+    {{end}}
+}

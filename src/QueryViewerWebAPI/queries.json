@@ -1,0 +1,52 @@
+{
+  "itemData": [
+    {
+      "Name": "Docker",
+      "connectionString": "Initial Catalog=inforo20190723;Data Source=.;UID=sa;PWD=Your_password123",
+      "queriesData": [
+        {
+          "Ignore": true,
+          "Name": "KVPBooks1",
+          "QueryMultiline": [ "select * from CountryFromKingdoms" ],
+          "IDSearch": "IdBook"
+  
+
+        }
+      ]
+    },
+    {
+      "Name": "Pers",
+      "connectionString": "Integrated Security=SSPI;Initial Catalog=Infovalutar;Data Source=.;",
+      "queriesData": [
+        {
+          "Ignore": false,
+          "Name": "CV_Valori",
+          "QueryMultiline": [ "select * from [CV_Valori]" ],
+          "IDSearch": "IDMoneda",
+          "DefaultValues": [
+            {
+              "FieldName": "IDMoneda",
+              "Value": "EUR",
+              "CriteriaString": "Equal"
+            },
+            {
+              "FieldName": "PK",
+              "Value": "84",
+              "CriteriaString": "LessOrEqual"
+            }
+
+          ]
+
+
+        },
+        {
+          "Ignore": false,
+          "Name": "CV_Banca",
+          "QueryMultiline": [ "select * from [CV_Banca]" ]
+
+
+        }
+      ]
+    }
+  ]
+}
