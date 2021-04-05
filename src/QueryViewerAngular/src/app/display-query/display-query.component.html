@@ -17,7 +17,9 @@ style="padding:8px;margin:15px auto;width:30%;"
 placeholder="Type to filter the table..."
 (keyup)="updateFilter($event)"
 />
-
+<button mat-raised-button color="primary" (click)="exportExcel()">
+    Excel
+  </button>
 
 <div>
 <ngx-datatable [rows]="rows"  class="material fullscreen server-scrolling-demo"

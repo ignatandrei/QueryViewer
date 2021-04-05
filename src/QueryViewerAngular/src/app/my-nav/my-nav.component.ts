@@ -29,10 +29,10 @@ export class MyNavComponent implements OnInit  {
 
       this.err.NextError().pipe(
         tap(it => {
-          // this.snackBar.open(it, 'ERROR', {
-          //   duration: 5000,
-          //   verticalPosition: 'top'
-          // });
+          this.snackBar.open(it, 'ERROR', {
+            duration: 5000,
+            verticalPosition: 'top'
+          });
         }),
         shareReplay()
       ).subscribe();

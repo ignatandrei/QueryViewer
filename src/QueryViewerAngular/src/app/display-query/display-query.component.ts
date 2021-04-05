@@ -7,7 +7,8 @@ import { MetadataService } from '../services/metadata.service';
 import { DataService } from '../services/data.service';
 import { receivedData } from '../services/receivedData';
 import { ColumnMode, SelectionType, SortType, TableColumn } from '@swimlane/ngx-datatable';
-
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 
 
 @Component({
@@ -35,6 +36,12 @@ export class DisplayQueryComponent implements OnInit {
   ColumnMode = ColumnMode;
   SortType = SortType;
   SelectionType = SelectionType;
+
+
+  fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  fileExtension = '.xlsx';
+
+
   constructor(private route: ActivatedRoute, public ms: MetadataService, public searchData: SearchDataService, private data: DataService) { 
 
     this.route.params
@@ -64,6 +71,21 @@ export class DisplayQueryComponent implements OnInit {
         ));
 
   }
+
+  public exportExcel(): void {
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.rows as any[]);
+    const wb: XLSX.WorkBook = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    this.saveExcelFile(excelBuffer, "export");
+  }
+
+  private saveExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {type: this.fileType});
+    FileSaver.saveAs(data, fileName + this.fileExtension);
+  }
+
+  
   updateFilter(event: any) {
     const val = event.target.value.toLowerCase();
     if(!val){

@@ -22,8 +22,11 @@
     "@angular/platform-browser-dynamic": "~11.0.5",
     "@angular/router": "~11.0.5",
     "@swimlane/ngx-datatable": "^19.0.0",
+    "@types/file-saver": "^2.0.1",
+    "file-saver": "^2.0.5",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "xlsx": "^0.16.9",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
