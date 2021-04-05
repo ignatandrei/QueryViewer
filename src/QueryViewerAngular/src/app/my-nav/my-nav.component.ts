@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs/operators';
 import { MetadataService } from '../services/metadata.service';
+import { ErrorService } from '../interceptors/error.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { LoaderService } from '../interceptors/loader.service';
 
 @Component({
   selector: 'app-my-nav',
@@ -16,8 +19,26 @@ export class MyNavComponent implements OnInit  {
       map(result => result.matches),
       shareReplay()
     );
+    public isLoading = false;
+  constructor(private breakpointObserver: BreakpointObserver, public ms:MetadataService
+    
+    , private err: ErrorService,
+    public snackBar: MatSnackBar
+    ,         private ls: LoaderService
+    ) {
 
-  constructor(private breakpointObserver: BreakpointObserver, public ms:MetadataService) {
+      this.err.NextError().pipe(
+        tap(it => {
+          // this.snackBar.open(it, 'ERROR', {
+          //   duration: 5000,
+          //   verticalPosition: 'top'
+          // });
+        }),
+        shareReplay()
+      ).subscribe();
+
+      this.ls.loading$().subscribe(it => this.isLoading = it);
+
     }
   ngOnInit(): void {
     this.ms.GetItems();
@@ -28,3 +49,4 @@ export class MyNavComponent implements OnInit  {
 
   
 }
+

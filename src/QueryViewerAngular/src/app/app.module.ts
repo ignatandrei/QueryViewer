@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,6 +20,10 @@ import { DisplayQueryComponent } from './display-query/display-query.component';
 import{ MatExpansionModule} from '@angular/material/expansion';
 import{  MatTableModule} from '@angular/material/table';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { httpInterceptorProviders } from './interceptors/barrelInterceptors';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,6 +33,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     DisplayQueryComponent
   ],
   imports: [
+    MatProgressSpinnerModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -46,8 +50,12 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     MatListModule,
     HttpClientModule,
     FormsModule,
+    MatSnackBarModule
+    ],
+  providers: [
+
+    ...httpInterceptorProviders,
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
