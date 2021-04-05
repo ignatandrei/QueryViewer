@@ -19,7 +19,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let fd of this.FieldsForQuery.get(itQ)">
-            <td title="{{ fd.fieldType }}">{{ fd.defaultValue.fieldName }}</td>
+            <td title="{{ fd.fieldType }}">
+              <div [ngStyle]="{'color' : ((fd.defaultValue.criteria !==0 ) ? 'red': '') }">
+              {{ fd.defaultValue.fieldName }} </div>
+            </td>
             <td>
               <mat-form-field appearance="fill">
                 <mat-label>Search </mat-label>
