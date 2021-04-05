@@ -15,7 +15,7 @@ Search :
 type="text"
 style="padding:8px;margin:15px auto;width:30%;"
 placeholder="Type to filter the table..."
-(keyup)="updateFilter($event)"
+[formControl]="firstNameControl"
 />
 <button mat-raised-button color="primary" (click)="exportExcel()">
     Excel

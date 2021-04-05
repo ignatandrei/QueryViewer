@@ -23,6 +23,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { httpInterceptorProviders } from './interceptors/barrelInterceptors';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
   ],
   imports: [
     MatProgressSpinnerModule,
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

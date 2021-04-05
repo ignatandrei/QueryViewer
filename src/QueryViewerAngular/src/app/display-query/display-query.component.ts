@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { SearchDataService } from '../services/search-data.service';
 import { FieldDescription } from '../services/FieldDescription';
 import { MetadataService } from '../services/metadata.service';
@@ -9,6 +9,8 @@ import { receivedData } from '../services/receivedData';
 import { ColumnMode, SelectionType, SortType, TableColumn } from '@swimlane/ngx-datatable';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -41,7 +43,8 @@ export class DisplayQueryComponent implements OnInit {
   fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
   fileExtension = '.xlsx';
 
-
+  firstNameControl = new FormControl();
+  formCtrlSub: Subscription|null = null;
   constructor(private route: ActivatedRoute, public ms: MetadataService, public searchData: SearchDataService, private data: DataService) { 
 
     this.route.params
@@ -86,8 +89,7 @@ export class DisplayQueryComponent implements OnInit {
   }
 
   
-  updateFilter(event: any) {
-    const val = event.target.value.toLowerCase();
+  updateFilter(val: any) {
     if(!val){
       this.rows=this.temp;
       return;
@@ -106,6 +108,18 @@ export class DisplayQueryComponent implements OnInit {
     
   }
   ngOnInit(): void {
+    this.formCtrlSub=this
+      .firstNameControl
+      .valueChanges.pipe(
+        
+        debounceTime(2000),
+        distinctUntilChanged(),
+      ).subscribe(it=> this.updateFilter(it));
+      
+  }
+  ngOnDestroy() {
+    if(this.formCtrlSub != null)
+      this.formCtrlSub.unsubscribe();
   }
 
 }
