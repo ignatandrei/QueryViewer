@@ -25,6 +25,10 @@ export class DisplayItemComponent implements OnInit {
     .subscribe(it=> this.ms.GetQueries(this.item));
 
   }
+
+  existsCriteria(itQ: string):boolean{
+    return ((this.FieldsForQuery.get(itQ)?.filter(it=>it.defaultValue.criteria !=0).length??0)>0);
+  }
   DisplayQuery(query:string){
     const fdArr:FieldDescription[]=[];
     this.FieldsForQuery.get(query)?.forEach(el=>{

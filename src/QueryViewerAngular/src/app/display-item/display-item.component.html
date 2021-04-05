@@ -45,7 +45,7 @@
           </tr>
         </tbody>
       </table>
-      <button mat-raised-button color="primary" (click)="DisplayQuery(itQ)">
+      <button *ngIf="existsCriteria(itQ)" mat-raised-button color="primary" (click)="DisplayQuery(itQ)">
         Display {{ itQ }}
       </button>
     </div>
