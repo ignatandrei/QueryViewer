@@ -11,6 +11,7 @@ import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { LoaderService } from '../interceptors/loader.service';
 
 
 @Component({
@@ -45,7 +46,7 @@ export class DisplayQueryComponent implements OnInit {
 
   firstNameControl = new FormControl();
   formCtrlSub: Subscription|null = null;
-  constructor(private route: ActivatedRoute, public ms: MetadataService, public searchData: SearchDataService, private data: DataService) { 
+  constructor(private route: ActivatedRoute, public ms: MetadataService, public searchData: SearchDataService, private data: DataService, private ls: LoaderService) { 
 
     this.route.params
       .pipe(
@@ -90,6 +91,9 @@ export class DisplayQueryComponent implements OnInit {
 
   
   updateFilter(val: any) {
+    try{
+      this.ls.isLoading(true);
+    
     if(!val){
       this.rows=this.temp;
       return;
@@ -102,10 +106,11 @@ export class DisplayQueryComponent implements OnInit {
       }
     )||[];
 
-    // update the rows
     this.rows = t1;
-    // Whenever the filter changes, always go back to the first page
-    
+    }
+    finally{
+      this.ls.isLoading(false);
+    }    
   }
   ngOnInit(): void {
     this.formCtrlSub=this

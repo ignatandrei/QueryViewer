@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, ReplaySubject, Subscription } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { shareReplay, tap } from 'rxjs/operators';
@@ -70,9 +70,18 @@ export class MetadataService {
       .subscribe();
     ;
   }
+  private static kvArr= new Map<string,KeyValue[]>();
 
   public GetSearch(typeField: string): Observable<KeyValue[]>{
-    var url = this.root+'GetSearch/'+ typeField;
-    return this.http.get<KeyValue[]>(url);
+
+    if(MetadataService.kvArr.has(typeField))
+      return of(MetadataService.kvArr.get(typeField)||[]);
+
+      var url = this.root+'GetSearch/'+ typeField;
+    return this.http.get<KeyValue[]>(url)
+      .pipe(
+        tap(it=>MetadataService.kvArr.set(typeField,it)),        
+      )
+    ;
   }
 }
