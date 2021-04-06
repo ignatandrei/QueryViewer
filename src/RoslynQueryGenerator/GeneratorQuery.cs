@@ -51,6 +51,14 @@ namespace RoslynQueryGenerator
                 context.AddSource("find.gen.cs",SourceText.From(find, Encoding.UTF8));
 
             }
+            catch (Scriban.Syntax.ScriptRuntimeException sc)
+            {
+                string s = sc.Message;
+                var dd = new DiagnosticDescriptor(newExec, $"StartExecution", $"{sc.Message}", newExec, DiagnosticSeverity.Error, true);
+                var d = Diagnostic.Create(dd, Location.None, "andrei.txt");
+                context.ReportDiagnostic(d);
+            }
+        
             catch (Exception ex)
             {
                 string s = ex.Message;

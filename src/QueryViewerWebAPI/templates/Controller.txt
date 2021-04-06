@@ -55,7 +55,7 @@ namespace {{ namespaceName }}.Controllers
         public string[] ActionNames = new string[]
         {
             {{ for query in item.queries }}
-                "{{query.Name}}" {{ if ! for.last  }} , {{end}}
+                "{{query.Name}}" {{ if for.last == false  }} , {{end}}
             {{ end }}
         };
         private readonly ILogger<{{item.Name}}Controller> _logger;
@@ -65,6 +65,20 @@ namespace {{ namespaceName }}.Controllers
             return ActionNames;
         }
         {{ for query in item.queries }}
+
+        static Dictionary<string,Find_{{item.Name}}_{{query.Name}} > data{{query.Name}}=new Dictionary<string,Find_{{item.Name}}_{{query.Name}} >();
+
+        [HttpGet("{id}")]
+        public SearchField[] GetSearch{{query.Name}}(string id){
+            return data{{query.Name}}[id].Searches;
+        }
+        [HttpPost()]
+        public string SaveSearch{{query.Name}}(Find_{{item.Name}}_{{query.Name}}  searches){
+            var id= "keySave"+data{{query.Name}}.Count+1;
+            data{{query.Name}}[id]=searches;
+            return id;
+        }
+
         /* 
         [HttpGet]
         public async Task<ActionResult<DisplayData>> DisplayDataFor{{query.Name}}([FromServices] IDbContextFactory<ApplicationDbContext{{item.Name}}> context, string idSearch)

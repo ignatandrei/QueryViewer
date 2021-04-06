@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { SearchDataService } from '../services/search-data.service';
-import { FieldDescription } from '../services/FieldDescription';
+import { FieldDescription, SearchField } from '../services/FieldDescription';
 import { MetadataService } from '../services/metadata.service';
 
 @Component({
@@ -38,9 +38,14 @@ export class DisplayItemComponent implements OnInit {
         fdArr.push(el);
       }
     }); 
-
-    var key  = this.searchData.addSearch(fdArr);
-    this.router.navigateByUrl('/DisplayQuery/'+ this.item+'/'+ query+"/"+ key);
+    var searches= fdArr.map(it=> {
+      
+        var r= new SearchField(it.defaultValue);
+        return r;
+      });
+    var key  = this.searchData.addSearch(this.item, query,searches).subscribe(key=>
+    this.router.navigateByUrl('/DisplayQuery/'+ this.item+'/'+ query+"/"+ key)
+    );
   }
   ngOnInit(): void {
 

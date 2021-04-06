@@ -26,8 +26,9 @@ export class FieldDescription {
   public possibleSearches: KeyValue[] = [];
 }
 export class SearchField {
-  constructor(init: Partial<SearchField>) {
-    Object.assign(this, init);
+  constructor(init: Partial<SearchField> | null) {
+    if(init != null)
+      Object.assign(this, init);
   }
   public fieldName: string = '';
   public value: string = '';

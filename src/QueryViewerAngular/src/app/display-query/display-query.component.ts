@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { SearchDataService } from '../services/search-data.service';
-import { FieldDescription } from '../services/FieldDescription';
+import { FieldDescription, SearchField } from '../services/FieldDescription';
 import { MetadataService } from '../services/metadata.service';
 import { DataService } from '../services/data.service';
 import { receivedData } from '../services/receivedData';
@@ -24,7 +24,7 @@ export class DisplayQueryComponent implements OnInit {
   public item: string='';
   public query:string='';
   public key:string='';
-  public fdArr:FieldDescription[]|null=[];
+  public fdArr:SearchField[]|null=[];
   public dataRec: receivedData |null = null;
   // rows = [
   //   { name: 'Austin', gender: 'Male', company: 'Swimlane' },
@@ -48,32 +48,7 @@ export class DisplayQueryComponent implements OnInit {
   formCtrlSub: Subscription|null = null;
   constructor(private route: ActivatedRoute, public ms: MetadataService, public searchData: SearchDataService, private data: DataService, private ls: LoaderService) { 
 
-    this.route.params
-      .pipe(
-        tap(it=> {
-          this.item=it["item"] as string;
-          this.query=it["query"] as string;
-          this.key=it['key'] as string;
-          this.fdArr =searchData.getSearch(this.key);
-
-        }
-        ),
-        
-        // tap(it=>console.log(it))
-      )
-    .subscribe(it=>data.GetData(this.item,this.query,this.fdArr?.map(it=>it.defaultValue)||[]).subscribe(it=>
-      {
-        if(it != null){
-        this.dataRec=it;
-        this.columns  = it.fieldNames.map(fn=>({ "name": fn.fieldName, 'prop':fn.fieldName ,'sortable':true}));
-        this.rows=[...it.values];
-        this.temp=[...it.values];
-        // console.log(this.columns);
-        // console.log(this.rows);
-        }
-      } 
-        ));
-
+    
   }
 
   public exportExcel(): void {
@@ -120,7 +95,43 @@ export class DisplayQueryComponent implements OnInit {
         debounceTime(2000),
         distinctUntilChanged(),
       ).subscribe(it=> this.updateFilter(it));
-      
+
+      this.route.params
+      .pipe(
+        tap(it=> {
+          this.item=it["item"] as string;
+          this.query=it["query"] as string;
+          this.key=it['key'] as string;
+          this.searchData.getSearch(this.item, this.query,this.key).subscribe(
+            arr=>{
+              this.fdArr =arr;
+
+              this.data.GetData(this.item,this.query,arr).subscribe(it=>
+                {
+                  if(it != null){
+                  this.dataRec=it;
+                  this.columns  = it.fieldNames.map(fn=>({ "name": fn.fieldName, 'prop':fn.fieldName ,'sortable':true}));
+                  this.rows=[...it.values];
+                  this.temp=[...it.values];
+                  // console.log(this.columns);
+                  // console.log(this.rows);
+                  }
+                } 
+                  );
+
+
+
+            }
+
+          )
+
+        }
+        ),
+        
+        // tap(it=>console.log(it))
+      )
+    .subscribe();
+
   }
   ngOnDestroy() {
     if(this.formCtrlSub != null)

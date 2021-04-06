@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.Text;
 using Scriban;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
@@ -30,7 +31,7 @@ namespace RoslynQueryGenerator
         private string GenerateFromFile(string name)
         {
             GenerateData();
-            string pathFolder = @"C:\Users\Surface1\Downloads\QueryViewer\QueryViewerWebAPI";
+            string pathFolder = @"E:\ignatandrei\QueryViewer\src\QueryViewerWebAPI";
             string file = Path.Combine(pathFolder, name);
             var template = Template.Parse(File.ReadAllText(file));
             var context = template.Render(new
