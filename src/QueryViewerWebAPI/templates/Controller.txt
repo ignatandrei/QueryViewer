@@ -36,13 +36,17 @@ namespace {{ namespaceName }}.Controllers
             lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.None,SearchCriteria.None.ToString()));
             lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Equal,SearchCriteria.Equal.ToString()));
             lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Different,SearchCriteria.Different.ToString()));
-            var compare= new string[]{ "System.Int32"  ,"System.Double","System.DateTime"};
+            var compare= new string[]{ "System.Int32"  ,"System.Int64"  , "System.Double","System.DateTime"};
             if(compare.Contains(typeField)){
                 lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Less,SearchCriteria.Less.ToString()));
                 lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.LessOrEqual,SearchCriteria.LessOrEqual.ToString()));
                 lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Greater,SearchCriteria.Greater.ToString()));
                 lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.GreaterOrEqual,SearchCriteria.GreaterOrEqual.ToString()));
             }
+            if(typeField == "System.String"){
+                lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Contains,SearchCriteria.Contains.ToString()));
+            }
+
             return lst.ToArray();
         }
     }

@@ -34,6 +34,7 @@ namespace  {{ namespaceName }}.Classes{
                         {{ for kv in query.Fields }}
                         {{ 
                             hasLess = 0
+                            hasString=0
                             if "Int32" == kv.Value.Name 
                                 hasLess=1
                             end
@@ -42,6 +43,9 @@ namespace  {{ namespaceName }}.Classes{
                             end
                             if "DateTime" == kv.Value.Name 
                                 hasLess=1                                
+                            end
+                            if "String" == kv.Value.Name
+                                hasString=1
                             end
                          }}
                             case "{{string.upcase(kv.Key)}}": 
@@ -68,8 +72,13 @@ namespace  {{ namespaceName }}.Classes{
                                         returnValue =returnValue.Where(it=>({{kv.Value.Name}})it["{{kv.Key}}"]>=value);
                                         break;
                                     {{end}}
+                                    {{if hasString == 1}}
+                                    case SearchCriteria.Contains:
+                                        returnValue =returnValue.Where(it=>(({{kv.Value.Name}})it["{{kv.Key}}"]).Contains(value));
+                                        break;
+                                    {{end}}
                                     default:
-                                        throw new ArgumentException($"not found {s.Criteria} for {s.FieldName}");
+                                        throw new ArgumentException($"not found {s.Criteria} for {s.FieldName} - type  {{kv.Value.Name}}");
                                 }
                                 break;
                             }
