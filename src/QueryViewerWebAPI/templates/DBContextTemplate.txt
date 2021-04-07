@@ -7,8 +7,12 @@ using RoslynQueryGenerator;
 namespace  {{ namespaceName }}.Classes{
     
     {{ for item in root.itemData }}
-    public class ApplicationDbContext{{item.Name}} : DbContext
+    public partial class ApplicationDbContext{{item.Name}} : DbContext
     {
+        partial void BeforeAction(string name);
+        partial void AfterAction(string name);
+        partial void ExceptionAction(string name, Exception ex);
+
         public ApplicationDbContext{{item.Name}}(DbContextOptions<ApplicationDbContext{{item.Name}}> options)
         : base(options)
         {
@@ -20,6 +24,8 @@ namespace  {{ namespaceName }}.Classes{
         
         public async Task<DisplayData> DisplayDataFind{{query.Name}}(Find_{{item.Name}}_{{query.Name}} findArr)
         {
+            try{
+            BeforeAction(nameof(DisplayDataFind{{query.Name}}));
             IQueryable<Dictionary<string, object>> returnValue = this.{{query.Name}};
             FieldDescription[] fieldNames=QueryControllers.Fields("{{item.Name}}","{{query.Name}}");
             if((findArr?.Searches?.Length??0)>0){
@@ -81,12 +87,23 @@ namespace  {{ namespaceName }}.Classes{
                 FieldNames = fieldNames.ToArray(),
                 Values = await returnValue.ToArrayAsync()
             };
+            }
+            catch(Exception ex){
+                ExceptionAction(nameof(DisplayDataFind{{query.Name}}),ex);
+                throw;
+            }
+            finally{
+                AfterAction(nameof(DisplayDataFind{{query.Name}}));
+            }
+
 
         }
         {{ end }}
         public async Task<DisplayData> DisplayDataFor(string name, string valueForId, int maxResults)
         {
-            
+            try{
+            BeforeAction(nameof(DisplayDataFor));
+
             IQueryable<Dictionary<string, object>> returnValue = null;
             FieldDescription[] fieldNames;
             name = name?.ToUpper();
@@ -127,11 +144,20 @@ namespace  {{ namespaceName }}.Classes{
                 FieldNames = fieldNames.ToArray(),
                 Values = await returnValue.ToArrayAsync()
             };
-           
+                       }
+            catch(Exception ex){
+                ExceptionAction(nameof(DisplayDataFor),ex);
+                throw;
+            }
+            finally{
+                AfterAction(nameof(DisplayDataFor));
+            }
+
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            try{
+            BeforeAction(nameof(OnModelCreating));
 
             {{ for query in item.queries }}
             modelBuilder.SharedTypeEntity<Dictionary<string, object>>("{{query.Name}}", b =>
@@ -155,6 +181,15 @@ namespace  {{ namespaceName }}.Classes{
          
             {{ end }}
             base.OnModelCreating(modelBuilder);
+                        }
+            catch(Exception ex){
+                ExceptionAction(nameof(OnModelCreating),ex);
+                throw;
+            }
+            finally{
+                AfterAction(nameof(OnModelCreating));
+            }
+
         }
 
     }

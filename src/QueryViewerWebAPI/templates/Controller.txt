@@ -16,6 +16,7 @@ namespace {{ namespaceName }}.Controllers
     
     public partial class MetadataController : Controller
     {
+        
         [HttpGet]
         public string[] ControllerNames(){
             return QueryControllers.Names;
@@ -52,6 +53,10 @@ namespace {{ namespaceName }}.Controllers
     
     public partial class {{item.Name}}Controller : Controller
     {
+        partial void BeforeAction(string name);
+        partial void AfterAction(string name);
+        partial void ExceptionAction(string name, Exception ex);
+
         public string[] ActionNames = new string[]
         {
             {{ for query in item.queries }}
@@ -60,7 +65,7 @@ namespace {{ namespaceName }}.Controllers
         };
         private readonly ILogger<{{item.Name}}Controller> _logger;
         [HttpGet]
-        public async Task<string[]> DisplayIDs()
+        public string[] DisplayIDs()
         {
             return ActionNames;
         }
@@ -70,13 +75,36 @@ namespace {{ namespaceName }}.Controllers
 
         [HttpGet("{id}")]
         public SearchField[] GetSearch{{query.Name}}(string id){
-            return data{{query.Name}}[id].Searches;
+            try{
+                BeforeAction(nameof(SearchField));
+                return data{{query.Name}}[id].Searches;
+            }
+            catch(Exception ex){
+                ExceptionAction(nameof(SearchField),ex);
+                throw;
+            }
+            finally{
+                AfterAction(nameof(SearchField));
+            }
         }
         [HttpPost()]
         public string SaveSearch{{query.Name}}(Find_{{item.Name}}_{{query.Name}}  searches){
-            var id= "keySave"+data{{query.Name}}.Count+1;
-            data{{query.Name}}[id]=searches;
-            return id;
+            
+            try{
+                BeforeAction(nameof(SaveSearch{{query.Name}}));
+             
+                var id= "keySave"+data{{query.Name}}.Count+1;
+                data{{query.Name}}[id]=searches;
+                return id;
+
+            }
+            catch(Exception ex){
+                ExceptionAction(nameof(SaveSearch{{query.Name}}),ex);
+                throw;
+            }
+            finally{
+                AfterAction(nameof(SaveSearch{{query.Name}}));
+            }
         }
 
         /* 
@@ -84,38 +112,46 @@ namespace {{ namespaceName }}.Controllers
         public async Task<ActionResult<DisplayData>> DisplayDataFor{{query.Name}}([FromServices] IDbContextFactory<ApplicationDbContext{{item.Name}}> context, string idSearch)
         {
             try{
-                //System.Diagnostics.Debug.Assert(false);
-                if(System.Diagnostics.Debugger.IsAttached)
-                    System.Diagnostics.Debugger.Break();
+                BeforeAction(nameof(DisplayDataFor));
+             
+                //if(System.Diagnostics.Debugger.IsAttached)
+                  //  System.Diagnostics.Debugger.Break();
                 using var db = context.CreateDbContext();
                 var data = await db.DisplayDataFor("{{query.Name}}",idSearch,0);
                 Console.WriteLine(data.Values.Length);
                 return data;
-            }
+            }                
             catch(Exception ex){
-                //System.Diagnostics.Debug.Assert(false);
+                ExceptionAction(nameof(DisplayDataFor),ex);
                 throw;
-            };
+            }
+            finally{
+                AfterAction(nameof(DisplayDataFor));
+            }
         }
         */
         [HttpPost]
         public async Task<DisplayData> DisplayDataFor{{query.Name}}([FromServices] IDbContextFactory<ApplicationDbContext{{item.Name}}> context, Find_{{item.Name}}_{{query.Name}} find)
         {
             try{
+                BeforeAction(nameof(DisplayDataFor{{query.Name}}));
+             
                 //System.Diagnostics.Debug.Assert(false);
-                if(System.Diagnostics.Debugger.IsAttached)
-                    System.Diagnostics.Debugger.Break();
+                //if(System.Diagnostics.Debugger.IsAttached)
+                  //  System.Diagnostics.Debugger.Break();
                 
                 using var db = context.CreateDbContext();
                 var data = await db.DisplayDataFind{{query.Name}}(find);
                 return data;
 
-            }
+            }                
             catch(Exception ex){
-                //System.Diagnostics.Debug.Assert(false);
-                
+                ExceptionAction(nameof(DisplayDataFor{{query.Name}}),ex);
                 throw;
-            };
+            }
+            finally{
+                AfterAction(nameof(DisplayDataFor{{query.Name}}));
+            }
         }
         {{end}}
     }
