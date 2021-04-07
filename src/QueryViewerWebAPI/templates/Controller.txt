@@ -45,6 +45,8 @@ namespace {{ namespaceName }}.Controllers
             }
             if(typeField == "System.String"){
                 lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.Contains,SearchCriteria.Contains.ToString()));
+                lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.StartsWith,SearchCriteria.StartsWith.ToString()));
+                lst.Add(new KeyValuePair<SearchCriteria,string>(SearchCriteria.EndsWith,SearchCriteria.EndsWith.ToString()));
             }
 
             return lst.ToArray();

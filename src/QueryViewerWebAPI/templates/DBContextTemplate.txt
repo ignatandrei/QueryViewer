@@ -76,6 +76,12 @@ namespace  {{ namespaceName }}.Classes{
                                     case SearchCriteria.Contains:
                                         returnValue =returnValue.Where(it=>(({{kv.Value.Name}})it["{{kv.Key}}"]).Contains(value));
                                         break;
+                                    case SearchCriteria.StartsWith:
+                                        returnValue =returnValue.Where(it=>(({{kv.Value.Name}})it["{{kv.Key}}"]).StartsWith(value));
+                                        break;
+                                    case SearchCriteria.EndsWith:
+                                        returnValue =returnValue.Where(it=>(({{kv.Value.Name}})it["{{kv.Key}}"]).EndsWith(value));
+                                        break;
                                     {{end}}
                                     default:
                                         throw new ArgumentException($"not found {s.Criteria} for {s.FieldName} - type  {{kv.Value.Name}}");
