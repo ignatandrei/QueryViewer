@@ -22,20 +22,7 @@ namespace RoslynQueryGenerator
             try
             {
                 string namespaceName = context.Compilation?.AssemblyName;
-                var query = context.AdditionalFiles.Where(
-                   file =>
-                   {
-                       var f = context.AnalyzerConfigOptions.GetOptions(file);
-                       if (!f.TryGetValue("build_metadata.AdditionalFiles.generateQuery", out string val))
-                           return false;
-
-                       return (val == "true");
-                   }
-                   ).FirstOrDefault();
-                
-                if (query == null)
-                    return;
-                var g = new GeneratorQueryFromFile(query.GetText().ToString(), namespaceName);
+                var g = new GeneratorQueryFromFile(context, namespaceName);
                 newExec = "GenerateContext";
                 var cnt = g.GenerateContext();
                 context.AddSource($"context.gen.cs", SourceText.From(cnt, Encoding.UTF8));

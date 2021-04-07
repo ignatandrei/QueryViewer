@@ -20,18 +20,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="templates\Controller.txt">
+    <AdditionalFiles Include="templates\Controller.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="templates\SearchClasses.txt">
+    </AdditionalFiles >
+    <AdditionalFiles Include="templates\SearchClasses.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="templates\Extensions.txt">
+    </AdditionalFiles>
+    <AdditionalFiles Include="templates\Extensions.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="templates\DBContextTemplate.txt">
+    </AdditionalFiles>
+    <AdditionalFiles Include="templates\DBContextTemplate.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </AdditionalFiles>
   </ItemGroup>
   <PropertyGroup>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
