@@ -1,7 +1,7 @@
 <h1>All items</h1>
 
 <ul >
-    <li  *ngFor="let item of ms.exposeItems() | async">
+    <li  *ngFor="let item of items">
         <a mat-list-item  routerLink="/DisplayItem/{{item}}">{{item}}</a>
     </li>
   </ul>

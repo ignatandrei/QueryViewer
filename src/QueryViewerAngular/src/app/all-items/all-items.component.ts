@@ -9,6 +9,7 @@ import { MetadataService } from '../services/metadata.service';
 })
 export class AllItemsComponent implements OnInit {
 
+  public items : string[] = [];
   constructor(public ms:MetadataService) { 
 
     
@@ -16,7 +17,7 @@ export class AllItemsComponent implements OnInit {
 
   ngOnInit(): void {
     
-    //this.ms.exposeItems().subscribe(it=>window.alert('aaa'+it.length));
+    this.ms.exposeItems().subscribe(it=>this.items=it);
 
   }
 

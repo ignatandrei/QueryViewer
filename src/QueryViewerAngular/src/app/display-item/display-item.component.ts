@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, switchMapTo, tap } from 'rxjs/operators';
 import { SearchDataService } from '../services/search-data.service';
 import { FieldDescription, SearchField } from '../services/FieldDescription';
 import { MetadataService } from '../services/metadata.service';
@@ -17,12 +17,6 @@ export class DisplayItemComponent implements OnInit {
   public FieldsForQuery = new Map<string,FieldDescription[]>();
   constructor(private router: Router, private route: ActivatedRoute, public ms: MetadataService, private searchData: SearchDataService) { 
 
-    this.route.params
-      .pipe(
-        tap(it=> this.item=(it["item"] as string)),
-        // tap(it=>console.log(it))
-      )
-    .subscribe(it=> this.ms.GetQueries(this.item));
 
   }
   GetSql(item: string, query:string){
@@ -52,33 +46,44 @@ export class DisplayItemComponent implements OnInit {
   ngOnInit(): void {
 
 
-    this.ms.exposeItemWithQuery().subscribe(it=>
+    this.route.params
+    .pipe(
+      tap(it=> this.item=(it["item"] as string)),
+      // tap(it=>console.log(it))
+      switchMap(it=>this.ms.exposeItemWithQuery(this.item)),
+      
+    )
+    .subscribe(it=>
       
       {
         if(it.item == this.item){
           it.queries.forEach(element => {
               this.FieldsForQuery.set(element,[]);   
             
-            this.ms.GetFields(this.item,element);
+            this.ms.exposeFields(this.item,element) 
+            .subscribe(it=>{
+              it.forEach(el=>{
+                  if(el.itemName == this.item){
+                    var arr =this.FieldsForQuery.get(el.queryName);
+                    if(arr?.filter(it=>it.fieldName == el.fieldName).length == 0)            
+                          arr?.push(el);   
+                    
+                    this.ms.GetSearch(el.fieldType).subscribe(
+                      searches=>el.possibleSearches = searches
+                    )       
+                  }
+        
+              });
+            })
+            
+            
+            
+            ;
           });
           this.queries=it.queries;
         }
       }
       );
-    this.ms.exposeFields().subscribe(it=>{
-      it.forEach(el=>{
-          if(el.itemName == this.item){
-            var arr =this.FieldsForQuery.get(el.queryName);
-            if(arr?.filter(it=>it.fieldName == el.fieldName).length == 0)            
-                  arr?.push(el);   
-            
-            this.ms.GetSearch(el.fieldType).subscribe(
-              searches=>el.possibleSearches = searches
-            )       
-          }
-
-      });
-    })
     
   }
 

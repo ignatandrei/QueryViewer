@@ -20,7 +20,7 @@ export class DataService {
 
     var url = this.root+ item+'/DisplayDataFor'+ query;
     var s={ "searches": searches};
-    console.log(searches);
+    // console.log(searches);
     return this.http.post<receivedData>(url,s).pipe(
       // tap(it=>console.log(it))
     );

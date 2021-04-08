@@ -20,6 +20,7 @@ export class MyNavComponent implements OnInit  {
       shareReplay()
     );
     public isLoading = false;
+    public items: string[]=[];
   constructor(private breakpointObserver: BreakpointObserver, public ms:MetadataService
     
     , private err: ErrorService,
@@ -41,10 +42,7 @@ export class MyNavComponent implements OnInit  {
 
     }
   ngOnInit(): void {
-    this.ms.GetItems();
-    //this.ms.exposeItems().subscribe(it=> window.alert('b'+it.length));
-    //this.ms.exposeItems().subscribe(it=> window.alert('b1'+it.length));
-  
+    this.ms.exposeItems().subscribe(it=>this.items=it); 
   }
 
   
