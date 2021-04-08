@@ -48,6 +48,10 @@
       <button *ngIf="existsCriteria(itQ)" mat-raised-button color="primary" (click)="DisplayQuery(itQ)">
         Display {{ itQ }}
       </button>
+      <mat-action-row>
+        <button mat-button color="primary" (click)="GetSql(item,itQ)">Sql</button>
+      </mat-action-row>
+      
     </div>
   </mat-expansion-panel>
 </mat-accordion>

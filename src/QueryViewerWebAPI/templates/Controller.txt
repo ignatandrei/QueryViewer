@@ -30,6 +30,11 @@ namespace {{ namespaceName }}.Controllers
         public FieldDescription[] Fields(string controllerName,string queryName){
             return QueryControllers.Fields(controllerName,queryName);
         }
+
+        [HttpGet("{controllerName}/{queryName}")]
+        public string Definition(string controllerName,string queryName){
+            return QueryControllers.Definition(controllerName,queryName);
+        }
         [HttpGet("{typeField}")]
         public KeyValuePair<SearchCriteria,string>[] GetSearch(string typeField){
             var lst=new List<KeyValuePair<SearchCriteria,string>>();
@@ -75,6 +80,7 @@ namespace {{ namespaceName }}.Controllers
         {
             return ActionNames;
         }
+        
         {{ for query in item.queries }}
 
         static Dictionary<string,Find_{{item.Name}}_{{query.Name}} > data{{query.Name}}=new Dictionary<string,Find_{{item.Name}}_{{query.Name}} >();

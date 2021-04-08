@@ -25,7 +25,9 @@ export class DisplayItemComponent implements OnInit {
     .subscribe(it=> this.ms.GetQueries(this.item));
 
   }
-
+  GetSql(item: string, query:string){
+    this.ms.GetSql(item,query).subscribe(it=> window.alert(it));
+  }
   existsCriteria(itQ: string):boolean{
     return ((this.FieldsForQuery.get(itQ)?.filter(it=>it.defaultValue.criteria !=0).length??0)>0);
   }

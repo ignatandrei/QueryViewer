@@ -42,6 +42,11 @@ export class MetadataService {
       .subscribe();
     ;
   }
+  public GetSql(item: string, query:string): Observable<string>{
+    var url = this.root+'Definition/'+item +'/'+ query;
+    return this.http.get<string>(url, { responseType: 'text' as 'json' });
+      
+  }
   public GetQueries(item: string):Subscription{
 
     var url = this.root+'ActionsNames/'+item;

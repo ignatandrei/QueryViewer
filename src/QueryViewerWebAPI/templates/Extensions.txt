@@ -25,7 +25,33 @@ namespace  {{ namespaceName }}{
                 "{{item.Name}}" {{ if ! for.last  }} , {{end}}
             {{end}}
         };
-        
+
+        public static string Definition(string item , string queryName){
+             switch(item)
+            {            
+                {{ for item in root.itemData }}       
+                   
+                    case "{{item.Name}}" :
+                            switch(queryName){
+                            {{ for query1 in item.queries }}
+                                case "{{query1.Name}}":                                    
+                                    {
+                                    var str="";
+                                    {{ for str in query1.QueryMultiline}}
+                                    str += "{{str}}";
+                                    {{ end }}
+                                    return str;
+                                    }
+                            {{end}}
+                          
+                            
+                            }
+                          return "";
+                        
+                {{end}}
+            }
+            return null;
+        }
         public static string FieldSearch(string item , string queryName){
              switch(item)
             {            
