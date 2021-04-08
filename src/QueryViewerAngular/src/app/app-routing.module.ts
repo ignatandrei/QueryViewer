@@ -9,7 +9,9 @@ const routes: Routes = [
   { path: 'AllItems', component: AllItemsComponent },
   {path:"DisplayItem/:item", component: DisplayItemComponent},
 
-  {path:"DisplayQuery/:item/:query/:key", component: DisplayQueryComponent}
+  {path:"DisplayQuery/:item/:query/:key", component: DisplayQueryComponent},
+  {path:"DisplayQuery/:item/:query", component: DisplayQueryComponent}
+
 
 ];
 

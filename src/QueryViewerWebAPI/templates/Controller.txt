@@ -88,15 +88,20 @@ namespace {{ namespaceName }}.Controllers
         [HttpGet("{id}")]
         public SearchField[] GetSearch{{query.Name}}(string id){
             try{
-                BeforeAction(nameof(SearchField));
-                return data{{query.Name}}[id].Searches;
+                BeforeAction(nameof(GetSearch{{query.Name}}));
+                if(data{{query.Name}}.ContainsKey(id))
+                    return data{{query.Name}}[id].Searches;
+                
+                FieldDescription[] data=QueryControllers.Fields("{{item.Name}}","{{query.Name}}");
+                var ret = data.Select(it=>it.DefaultValue).Where(it=>it != null).ToArray();
+                return ret;
             }
             catch(Exception ex){
-                ExceptionAction(nameof(SearchField),ex);
+                ExceptionAction(nameof(GetSearch{{query.Name}}),ex);
                 throw;
             }
             finally{
-                AfterAction(nameof(SearchField));
+                AfterAction(nameof(GetSearch{{query.Name}}));
             }
         }
         [HttpPost()]
