@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, tap } from 'rxjs/operators';
 import { SearchDataService } from '../services/search-data.service';
 import { FieldDescription, SearchField } from '../services/FieldDescription';
 import { MetadataService } from '../services/metadata.service';
@@ -73,6 +73,7 @@ export class DisplayQueryComponent implements OnInit {
       this.rows=this.temp;
       return;
     }
+    
     // filter our data
     const t1 = this.temp?.filter(function (d) {
       
@@ -92,9 +93,14 @@ export class DisplayQueryComponent implements OnInit {
       .firstNameControl
       .valueChanges.pipe(
         
-        debounceTime(2000),
+        debounceTime(1000),
         distinctUntilChanged(),
-      ).subscribe(it=> this.updateFilter(it));
+        tap(it=> this.ls.isLoading(true)),
+        debounceTime(2000),
+        tap(it=> this.updateFilter(it)),
+        finalize(()=>this.ls.isLoading(false))
+
+      ).subscribe();
 
       this.route.params
       .pipe(
