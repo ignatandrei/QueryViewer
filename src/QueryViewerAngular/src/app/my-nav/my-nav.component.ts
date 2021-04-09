@@ -6,7 +6,9 @@ import { MetadataService } from '../services/metadata.service';
 import { ErrorService } from '../interceptors/error.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderService } from '../interceptors/loader.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-my-nav',
   templateUrl: './my-nav.component.html',
@@ -29,6 +31,7 @@ export class MyNavComponent implements OnInit  {
     ) {
 
       this.err.NextError().pipe(
+        untilDestroyed(this),
         tap(it => {
           this.snackBar.open(it, 'ERROR', {
             duration: 5000,
@@ -38,11 +41,11 @@ export class MyNavComponent implements OnInit  {
         shareReplay()
       ).subscribe();
 
-      this.ls.loading$().subscribe(it => this.isLoading = it);
+      this.ls.loading$().pipe(untilDestroyed(this)).subscribe(it => this.isLoading = it);
 
     }
   ngOnInit(): void {
-    this.ms.exposeItems().subscribe(it=>this.items=it); 
+    this.ms.exposeItems().pipe(untilDestroyed(this)).subscribe(it=>this.items=it); 
   }
 
   

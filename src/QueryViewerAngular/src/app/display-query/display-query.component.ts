@@ -12,8 +12,9 @@ import * as XLSX from 'xlsx';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LoaderService } from '../interceptors/loader.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-
+@UntilDestroy()
 @Component({
   selector: 'app-display-query',
   templateUrl: './display-query.component.html',
@@ -91,29 +92,35 @@ export class DisplayQueryComponent implements OnInit {
   ngOnInit(): void {
     this.formCtrlSub=this
       .firstNameControl
-      .valueChanges.pipe(
+      .valueChanges
+      .pipe(
         
         debounceTime(1000),
         distinctUntilChanged(),
         tap(it=> this.ls.isLoading(true)),
         debounceTime(2000),
         tap(it=> this.updateFilter(it)),
-        finalize(()=>this.ls.isLoading(false))
-
+        finalize(()=>this.ls.isLoading(false)),
+        untilDestroyed(this)
       ).subscribe();
 
       this.route.params
       .pipe(
+        untilDestroyed(this),
         delay(1000),
         tap(it=> {
           this.item=it["item"] as string;
           this.query=it["query"] as string;
           this.key=it['key'] as string;
-          this.searchData.getSearch(this.item, this.query,this.key).subscribe(
+          this.searchData.getSearch(this.item, this.query,this.key)
+          .pipe(untilDestroyed(this))
+          .subscribe(
             arr=>{
               this.fdArr =arr;
 
-              this.data.GetData(this.item,this.query,arr).subscribe(it=>
+              this.data.GetData(this.item,this.query,arr)
+              .pipe(untilDestroyed(this))
+              .subscribe(it=>
                 {
                   if(it != null){
                   this.dataRec=it;
@@ -136,13 +143,13 @@ export class DisplayQueryComponent implements OnInit {
         ),
         
         // tap(it=>console.log(it))
-      )
+        )
     .subscribe();
 
   }
   ngOnDestroy() {
-    if(this.formCtrlSub != null)
-      this.formCtrlSub.unsubscribe();
+    // if(this.formCtrlSub != null)
+    //   this.formCtrlSub.unsubscribe();
   }
 
 }
