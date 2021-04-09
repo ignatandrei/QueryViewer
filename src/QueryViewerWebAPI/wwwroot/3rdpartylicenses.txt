@@ -66,6 +66,9 @@ MIT
 @angular/router
 MIT
 
+@ngneat/until-destroy
+MIT
+
 @swimlane/ngx-datatable
 MIT
 (The MIT License)
