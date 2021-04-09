@@ -1,5 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserModule, Meta } from '@angular/platform-browser';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,6 +24,12 @@ import { httpInterceptorProviders } from './interceptors/barrelInterceptors';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MetadataService } from './services/metadata.service';
+
+export function InitializeMetadata(ms: MetadataService) {
+  return ()=> ms.Init();
+  }
+
 
 @NgModule({
   declarations: [
@@ -54,9 +60,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     MatSnackBarModule
     ],
-  providers: [
+  providers: [ 
 
     ...httpInterceptorProviders,
+    MetadataService,
+    { provide: APP_INITIALIZER,useFactory: InitializeMetadata, deps: [MetadataService], multi: true}
   ],
   bootstrap: [AppComponent]
 })
