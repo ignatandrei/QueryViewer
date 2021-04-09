@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, delay, distinctUntilChanged, filter, finalize, switchMap, tap } from 'rxjs/operators';
 import { SearchDataService } from '../services/search-data.service';
 import { FieldDescription, SearchField } from '../services/FieldDescription';
 import { MetadataService } from '../services/metadata.service';
@@ -104,6 +104,7 @@ export class DisplayQueryComponent implements OnInit {
 
       this.route.params
       .pipe(
+        delay(1000),
         tap(it=> {
           this.item=it["item"] as string;
           this.query=it["query"] as string;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { delay, switchMap, switchMapTo, tap } from 'rxjs/operators';
 import { SearchDataService } from '../services/search-data.service';
 import { FieldDescription, SearchField } from '../services/FieldDescription';
 import { MetadataService } from '../services/metadata.service';
@@ -48,6 +48,7 @@ export class DisplayItemComponent implements OnInit {
 
     this.route.params
     .pipe(
+      delay(1000),
       tap(it=> this.item=(it["item"] as string)),
       // tap(it=>console.log(it))
       switchMap(it=>this.ms.exposeItemWithQuery(this.item)),

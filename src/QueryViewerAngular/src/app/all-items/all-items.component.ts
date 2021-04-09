@@ -1,5 +1,6 @@
 import { utf8Encode } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
+import { delay, tap } from 'rxjs/operators';
 import { MetadataService } from '../services/metadata.service';
 
 @Component({
@@ -17,7 +18,12 @@ export class AllItemsComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this.ms.exposeItems().subscribe(it=>this.items=it);
+    this.ms.exposeItems()
+      .pipe(
+        delay(1000),
+        tap(it=>this.items=it)
+      )
+    .subscribe();
 
   }
 

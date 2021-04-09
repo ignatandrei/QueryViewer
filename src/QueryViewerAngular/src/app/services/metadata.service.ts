@@ -84,8 +84,8 @@ export class MetadataService {
     if(MetadataService.kvArr.has(key))
       return of(MetadataService.kvArr.get(key)||[]);
 
-      console.log("not found"+ typeField + MetadataService.kvArr.has(key));
-      console.log(MetadataService.kvArr);
+      // console.log("not found"+ typeField + MetadataService.kvArr.has(key));
+      // console.log(MetadataService.kvArr);
       var url = this.root+'GetSearch/'+ typeField;
     return this.http.get<KeyValue[]>(url)
       .pipe(
