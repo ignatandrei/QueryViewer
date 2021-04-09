@@ -35,9 +35,17 @@
               "CriteriaString": "LessOrEqual"
             }
 
+          ],
+          "Orders": [
+            {
+              "FieldName": "IDMoneda",
+              "Asc": true
+            },
+            {
+              "FieldName": "Valoare",
+              "Asc": false
+            }
           ]
-
-
         },
         {
           "Ignore": false,

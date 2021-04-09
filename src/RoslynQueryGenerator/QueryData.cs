@@ -9,7 +9,7 @@ namespace RoslynQueryGenerator
         {
             Ignore = false;
         }
-        
+        public OrderBy[] Orders { get; set; }
         public SearchField[] DefaultValues { get; set; }
         public string IDSearch { get; set; }
         public string Name { get; set; }

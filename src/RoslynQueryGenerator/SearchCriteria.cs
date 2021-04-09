@@ -1,7 +1,11 @@
 ﻿namespace RoslynQueryGenerator
 
 {
-    
+    public class OrderBy
+    {
+        public string FieldName { get; set; }
+        public bool Asc { get; set; }
+    }
     public class SearchField
     {
         public string FieldName { get; set; }        

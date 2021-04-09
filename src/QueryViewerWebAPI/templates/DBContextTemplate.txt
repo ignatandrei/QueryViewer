@@ -95,6 +95,31 @@ namespace  {{ namespaceName }}.Classes{
                         }           
                 }
             }
+             //if(System.Diagnostics.Debugger.IsAttached)
+             //       System.Diagnostics.Debugger.Break();
+               
+            IOrderedQueryable<Dictionary<string, object>> iq = null;
+            {{ for ob in query.Orders  }}
+                 
+                {{ if for.first == true  }}
+                    {{ if ob.Asc }}
+                        iq  =returnValue.OrderBy(it=>it["{{ob.FieldName}}"]);
+                    {{ else }}
+                        iq  =returnValue.OrderByDescending(it=>it["{{ob.FieldName}}"]);
+                    {{ end}}
+                {{ else }}
+                    {{ if ob.Asc }}
+                        iq = iq.ThenBy(it=>it["{{ob.FieldName}}"]);
+                    {{ else }}
+                        iq = iq.ThenByDescending(it=>it["{{ob.FieldName}}"]);
+                    {{ end}}
+                        
+                {{end }}
+            {{ end}}
+            if(iq != null)
+            {
+                returnValue = iq;
+            }
             return new DisplayData()
             {
                 QueryName = "{{query.Name}}",
