@@ -2,17 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" /> 
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" /> 
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" />
+    <!--<PackageReference Include="QueryGenerator" Version="2021.4.9.2115" OutputItemType="Analyzer" />-->
+    <PackageReference Include="QueryGenerator" Version="2021.4.9.2150" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <!--<PackageReference Include="System.Text.Json" Version="5.0.0" GeneratePathProperty="true" />-->
+
+
   </ItemGroup>
 
   <ItemGroup>
 
-    <ProjectReference Include="..\RoslynQueryGenerator\RoslynQueryGenerator.csproj" OutputItemType="Analyzer" />
+    <!--<ProjectReference Include="..\RoslynQueryGenerator\RoslynQueryGenerator.csproj" OutputItemType="Analyzer" />-->
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="generateQuery" />
     <AdditionalFiles Include="queries.json" generateQuery="true">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -22,7 +27,7 @@
   <ItemGroup>
     <AdditionalFiles Include="templates\Controller.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AdditionalFiles >
+    </AdditionalFiles>
     <AdditionalFiles Include="templates\SearchClasses.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </AdditionalFiles>

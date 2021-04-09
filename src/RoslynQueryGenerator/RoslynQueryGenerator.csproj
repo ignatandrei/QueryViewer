@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
-    <!--<PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.2"  GeneratePathProperty="true" />-->
+    <!--<PackageReference Include="Microsoft.Data.SqlClient" Version="2.0.1"  GeneratePathProperty="true" />-->
     
     <PackageReference Include="System.Data.SqlClient" Version="4.6.1" GeneratePathProperty="true" />    
     <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />    
@@ -19,12 +19,22 @@
     </PackageReference>
   
   </ItemGroup>
+  <ItemGroup>
+    <!-- Package the generator in the analyzer directory of the nuget package -->
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PkgScriban)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PKGSystem_Text_Encodings_Web)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PKGSystem_Data_SqlClient)\lib\net461\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+  </ItemGroup>
+
   <PropertyGroup>
     <PackageId>QueryGenerator</PackageId>
     <Description>
       It works with the templates from https://github.com/ignatandrei/QueryViewer/
     </Description>
-    <Version>2021.04.09.2100</Version>
+    <Version>2021.04.09.2150</Version>
     <Authors>Andrei Ignat</Authors>
     <PackageTags>RoslynCodeGenerators;C#;CSharp;site generator from query</PackageTags>
     <PackageProjectUrl>https://github.com/ignatandrei/QueryViewer/</PackageProjectUrl>
