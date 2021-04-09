@@ -17,8 +17,24 @@
     <PackageReference Include="ThisAssembly.AssemblyInfo" Version="1.0.0" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer">
 
     </PackageReference>
-
+  
   </ItemGroup>
+  <PropertyGroup>
+    <PackageId>QueryGenerator</PackageId>
+    <Description>
+      It works with the templates from https://github.com/ignatandrei/QueryViewer/
+    </Description>
+    <Version>2021.04.09.2100</Version>
+    <Authors>Andrei Ignat</Authors>
+    <PackageTags>RoslynCodeGenerators;C#;CSharp;site generator from query</PackageTags>
+    <PackageProjectUrl>https://github.com/ignatandrei/QueryViewer/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ignatandrei/QueryViewer/</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>MIT</Copyright>
+
+  </PropertyGroup>
+
   <PropertyGroup>
     <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
   </PropertyGroup>
