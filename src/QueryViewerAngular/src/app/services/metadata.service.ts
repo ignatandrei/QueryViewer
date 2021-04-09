@@ -6,6 +6,8 @@ import { shareReplay, switchMap, tap } from 'rxjs/operators';
 import { ItemPlusQueries } from './ItemPlusQueries';
 import { FieldDescription } from './FieldDescription';
 import { KeyValue } from './KeyValue';
+import { Items, StoreItemsService } from './store-items.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,7 @@ import { KeyValue } from './KeyValue';
 export class MetadataService {
   
   private root: string ;
-  constructor( private http: HttpClient) { 
+  constructor( private http: HttpClient, private store: StoreItemsService) { 
     this.root=environment.url +'Metadata/';
 
   }
@@ -40,7 +42,17 @@ export class MetadataService {
 
   public exposeItems(): Observable<string[]>{
     var url = this.root+'ControllerNames';
-    return this.http.get<string[]>(url)
+    return this.http.get<string[]>(url).pipe(
+
+      tap(it=>{
+        const items=new Items();
+        items.items=it;
+        this.store.setLoading(true);
+        
+        this.store.update(items);
+        this.store.setLoading(false);
+      })
+    )
     ;
   }
   public exposeFields(item:string, query:string): Observable<FieldDescription[]>{
