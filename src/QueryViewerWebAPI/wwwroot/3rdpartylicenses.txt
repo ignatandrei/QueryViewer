@@ -66,6 +66,9 @@ MIT
 @angular/router
 MIT
 
+@datorama/akita
+Apache-2.0
+
 @ngneat/until-destroy
 MIT
 
