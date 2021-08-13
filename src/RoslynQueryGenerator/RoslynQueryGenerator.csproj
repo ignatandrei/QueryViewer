@@ -3,16 +3,17 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   <LangVersion>latest</LangVersion>
+    <IsRoslynComponent>true</IsRoslynComponent>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <!--<PackageReference Include="Microsoft.Data.SqlClient" Version="2.0.1"  GeneratePathProperty="true" />-->
     
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" GeneratePathProperty="true" />    
     <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" GeneratePathProperty="true" />
     <PackageReference Include="Scriban" Version="4.0.1" GeneratePathProperty="true"></PackageReference>
     <PackageReference Include="ThisAssembly.AssemblyInfo" Version="1.0.8" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer">
 
@@ -23,9 +24,9 @@
     <!-- Package the generator in the analyzer directory of the nuget package -->
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(PkgScriban)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PKGSystem_Text_Encodings_Web)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PKGSystem_Data_SqlClient)\lib\net461\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PkgNewtonsoft_Json)\lib\netstandard2.0\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <!-- <None Include="$(PKGSystem_Text_Encodings_Web)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" /> -->
+    <None Include="$(PkgSystem_Data_SqlClient)\lib\net461\System.Data.SqlClient.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 
   </ItemGroup>
 
@@ -34,7 +35,7 @@
     <Description>
       It works with the templates from https://github.com/ignatandrei/QueryViewer/
     </Description>
-    <Version>2021.08.13.2000</Version>
+    <Version>2021.08.13.2126</Version>
     <Authors>Andrei Ignat</Authors>
     <PackageTags>RoslynCodeGenerators;C#;CSharp;site generator from query</PackageTags>
     <PackageProjectUrl>https://github.com/ignatandrei/QueryViewer/</PackageProjectUrl>
@@ -54,8 +55,8 @@
 
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" IncludeRuntimeDependency="false" />
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Encodings_Web)\lib\netstandard2.0\System.Text.Encodings.Web.dll" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGNewtonsoft_Json)\lib\netstandard2.0\Newtonsoft.Json.dll" IncludeRuntimeDependency="false" />
+      <!--<TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Encodings_Web)\lib\netstandard2.0\System.Text.Encodings.Web.dll" IncludeRuntimeDependency="false" />-->
       <TargetPathWithTargetPlatformMoniker Include="$(PKGScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" />
       <!--<TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_Data_SqlClient)\lib\netstandard2.0\Microsoft.Data.SqlClient.dll" IncludeRuntimeDependency="false" />-->
       <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Data_SqlClient)\lib\net461\System.Data.SqlClient.dll" IncludeRuntimeDependency="false" />

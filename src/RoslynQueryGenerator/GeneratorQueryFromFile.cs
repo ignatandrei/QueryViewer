@@ -1,11 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using Newtonsoft.Json;
 using Scriban;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 
 namespace RoslynQueryGenerator
 {
@@ -31,8 +31,8 @@ namespace RoslynQueryGenerator
                        return (val == "true");
                    }
                    ).FirstOrDefault();
-
-            root = JsonSerializer.Deserialize<Root>(query.GetText().ToString());
+            var text = query.GetText().ToString();
+            root = JsonConvert.DeserializeObject<Root>(text);
 
         }
 
