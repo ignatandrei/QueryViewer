@@ -11,8 +11,7 @@
     <!--<PackageReference Include="Microsoft.Data.SqlClient" Version="2.0.1"  GeneratePathProperty="true" />-->
     
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" GeneratePathProperty="true" />    
-    <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />    
-    <PackageReference Include="System.Text.Encodings.Web" Version="5.0.1" GeneratePathProperty="true" />
+    <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" GeneratePathProperty="true" />
     <PackageReference Include="Scriban" Version="4.0.1" GeneratePathProperty="true"></PackageReference>
     <PackageReference Include="ThisAssembly.AssemblyInfo" Version="1.0.8" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer">
