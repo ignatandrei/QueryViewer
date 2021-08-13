@@ -35,7 +35,7 @@
     <Description>
       It works with the templates from https://github.com/ignatandrei/QueryViewer/
     </Description>
-    <Version>2021.09.13.2000</Version>
+    <Version>2021.08.13.2000</Version>
     <Authors>Andrei Ignat</Authors>
     <PackageTags>RoslynCodeGenerators;C#;CSharp;site generator from query</PackageTags>
     <PackageProjectUrl>https://github.com/ignatandrei/QueryViewer/</PackageProjectUrl>
