@@ -1,17 +1,31 @@
-﻿
-namespace DBToGuiRSCG;
+﻿namespace DBToGuiRSCG;
 
-[Generator]
-public class GeneratorData : ISourceGenerator
+[Generator(LanguageNames.CSharp)]
+public class GeneratorData : IIncrementalGenerator
 {
-    public void Execute(GeneratorExecutionContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        throw new NotImplementedException();
-    }
+        var dbContext = context.SyntaxProvider.CreateSyntaxProvider
+            (
+            predicate: (sn, ct) =>
+            {
+                if (sn is ClassDeclarationSyntax cds)
+                {
+                    return cds.BaseList.Types.Any();
+                }
+                return false;
+            },
+            transform: (gsc, ct) =>
+            {
+                var cds=gsc.Node  as ClassDeclarationSyntax;
+                var bt = cds.BaseList.Types;
+                if (bt.Any())
+                    return new Tuple<int>(0);
+                return null;
+            })
+            .Where(it=>it != null);
 
-    public void Initialize(GeneratorInitializationContext context)
-    {
-        throw new NotImplementedException();
+
     }
 }
 
