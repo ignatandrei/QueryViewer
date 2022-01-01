@@ -1,3 +1,4 @@
+cls
 $connection= "Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>"
 $provider = "Microsoft.EntityFrameworkCore.SqlServer"
 dotnet tool restore
