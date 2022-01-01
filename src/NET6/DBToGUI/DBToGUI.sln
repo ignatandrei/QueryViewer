@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastDBToGUIContext", "FastDBToGUIContext\FastDBToGUIContext.csproj", "{4BD38048-35E9-42A9-AECD-46B6F8F98CF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastDBToGUIContext", "FastDBToGUIContext\FastDBToGUIContext.csproj", "{4BD38048-35E9-42A9-AECD-46B6F8F98CF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastDBToGuiModels", "FastDBToGuiModels\FastDBToGuiModels.csproj", "{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastDBToGuiModels", "FastDBToGuiModels\FastDBToGuiModels.csproj", "{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastDBToGuiWebAPI", "FastDBToGuiWebAPI\FastDBToGuiWebAPI.csproj", "{0BE36AD0-66BE-4E8E-974D-599F2C48462E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BE36AD0-66BE-4E8E-974D-599F2C48462E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BE36AD0-66BE-4E8E-974D-599F2C48462E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BE36AD0-66BE-4E8E-974D-599F2C48462E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BE36AD0-66BE-4E8E-974D-599F2C48462E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
