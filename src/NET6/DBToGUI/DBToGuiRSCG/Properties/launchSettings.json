@@ -2,6 +2,13 @@
   "profiles": {
     "DBToGuiRSCG": {
       "commandName": "Project"
+    },
+    "Test": {
+      "commandName": "Executable",
+      "executablePath": "dotnet",
+      "commandLineArgs": "build",
+      "workingDirectory": "C:\\Users\\Surface1\\Documents\\GitHub\\QueryViewer\\src\\NET6\\DBToGUI\\FastDBToGUIContext\\"
     }
+    
   }
 }
