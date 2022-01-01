@@ -24,8 +24,6 @@ public class GeneratorData : IIncrementalGenerator
                 return null;
             })
             .Where(it=>it != null);
-
-
     }
 }
 
