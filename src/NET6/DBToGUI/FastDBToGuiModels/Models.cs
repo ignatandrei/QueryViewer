@@ -1,7 +1,5 @@
-﻿namespace FastDBToGuiModels
+﻿namespace FastDBToGuiModels;
+public partial class Models
 {
-    public class Models
-    {
 
-    }
 }
