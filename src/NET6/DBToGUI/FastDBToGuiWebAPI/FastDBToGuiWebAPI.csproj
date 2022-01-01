@@ -21,4 +21,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\FastDBToGUIContext\FastDBToGUIContext.csproj" />
+	</ItemGroup>
+
 </Project>

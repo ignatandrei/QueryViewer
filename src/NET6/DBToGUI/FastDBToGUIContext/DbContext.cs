@@ -1,6 +1,7 @@
-﻿namespace FastDBToGUI
+﻿using Microsoft.EntityFrameworkCore;
+namespace FastDBToGUI
 {
-    public partial class OriginalDbContext
+    public partial class ApplicationDbContext:DbContext
     {
 
     }
