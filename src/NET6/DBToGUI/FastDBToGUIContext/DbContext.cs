@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-namespace FastDBToGUI
+namespace FastDBToGUIContext
 {
     public partial class ApplicationDbContext:DbContext
     {
