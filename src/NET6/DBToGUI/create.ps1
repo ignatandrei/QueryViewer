@@ -4,6 +4,6 @@ $provider = "Microsoft.EntityFrameworkCore.SqlServer"
 dotnet tool restore
 cd .\FastDBToGUIWebAPI\
 #https://docs.microsoft.com/ro-ro/ef/core/managing-schemas/scaffolding?tabs=dotnet-core-cli
-dotnet ef dbcontext scaffold $connection $provider  --no-pluralize --data-annotations --use-database-names --context ApplicationDbContext  --context-namespace FastDBToGuiContext --namespace FastDBToGuiModels --context-dir ../FastDBToGuiContext/ --output-dir ../FastDBToGuiModels/  --prefix-output --json
+dotnet ef dbcontext scaffold $connection $provider  --no-pluralize --data-annotations --use-database-names  --no-onconfiguring --context ApplicationDbContext  --context-namespace FastDBToGuiContext --namespace FastDBToGuiModels --context-dir ../FastDBToGuiContext/ --output-dir ../FastDBToGuiModels/  --prefix-output --json
 cd ..
- 
+ dotnet build
