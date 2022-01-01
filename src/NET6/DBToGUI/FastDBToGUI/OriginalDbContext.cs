@@ -1,6 +1,6 @@
 ﻿namespace FastDBToGUI
 {
-    public partial class MyDbContext
+    public partial class OriginalDbContext
     {
 
     }
