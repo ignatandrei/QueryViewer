@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastDBToGUI", "FastDBToGUI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastDBToGuiModels", "FastDBToGuiModels\FastDBToGuiModels.csproj", "{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastDBToGuiIModels", "FastDBToGuiIModels\FastDBToGuiIModels.csproj", "{1D70F08E-00E2-467E-890D-973726183668}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67ECFBCA-75E3-4B3A-AB21-C3936BD41819}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D70F08E-00E2-467E-890D-973726183668}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D70F08E-00E2-467E-890D-973726183668}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D70F08E-00E2-467E-890D-973726183668}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D70F08E-00E2-467E-890D-973726183668}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
