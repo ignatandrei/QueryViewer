@@ -1,2 +1,2 @@
-﻿global using FastDBToGUIContext;
+﻿global using Generated;
 global using Microsoft.EntityFrameworkCore;

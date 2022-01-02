@@ -5,7 +5,7 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        Debugger.Launch();
+        //Debugger.Launch();
 
         var classDeclarations = context.SyntaxProvider.CreateSyntaxProvider
             (

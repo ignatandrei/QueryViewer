@@ -1,4 +1,4 @@
-﻿namespace FastDBToGUIContext;
+﻿namespace Generated;
 
 public partial class ApplicationDbContext : DbContext
 {
