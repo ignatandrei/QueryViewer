@@ -8,6 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+	  <ProjectReference Include="..\DBToGuiRSCG\DBToGuiRSCG.csproj"
+						  OutputItemType="Analyzer"
+						  ReferenceOutputAssembly="false"  />
   </ItemGroup>
+  <PropertyGroup>
+	  <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+	  <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)GeneratedX</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
+
 
 </Project>

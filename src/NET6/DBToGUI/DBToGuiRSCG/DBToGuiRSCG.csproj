@@ -23,9 +23,11 @@
 	
 	<ItemGroup>
 	  <None Remove="Templates\context.txt" />
+	  <None Remove="Templates\ModelToEnum.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Include="Templates\ModelToEnum.txt" />
 	  <EmbeddedResource Include="Templates\context.txt" />
 	</ItemGroup>
 	<PropertyGroup>

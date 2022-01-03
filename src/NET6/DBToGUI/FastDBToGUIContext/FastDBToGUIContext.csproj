@@ -13,9 +13,9 @@
   <ItemGroup>
     <ProjectReference Include="..\DBToGuiRSCG\DBToGuiRSCG.csproj" />
     <ProjectReference Include="..\FastDBToGuiModels\FastDBToGuiModels.csproj" />
-    <ProjectReference Include="..\DBToGuiRSCG\DBToGuiRSCG.csproj" 
+    <!--<ProjectReference Include="..\DBToGuiRSCG\DBToGuiRSCG.csproj" 
 					  OutputItemType="Analyzer"
-                      ReferenceOutputAssembly="false"  />
+                      ReferenceOutputAssembly="false"  />-->
   </ItemGroup>
 	<PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>

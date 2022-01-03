@@ -8,7 +8,72 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         //Debugger.Launch();
-        
+        GenerateFromModels(context);
+        GenerateFromContext(context);
+    }
+    private void GenerateFromModels(IncrementalGeneratorInitializationContext context)
+    {
+        var classDeclarations = context.SyntaxProvider.CreateSyntaxProvider
+            (
+            predicate: (sn, ct) =>
+            {
+                if (sn is ClassDeclarationSyntax cds)
+                {
+                    if(sn.Parent is BaseNamespaceDeclarationSyntax ns)
+                    {
+                        if(ns.Name is IdentifierNameSyntax ins) 
+                            return ins.Identifier.Text == "Generated";
+                    }
+
+                }
+                return false;
+            },
+            transform: (gsc, ct) =>
+            {
+                var pds = gsc.Node as ClassDeclarationSyntax;
+                return pds;
+            })
+            .Where(it => it != null);
+
+        var compilationAndClasses = context.CompilationProvider.Combine(classDeclarations.Collect());
+
+        context.RegisterSourceOutput(compilationAndClasses,
+            static (spc, source) => ExecuteForModels(source.Item1, source.Item2, spc));
+
+    }
+    private static void ExecuteForModels(Compilation compilation, ImmutableArray<ClassDeclarationSyntax> classes, SourceProductionContext context)
+    {
+        if (classes.IsDefaultOrEmpty)
+        {
+            // nothing to do yet
+            return;
+        }
+        var classParent = classes.First().Parent as BaseNamespaceDeclarationSyntax;
+        var nameContext = classParent.ToString();
+        var content = EmbedReader.ContentFile("DBToGuiRSCG.Templates.ModelToEnum.txt"); ;
+
+        var template = Template.Parse(content);
+        var renderClasses = classes.Select(
+            it => new
+            {
+                Name= it.Identifier.ValueText  ,
+                Props = it
+                    .Members
+                    .Select(it => it as PropertyDeclarationSyntax)
+                    .Where(it => it != null)
+                    .Select(it=>it.Identifier.Text)
+                    .ToArray()
+            }).ToArray();
+        var rend = template.Render(new
+        {
+            nameContext,
+            classes = renderClasses,
+        }, member => member.Name);
+        context.AddSource("ModelToEnum.cs", SourceText.From(rend, Encoding.UTF8));
+    }
+
+    private void GenerateFromContext(IncrementalGeneratorInitializationContext context)
+    {
         var classDeclarations = context.SyntaxProvider.CreateSyntaxProvider
             (
             predicate: (sn, ct) =>
@@ -16,7 +81,7 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                 if (sn is PropertyDeclarationSyntax pds)
                 {
                     var ret = pds;
-                    return pds.Parent is ClassDeclarationSyntax cds && cds.BaseList.Types.Any();
+                    return pds.Parent is ClassDeclarationSyntax cds && cds.BaseList?.Types !=null    && cds.BaseList.Types.Any();
                 }
                 return false;
             },
@@ -46,6 +111,7 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
 
         context.RegisterSourceOutput(compilationAndClasses,
             static (spc, source) => ExecuteForDbSet(source.Item1, source.Item2, spc));
+
     }
     private static void ExecuteForDbSet(Compilation compilation, ImmutableArray<PropertyDeclarationSyntax> classes, SourceProductionContext context)
     {
