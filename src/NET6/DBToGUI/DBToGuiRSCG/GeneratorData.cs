@@ -8,9 +8,9 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        //Debugger.Launch();
-        GenerateFromModels(context);
+        //Debugger.Launch();        
         GenerateFromContext(context);
+        GenerateFromModels(context);
     }
     private void GenerateFromModels(IncrementalGeneratorInitializationContext context)
     {
@@ -51,6 +51,9 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
             // nothing to do yet
             return;
         }
+        if (classes.Any(item => item.Identifier.ValueText == "ApplicationDbContext"))
+            return;
+
         var classParent = classes.First().Parent as BaseNamespaceDeclarationSyntax;
         var nameContext = classParent.ToString();
         var content = EmbedReader.ContentFile("DBToGuiRSCG.Templates.ModelToEnum.txt"); ;
@@ -64,7 +67,7 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                     .Members
                     .Select(it => it as PropertyDeclarationSyntax)
                     .Where(it => it != null)
-                    .Select(it=>it.Identifier.Text)
+                    .Select(it=>new { Name = it.Identifier.Text, Type = it.Type.ToString() })
                     .ToArray()
             })
             .GroupBy(it=>it.Name)
@@ -95,7 +98,7 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                 if (sn is PropertyDeclarationSyntax pds)
                 {
                     var ret = pds;
-                    return pds.Parent is ClassDeclarationSyntax cds && cds.BaseList?.Types !=null    && cds.BaseList.Types.Any();
+                    return pds.Parent is ClassDeclarationSyntax cds && cds.BaseList?.Types != null && cds.BaseList.Types.Any();
                 }
                 return false;
             },
@@ -120,7 +123,9 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                 return null;
             })
             .Where(it => it != null);
+            
 
+        
         var compilationAndClasses = context.CompilationProvider.Combine(classDeclarations.Collect());
 
         context.RegisterSourceOutput(compilationAndClasses,
