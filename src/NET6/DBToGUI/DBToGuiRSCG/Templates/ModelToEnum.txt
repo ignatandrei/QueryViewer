@@ -13,7 +13,19 @@ public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{cla
     public override  IQueryable<{{classLoop.Name}}> TransformToWhere(IQueryable<{{classLoop.Name}}> data){
         if((SearchFields?.Length ??0)==0)        
             return data;
+        foreach(var sf in SearchFields){
+            switch(sf.FieldName ){
+                case e{{classLoop.Name}}Columns.None :
+                    break;
+{{ for prop in classLoop.Props }}
+    case e{{classLoop.Name}}Columns.{{prop}}:
+        break;
+{{ end }}
 
+                default:
+                    throw new ArgumentException("{{classLoop.Name}} has not column "+sf.FieldName);
+            }
+        }
         return data;
     }
 }
