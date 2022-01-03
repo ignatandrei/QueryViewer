@@ -5,6 +5,16 @@ public partial class {{nameContext}}
 {
     {{ for classLoop in queries }}
     // {{query}}    
+    public IAsyncEnumerable<{{classLoop}}> {{classLoop}}FindAsync(Search{{classLoop}}? search){
+        
+        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+        if(search == null){
+            return data.AsAsyncEnumerable();
+        }
+        data = search.TransformToWhere(data);        
+        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        return ret.AsAsyncEnumerable();
+    }
     public Task<{{classLoop}}[]> {{classLoop}}Find( Search{{classLoop}} search){
         IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
         data = search.TransformToWhere(data);        

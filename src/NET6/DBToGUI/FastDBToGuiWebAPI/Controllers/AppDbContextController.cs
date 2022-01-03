@@ -13,13 +13,26 @@ namespace FastDBToGuiWebAPI.Controllers
         {
             this.context = context;
         }
+        [HttpGet]
         public long GetDeps()
         {
             return context.Department.LongCount();
         }
-        public async Task<long> DepartmentFindNumber(Generated.SearchDepartment search)
+        [HttpPost]
+        public Task<long> DepartmentFindNumber(SearchDepartment search)
         {
-            return 34;
+            return context.DepartmentFindNumber(search);
+            
+        }
+        [HttpGet]
+        public async IAsyncEnumerable<Department> DepartmentAsync()
+        {
+            await foreach(var item in context.DepartmentFindAsync(null))
+            {
+                await Task.Delay(2000);
+                yield return item;
+            }
+
         }
     }
 }
