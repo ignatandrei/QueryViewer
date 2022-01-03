@@ -56,13 +56,14 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
         }
         var classParent = classes.First().Parent as ClassDeclarationSyntax;
         var nameContext = classParent.Identifier.ValueText;
-        var content = EmbedReader.ContentFile("Templates/context.txt"); ;
+        var content = EmbedReader.ContentFile("DBToGuiRSCG.Templates.context.txt"); ;
         
         var template = Template.Parse(content);
+        
         var rend = template.Render(new
         {
             nameContext,
-            
+            queries = classes.Select(it => it.Identifier.ValueText).ToArray(),
         }, member => member.Name);
         context.AddSource("ApplicationDbContextGenerated.cs", SourceText.From(rend, Encoding.UTF8));
     }
