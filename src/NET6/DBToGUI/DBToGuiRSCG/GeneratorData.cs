@@ -1,4 +1,5 @@
 ﻿using Scriban;
+using System.Linq;
 
 namespace DBToGuiRSCG;
 
@@ -21,8 +22,10 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                 {
                     if(sn.Parent is BaseNamespaceDeclarationSyntax ns)
                     {
-                        if(ns.Name is IdentifierNameSyntax ins) 
+                        if (ns.Name is IdentifierNameSyntax ins)
+                        {
                             return ins.Identifier.Text == "Generated";
+                        }
                     }
 
                 }
@@ -51,8 +54,8 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
         var classParent = classes.First().Parent as BaseNamespaceDeclarationSyntax;
         var nameContext = classParent.ToString();
         var content = EmbedReader.ContentFile("DBToGuiRSCG.Templates.ModelToEnum.txt"); ;
-
         var template = Template.Parse(content);
+        //dealing with partial classes
         var renderClasses = classes.Select(
             it => new
             {
@@ -63,7 +66,18 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                     .Where(it => it != null)
                     .Select(it=>it.Identifier.Text)
                     .ToArray()
-            }).ToArray();
+            })
+            .GroupBy(it=>it.Name)
+            .ToDictionary(it=>it.Key,v=>
+            {
+                return v.SelectMany(a => a.Props);
+            })
+            .Select(it=> new
+            {
+                Name=  it.Key,
+                Props = it.Value
+            })
+            .ToArray();
         var rend = template.Render(new
         {
             nameContext,

@@ -6,7 +6,19 @@ public enum e{{classLoop.Name}}Columns {
 {{ for prop in classLoop.Props }}
     ,{{prop}}
 {{ end }}
-}    
+}
+public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns>
+{
+}
+/*
+public class OrderBy{{classLoop.Name}} :  OrderBy<e{{classLoop.Name}}Columns>
+{
+}
+
+public class SearchField{{classLoop.Name}} :  SearchField<e{{classLoop.Name}}Columns>
+{
+}
+*/
 {{ end }}
 
 public class OrderBy<TColumn>
@@ -23,6 +35,18 @@ public class SearchField<TColumn>
          
     public string? CriteriaString { get; set; }
 
+}
+public class Search<TColumn>
+    where TColumn : System.Enum
+{
+    public Search(){
+        PageSize=10;
+        PageNumber=1;
+    }
+    public SearchField<TColumn> Fields { get; set; }
+    public OrderBy<TColumn> OrderBys { get; set; }
+    public int PageSize{get;set;}
+    public int PageNumber{get;set;}
 }
 
 public enum SearchCriteria
