@@ -1,4 +1,4 @@
-﻿namespace Generator;
+﻿namespace Generated;
 {{ for classLoop in classes }}
 //for {{classLoop.Name}} : props: {{classLoop.Props}} 
 public enum e{{classLoop.Name}}Columns {
@@ -7,8 +7,15 @@ public enum e{{classLoop.Name}}Columns {
     ,{{prop}}
 {{ end }}
 }
-public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns>
+public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{classLoop.Name}}>
 {
+
+    public override  IQueryable<{{classLoop.Name}}> TransformToWhere(IQueryable<{{classLoop.Name}}> data){
+        if((SearchFields?.Length ??0)==0)        
+            return data;
+
+        return data;
+    }
 }
 /*
 public class OrderBy{{classLoop.Name}} :  OrderBy<e{{classLoop.Name}}Columns>
@@ -28,6 +35,7 @@ public class OrderBy<TColumn>
     public bool Asc { get; set; }
 }
 public class SearchField<TColumn>
+    where TColumn : System.Enum
 {
     public TColumn FieldName { get; set; }        
     public string? Value { get; set; }
@@ -36,17 +44,20 @@ public class SearchField<TColumn>
     public string? CriteriaString { get; set; }
 
 }
-public class Search<TColumn>
+public abstract class Search<TColumn, TClass>
     where TColumn : System.Enum
+    where TClass: class
 {
     public Search(){
         PageSize=10;
         PageNumber=1;
     }
-    public SearchField<TColumn> Fields { get; set; }
-    public OrderBy<TColumn> OrderBys { get; set; }
+    public SearchField<TColumn>[] SearchFields { get; set; }
+    public OrderBy<TColumn>[] OrderBys { get; set; }
     public int PageSize{get;set;}
     public int PageNumber{get;set;}
+    public abstract IQueryable<TClass> TransformToWhere(IQueryable<TClass> data);
+    
 }
 
 public enum SearchCriteria

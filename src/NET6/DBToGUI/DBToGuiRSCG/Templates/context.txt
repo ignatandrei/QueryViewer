@@ -1,5 +1,5 @@
 ﻿
-namespace Generator;
+namespace Generated;
     
 public partial class {{nameContext}}
 {
