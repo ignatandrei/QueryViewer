@@ -111,7 +111,7 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                     foreach (var item in bt)
                     {
 
-                        if (!(item.Type is IdentifierNameSyntax i))
+                        if (item.Type is not IdentifierNameSyntax i)
                             continue;
 
                         if (i.Identifier.ValueText == "DbContext")

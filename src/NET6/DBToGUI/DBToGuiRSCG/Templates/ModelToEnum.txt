@@ -42,9 +42,9 @@ public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{cla
         {{ for prop in classLoop.Props }}
             case e{{classLoop.Name}}Columns.{{prop.Name}}:
                 if(order.Asc)
-                    ret = data.ThenBy(it=>it.{{prop.Name}});
+                    ret = ret.ThenBy(it=>it.{{prop.Name}});
                 else
-                    ret = data.ThenByDescending(it=>it.{{prop.Name}});
+                    ret = ret.ThenByDescending(it=>it.{{prop.Name}});
                 
                 break;
         {{end}}
@@ -182,6 +182,8 @@ public abstract class Search<TColumn, TClass>
     public int PageNumber{get;set;}
     public abstract IQueryable<TClass> TransformToWhere(IQueryable<TClass> data);
     public abstract IOrderedQueryable<TClass> TransformToOrder(IQueryable<TClass> data);
+    //public abstract IOrderedQueryable<TClass> TransformToPaging(IOrderedQueryable<TClass>  data);
+
 }
 
 public enum SearchCriteria

@@ -3,9 +3,21 @@ namespace Generated;
     
 public partial class {{nameContext}}
 {
-    {{ for query in queries }}
+    {{ for classLoop in queries }}
     // {{query}}    
+    public Task<{{classLoop}}[]> {{classLoop}}Find( Search{{classLoop}} search){
+        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+        data = search.TransformToWhere(data);        
+        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        return ret.ToArrayAsync();
+    }
+    public Task<long> {{classLoop}}FindNumber( Search{{classLoop}} search){
+        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+        data = search.TransformToWhere(data);        
+        return data.LongCountAsync();
+    }
     {{ end }}
+    
 }
 
     
