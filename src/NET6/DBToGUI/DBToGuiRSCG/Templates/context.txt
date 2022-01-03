@@ -1,0 +1,5 @@
+﻿using Generator;
+public partial class {{nameContext}}
+{
+
+}

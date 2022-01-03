@@ -1,4 +1,6 @@
-﻿namespace DBToGuiRSCG;
+﻿using Scriban;
+
+namespace DBToGuiRSCG;
 
 [Generator]
 public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
@@ -6,7 +8,7 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         //Debugger.Launch();
-
+        
         var classDeclarations = context.SyntaxProvider.CreateSyntaxProvider
             (
             predicate: (sn, ct) =>
@@ -43,17 +45,26 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
         var compilationAndClasses = context.CompilationProvider.Combine(classDeclarations.Collect());
 
         context.RegisterSourceOutput(compilationAndClasses,
-            static (spc, source) => Execute(source.Item1, source.Item2, spc));
+            static (spc, source) => ExecuteForDbSet(source.Item1, source.Item2, spc));
     }
-    private static void Execute(Compilation compilation, ImmutableArray<PropertyDeclarationSyntax> classes, SourceProductionContext context)
+    private static void ExecuteForDbSet(Compilation compilation, ImmutableArray<PropertyDeclarationSyntax> classes, SourceProductionContext context)
     {
         if (classes.IsDefaultOrEmpty)
         {
             // nothing to do yet
             return;
         }
-        //var result = "";
-        //context.AddSource("LoggerMessage.g.cs", SourceText.From(result, Encoding.UTF8));
+        var classParent = classes.First().Parent as ClassDeclarationSyntax;
+        var nameContext = classParent.Identifier.ValueText;
+        var content = EmbedReader.ContentFile("Templates/context.txt"); ;
+        
+        var template = Template.Parse(content);
+        var rend = template.Render(new
+        {
+            nameContext,
+            
+        }, member => member.Name);
+        context.AddSource("ApplicationDbContextGenerated.cs", SourceText.From(rend, Encoding.UTF8));
     }
     //public void Execute(GeneratorExecutionContext context)
     //{

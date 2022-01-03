@@ -7,5 +7,8 @@ global using System.Linq;
 global using System.Diagnostics;
 global using System.Collections.Immutable;
 global using Microsoft.CodeAnalysis.Text;
+global using System.IO;
+global using System.Reflection;
+
 
 
