@@ -1,4 +1,5 @@
-﻿namespace Generated;
+﻿#nullable enable
+namespace Generated;
 {{ for classLoop in classes }}
 //for {{classLoop.Name}} : props: {{classLoop.Props}} 
 public enum e{{classLoop.Name}}Columns {
@@ -91,7 +92,8 @@ end
             {{ if prop.Type.IsNullable}}
                 data=data.Where(it=>it.{{prop.Name}}==null);
             {{ else }}
-            {{ }}
+                throw new ArgumentException("{{prop.Name}} from {{classLoop.Name}} cannot be null");
+            {{ end }}
         }
         else{
         //andrei
@@ -158,13 +160,13 @@ public class SearchField{{classLoop.Name}} :  SearchField<e{{classLoop.Name}}Col
 public class OrderBy<TColumn>
     where TColumn : System.Enum
 {
-    public TColumn FieldName { get; set; }
+    public TColumn? FieldName { get; set; }
     public bool Asc { get; set; }
 }
 public class SearchField<TColumn>
     where TColumn : System.Enum
 {
-    public TColumn FieldName { get; set; }        
+    public TColumn? FieldName { get; set; }        
     public string? Value { get; set; }
     public SearchCriteria Criteria { get; set; }
          
@@ -179,8 +181,8 @@ public abstract class Search<TColumn, TClass>
         PageSize=10;
         PageNumber=1;
     }
-    public SearchField<TColumn>[] SearchFields { get; set; }
-    public OrderBy<TColumn>[] OrderBys { get; set; }
+    public SearchField<TColumn>[]? SearchFields { get; set; }
+    public OrderBy<TColumn>[]? OrderBys { get; set; }
     public int PageSize{get;set;}
     public int PageNumber{get;set;}
     public abstract IQueryable<TClass> TransformToWhere(IQueryable<TClass> data);
@@ -202,3 +204,5 @@ public enum SearchCriteria
     GreaterOrEqual,
     LessOrEqual
 }
+
+#nullable restore

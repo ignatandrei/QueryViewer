@@ -1,5 +1,11 @@
 cls
-$connection= "Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>"
+$appSettings = Get-Content -Raw -Path FastDBToGuiWebAPI/appSettings.json | ConvertFrom-Json
+
+Write-host $appSettings.ConnectionStrings.DefaultConnection
+#return
+
+#$connection= "Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>"
+$connection=$appSettings.ConnectionStrings.DefaultConnection
 $provider = "Microsoft.EntityFrameworkCore.SqlServer"
 dotnet tool restore
 cd .\FastDBToGUIWebAPI\
