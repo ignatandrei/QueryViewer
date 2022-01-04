@@ -22,8 +22,15 @@ namespace Generated;
      
 public partial class {{nameContext}}
 {
+    
     {{ for classLoop in queries }}
     // {{query}}    
+    public  IAsyncEnumerable<{{classLoop}}> SimpleSearch{{classLoop}}(SearchField<e{{classLoop}}Columns> search){
+        var s=new Search{{classLoop}}();
+         s.SearchFields = new SearchField<e{{classLoop}}Columns>[1];
+         s.SearchFields[0] = search;
+        return this.{{classLoop}}Find(s);
+    }
     public IAsyncEnumerable<{{classLoop}}> {{classLoop}}Find(Search{{classLoop}}? search){
         
         IQueryable<{{classLoop}}> data= this.{{classLoop}} ;

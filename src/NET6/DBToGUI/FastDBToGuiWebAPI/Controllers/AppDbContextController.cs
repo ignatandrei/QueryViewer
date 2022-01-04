@@ -14,7 +14,10 @@ namespace FastDBToGuiWebAPI.Controllers
         public AppDbContextController(ApplicationDbContext context)
         {
             this.context = context;
+            
+            
         }
+    
         //[HttpGet]
         //public long GetDeps()
         //{
