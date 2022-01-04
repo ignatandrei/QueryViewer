@@ -13,7 +13,7 @@ public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{cla
 {
 
     public override IOrderedQueryable<{{classLoop.Name}}> TransformToOrder(IQueryable<{{classLoop.Name}}> data){
-        if((OrderBys?.Length ??0)==0){
+        if(OrderBys == null || OrderBys.Length ==0){
            //first item
            {{ for prop in classLoop.Props  limit:1 }}
                 return data.OrderByDescending(it=>it.{{prop.Name}});
@@ -60,7 +60,7 @@ public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{cla
 
 
     public override  IQueryable<{{classLoop.Name}}> TransformToWhere(IQueryable<{{classLoop.Name}}> data){
-        if((SearchFields?.Length ??0)==0)        
+        if(SearchFields == null || SearchFields.Length ==0)        
             return data;
         var returnValue = data;
         foreach(var s in SearchFields){
@@ -88,7 +88,10 @@ end
 }}
         if(s.Value == null)
         {
-            data=data.Where(it=>it.{{prop.Name}}==null);
+            {{ if prop.Type.IsNullable}}
+                data=data.Where(it=>it.{{prop.Name}}==null);
+            {{ else }}
+            {{ }}
         }
         else{
         //andrei

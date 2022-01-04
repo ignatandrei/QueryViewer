@@ -67,7 +67,11 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                     .Members
                     .Select(it => it as PropertyDeclarationSyntax)
                     .Where(it => it != null)
-                    .Select(it=>new { Name = it.Identifier.Text, Type = it.Type.ToString() })
+                    .Select(it=>new { 
+                        Name = it.Identifier.Text, 
+                        Type = it.Type.ToString(),
+                        IsNullable= it.Type.ToString().Contains("?")
+                    })
                     .ToArray()
             })
             .GroupBy(it=>it.Name)

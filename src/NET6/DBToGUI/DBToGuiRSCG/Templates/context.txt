@@ -1,6 +1,25 @@
 ﻿
 namespace Generated;
-    
+   {{ for classLoop in queries }}
+   public partial class SearchData{{classLoop}} {
+        private {{nameContext}} context;
+        public SearchData{{classLoop}} ({{nameContext}} context) {
+            this.context=context;
+        }
+        public IAsyncEnumerable<{{classLoop}}> {{classLoop}}Find(Search{{classLoop}}? search){
+            return context.{{classLoop}}Find(search);
+        }
+        public Task<{{classLoop}}[]> {{classLoop}}FindArray( Search{{classLoop}}? search){
+            return  context.{{classLoop}}FindArray(search);
+        }
+        public Task<long> {{classLoop}}FindNumber( Search{{classLoop}} search){
+            return context.{{classLoop}}FindNumber(search);
+        }
+
+   }
+
+   {{ end }}
+     
 public partial class {{nameContext}}
 {
     {{ for classLoop in queries }}
