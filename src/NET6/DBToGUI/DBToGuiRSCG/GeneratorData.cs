@@ -53,7 +53,8 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
         }
         if (classes.Any(item => item.Identifier.ValueText == "ApplicationDbContext"))
             return;
-
+        if (classes.Any(item => item.Identifier.ValueText == "AppDbContextController"))
+            return;
         var classParent = classes.First().Parent as BaseNamespaceDeclarationSyntax;
         var nameContext = classParent.ToString();
         var content = EmbedReader.ContentFile("DBToGuiRSCG.Templates.ModelToEnum.txt"); ;
@@ -85,12 +86,23 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
                 Props = it.Value
             })
             .ToArray();
-        var rend = template.Render(new
+        try
         {
-            nameContext,
-            classes = renderClasses,
-        }, member => member.Name);
-        context.AddSource("ModelToEnum.cs", SourceText.From(rend, Encoding.UTF8));
+            var rend = template.Render(new
+            {
+                nameContext,
+                classes = renderClasses,
+            }, member => member.Name);
+            context.AddSource("ModelToEnum.cs", SourceText.From(rend, Encoding.UTF8));
+        }
+        catch (Exception sc)
+        {
+            string s = sc.Message;
+            var dd = new DiagnosticDescriptor("models", nameof(ExecuteForModels), $"{sc.Message}", "models", DiagnosticSeverity.Error, true);
+            var d = Diagnostic.Create(dd, Location.None, "andrei.txt");
+            context.ReportDiagnostic(d);
+        }
+        
     }
 
     private void GenerateFromContext(IncrementalGeneratorInitializationContext context)
@@ -146,15 +158,25 @@ public class GeneratorData : /*ISourceGenerator*/ IIncrementalGenerator
         var classParent = classes.First().Parent as ClassDeclarationSyntax;
         var nameContext = classParent.Identifier.ValueText;
         var content = EmbedReader.ContentFile("DBToGuiRSCG.Templates.context.txt"); ;
-        
+
         var template = Template.Parse(content);
-        
-        var rend = template.Render(new
+        try
         {
-            nameContext,
-            queries = classes.Select(it => it.Identifier.ValueText).ToArray(),
-        }, member => member.Name);
-        context.AddSource("ApplicationDbContextGenerated.cs", SourceText.From(rend, Encoding.UTF8));
+            var rend = template.Render(new
+            {
+                nameContext,
+                queries = classes.Select(it => it.Identifier.ValueText).ToArray(),
+            }, member => member.Name);
+
+            context.AddSource("ApplicationDbContextGenerated.cs", SourceText.From(rend, Encoding.UTF8));
+        }
+        catch (Exception sc)
+        {
+            string s = sc.Message;
+            var dd = new DiagnosticDescriptor("models", nameof(ExecuteForDbSet), $"{sc.Message}", "models", DiagnosticSeverity.Error, true);
+            var d = Diagnostic.Create(dd, Location.None, "andrei.txt");
+            context.ReportDiagnostic(d);
+        }
     }
     //public void Execute(GeneratorExecutionContext context)
     //{

@@ -1,4 +1,5 @@
 ﻿#nullable enable
+
 namespace Generated;
 {{ for classLoop in classes }}
 //for {{classLoop.Name}} : props: {{classLoop.Props}} 
@@ -86,14 +87,14 @@ end
 if "string" == prop.Type
     hasString=1
 end
-}}
+}}                                    
         if(s.Value == null)
         {
             {{ if prop.Type.IsNullable}}
                 data=data.Where(it=>it.{{prop.Name}}==null);
             {{ else }}
-                throw new ArgumentException("{{prop.Name}} from {{classLoop.Name}} cannot be null");
-            {{ end }}
+                throw new ArgumentException("{{classLoop.Name}}.{{prop.Name}} cannot be null");
+            {{ end}}
         }
         else{
         //andrei
