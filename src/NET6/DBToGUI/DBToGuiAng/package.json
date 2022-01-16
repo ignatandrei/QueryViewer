@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "prestart": "node aspnetcore-https",
-    "openapi-generator": "openapi-generator"
+    "generate": "openapi-generator-cli generate -g typescript-angular -i http://localhost:5064/swagger/v1/swagger.json -o andrei"
   },
   "private": true,
   "dependencies": {
