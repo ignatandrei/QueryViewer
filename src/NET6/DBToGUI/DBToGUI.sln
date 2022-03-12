@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastDBToGuiWebAPI", "FastDB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBToGuiRSCG", "DBToGuiRSCG\DBToGuiRSCG.csproj", "{77066BC6-0382-4834-97F0-013466E22705}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "DBToGuiAng", "DBToGuiAng\DBToGuiAng.esproj", "{852689C3-A961-4137-991F-54AB34FCDE88}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,12 +33,6 @@ Global
 		{77066BC6-0382-4834-97F0-013466E22705}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77066BC6-0382-4834-97F0-013466E22705}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77066BC6-0382-4834-97F0-013466E22705}.Release|Any CPU.Build.0 = Release|Any CPU
-		{852689C3-A961-4137-991F-54AB34FCDE88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{852689C3-A961-4137-991F-54AB34FCDE88}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{852689C3-A961-4137-991F-54AB34FCDE88}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{852689C3-A961-4137-991F-54AB34FCDE88}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{852689C3-A961-4137-991F-54AB34FCDE88}.Release|Any CPU.Build.0 = Release|Any CPU
-		{852689C3-A961-4137-991F-54AB34FCDE88}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
