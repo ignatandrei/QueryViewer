@@ -1,0 +1,209 @@
+﻿#nullable enable
+
+namespace Generated;
+{{ for classLoop in classes }}
+//for {{classLoop.Name}} : props: {{classLoop.Props}} 
+public enum e{{classLoop.Name}}Columns {
+    None = 0
+{{ for prop in classLoop.Props }}
+    ,{{prop.Name}}
+{{ end }}
+}
+
+
+public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{classLoop.Name}}>
+{
+
+    public override IOrderedQueryable<{{classLoop.Name}}> TransformToOrder(IQueryable<{{classLoop.Name}}> data){
+        if(OrderBys == null || OrderBys.Length ==0){
+           //first item
+           {{ for prop in classLoop.Props  limit:1 }}
+                return data.OrderByDescending(it=>it.{{prop.Name}});
+           {{ end }}
+        }
+        var order = OrderBys[0]!;
+        
+        IOrderedQueryable<{{classLoop.Name}}> ret;
+        switch(order.FieldName){
+        {{ for prop in classLoop.Props }}
+            case e{{classLoop.Name}}Columns.{{prop.Name}}:
+                if(order.Asc)
+                    ret = data.OrderBy(it=>it.{{prop.Name}});
+                else
+                    ret = data.OrderByDescending(it=>it.{{prop.Name}});
+                
+                break;
+        {{end}}
+            default:
+                throw new ArgumentException(" cannot order {{classLoop.Name}} by "+ order.FieldName);
+            
+        }
+        for(var i=1;i<OrderBys.Length;i++){
+            order=OrderBys[i];
+            switch(order.FieldName){
+        {{ for prop in classLoop.Props }}
+            case e{{classLoop.Name}}Columns.{{prop.Name}}:
+                if(order.Asc)
+                    ret = ret.ThenBy(it=>it.{{prop.Name}});
+                else
+                    ret = ret.ThenByDescending(it=>it.{{prop.Name}});
+                
+                break;
+        {{end}}
+            default:
+                throw new ArgumentException(" cannot order {{classLoop.Name}} by "+ order.FieldName);
+            
+        }
+        }
+        return ret;
+
+        
+    }
+
+
+    public override  IQueryable<{{classLoop.Name}}> TransformToWhere(IQueryable<{{classLoop.Name}}> data){
+        if(SearchFields == null || SearchFields.Length ==0)        
+            return data;
+        var returnValue = data;
+        foreach(var s in SearchFields){
+            switch(s.FieldName ){
+                case e{{classLoop.Name}}Columns.None :
+                    break;
+{{ for prop in classLoop.Props }}
+    case e{{classLoop.Name}}Columns.{{prop.Name}}:
+        //{{prop.Type}}
+{{ 
+hasLess = 0
+hasString=0
+if "int" == prop.Type
+    hasLess=1
+end
+if "double" == prop.Type
+    hasLess=1
+end
+if "DateTime" == prop.Type
+    hasLess=1                                
+end
+if "string" == prop.Type
+    hasString=1
+end
+}}                                    
+        if(s.Value == null)
+        {
+            {{ if prop.Type.IsNullable}}
+                data=data.Where(it=>it.{{prop.Name}}==null);
+            {{ else }}
+                throw new ArgumentException("{{classLoop.Name}}.{{prop.Name}} cannot be null");
+            {{ end}}
+        }
+        else{
+        //andrei
+            var value =({{prop.Type}})((dynamic)s.Value);
+            switch(s.Criteria){
+                    case SearchCriteria.Equal:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}==value);
+                        break;
+                    case SearchCriteria.Different:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}!=value);
+                        break;
+                    {{ if hasLess == 1 }}
+                    case SearchCriteria.Less:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}<value);
+                        break;
+                    case SearchCriteria.LessOrEqual:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}<=value);
+                        break;
+                    case SearchCriteria.Greater:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}>value);
+                        break;
+                    case SearchCriteria.GreaterOrEqual:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}>=value);
+                        break;
+                    {{end}}
+                    {{if hasString == 1}}
+                    case SearchCriteria.Contains:
+                        returnValue =returnValue.Where(it=>(it.{{prop.Name}}).Contains(value));
+                        break;
+                    case SearchCriteria.StartsWith:
+                        returnValue =returnValue.Where(it=>(it.{{prop.Name}}).StartsWith(value));
+                        break;
+                    case SearchCriteria.EndsWith:
+                        returnValue =returnValue.Where(it=>(it.{{prop.Name}}).EndsWith(value));
+                        break;
+                    {{end}}
+                    default:
+                        throw new ArgumentException($"not found {s.Criteria} for {s.FieldName} - type");
+                }
+            
+        }
+        break;
+{{ end }}
+
+                default:
+                    throw new ArgumentException("{{classLoop.Name}} has not column "+s.FieldName);
+            }
+        }
+        return data;
+    }
+
+}
+/*
+public class OrderBy{{classLoop.Name}} :  OrderBy<e{{classLoop.Name}}Columns>
+{
+}
+
+public class SearchField{{classLoop.Name}} :  SearchField<e{{classLoop.Name}}Columns>
+{
+}
+*/
+{{ end }}
+
+public class OrderBy<TColumn>
+    where TColumn : System.Enum
+{
+    public TColumn? FieldName { get; set; }
+    public bool Asc { get; set; }
+}
+public class SearchField<TColumn>
+    where TColumn : System.Enum
+{
+    public TColumn? FieldName { get; set; }        
+    public string? Value { get; set; }
+    public SearchCriteria Criteria { get; set; }
+         
+    public string? CriteriaString { get; set; }
+
+}
+public abstract class Search<TColumn, TClass>
+    where TColumn : System.Enum
+    where TClass: class
+{
+    public Search(){
+        PageSize=10;
+        PageNumber=1;
+    }
+    public SearchField<TColumn>[]? SearchFields { get; set; }
+    public OrderBy<TColumn>[]? OrderBys { get; set; }
+    public int PageSize{get;set;}
+    public int PageNumber{get;set;}
+    public abstract IQueryable<TClass> TransformToWhere(IQueryable<TClass> data);
+    public abstract IOrderedQueryable<TClass> TransformToOrder(IQueryable<TClass> data);
+    //public abstract IOrderedQueryable<TClass> TransformToPaging(IOrderedQueryable<TClass>  data);
+
+}
+
+public enum SearchCriteria
+{
+    None = 0,
+    StartsWith,
+    EndsWith,
+    Contains,
+    Equal,
+    Different,
+    Greater,
+    Less,
+    GreaterOrEqual,
+    LessOrEqual
+}
+
+#nullable restore

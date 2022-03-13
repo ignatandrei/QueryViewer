@@ -1,0 +1,47 @@
+﻿namespace DB2GUI_RDCG;
+
+internal class DBGeneratorSN : ISyntaxReceiver
+{
+    internal List<ClassDeclarationSyntax> models=new List<ClassDeclarationSyntax>();
+    internal List<PropertyDeclarationSyntax> DbContextProps = new List<PropertyDeclarationSyntax>();
+    public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
+    {
+        {
+            if (syntaxNode is ClassDeclarationSyntax cds)
+            {
+                if (syntaxNode.Parent is BaseNamespaceDeclarationSyntax ns)
+                {
+                    if (ns.Name is IdentifierNameSyntax ins)
+                    {
+                        if (ins.Identifier.Text == "Generated")
+                            models.Add(cds);
+                    }
+                }
+            }
+        }
+        {
+            if (syntaxNode is PropertyDeclarationSyntax pds)
+            {
+                
+                if (pds.Parent is ClassDeclarationSyntax cds && cds.BaseList?.Types != null && cds.BaseList.Types.Any())
+                {
+                    var bt = (pds.Parent as ClassDeclarationSyntax).BaseList.Types;
+                    if (bt.Any())
+                    {
+                        foreach (var item in bt)
+                        {
+
+                            if (item.Type is not IdentifierNameSyntax i)
+                                continue;
+
+                            if (i.Identifier.ValueText == "DbContext")
+                                DbContextProps.Add(pds);
+                        }
+
+                        
+                    }
+                }
+            }
+        }
+    }
+}

@@ -2,9 +2,9 @@
 
 namespace GeneratorFromDB
 {
-    public class Class1
+    public class DemoText
     {
-        public Class1()
+        public DemoText()
         {
             Console.WriteLine("connection string is in create.ps1");
         }

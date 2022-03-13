@@ -6,6 +6,12 @@ global using System.Linq;
 global using System.IO;
 global using System.Diagnostics;
 global using Microsoft.CodeAnalysis.Diagnostics;
+global using Microsoft.CodeAnalysis.CSharp.Syntax;
+global using System.Reflection;
+global using Scriban;
+global using Microsoft.CodeAnalysis.Text;
+
+
 
 
 

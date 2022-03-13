@@ -1,6 +1,4 @@
-﻿
-
-namespace DB2GUI_RDCG;
+﻿namespace DB2GUI_RDCG;
 
 [Generator]
 public class GeneratorData : ISourceGenerator
@@ -20,6 +18,12 @@ public class GeneratorData : ISourceGenerator
             case "CONTEXTANDCLASSES":
                 GenerateContextAndClasses(context);
                 break;
+            case "MODELS":
+                GenerateModels(context);
+                break;
+            case "DBCONTEXT":
+                GenerateForContext(context);
+                break;
             default:
                 var dd = new DiagnosticDescriptor("StepNotFound", nameof(GeneratorData), $"Step not found:"+value,"GenerateStep", DiagnosticSeverity.Error, true);
                 var d = Diagnostic.Create(dd, Location.None, "csproj");
@@ -31,6 +35,97 @@ public class GeneratorData : ISourceGenerator
         
 
     }
+
+    private void GenerateForContext(GeneratorExecutionContext context)
+    {
+        var gen = context.SyntaxReceiver as DBGeneratorSN;
+        var classes = gen.DbContextProps;
+        if (classes.Count == 0)
+        {
+            //not generated yet....
+            return;
+        }
+        var classParent = classes.First().Parent as ClassDeclarationSyntax;
+        var nameContext = classParent.Identifier.ValueText;
+        var content = EmbedReader.ContentFile("DB2GUI_RSCG.Templates.context.txt"); ;
+        var template = Template.Parse(content);
+        try
+        {
+            var rend = template.Render(new
+            {
+                nameContext,
+                queries = classes.Select(it => it.Identifier.ValueText).ToArray(),
+            }, member => member.Name);
+
+            context.AddSource("ApplicationDbContextGenerated.cs", SourceText.From(rend, Encoding.UTF8));
+        }
+        catch (Exception sc)
+        {
+            string s = sc.Message;
+            var dd = new DiagnosticDescriptor("models", nameof(GenerateForContext), $"{sc.Message}", "models", DiagnosticSeverity.Error, true);
+            var d = Diagnostic.Create(dd, Location.None, "andrei.txt");
+            context.ReportDiagnostic(d);
+        }
+
+    }
+
+    private void GenerateModels(GeneratorExecutionContext context)
+    {
+        var gen = context.SyntaxReceiver as DBGeneratorSN;
+        var classes = gen.models;
+        if(classes.Count == 0)
+        {
+            //not generated yet....
+            return;
+        }
+        var classParent = classes.First().Parent as BaseNamespaceDeclarationSyntax;
+        var nameContext = classParent.ToString();
+        var content = EmbedReader.ContentFile("DB2GUI_RSCG.Templates.ModelToEnum.txt"); ;
+        var template = Template.Parse(content);
+        var renderClasses = classes.Select(
+            it => new
+            {
+                Name = it.Identifier.ValueText,
+                Props = it
+                    .Members
+                    .Select(it => it as PropertyDeclarationSyntax)
+                    .Where(it => it != null)
+                    .Select(it => new {
+                        Name = it.Identifier.Text,
+                        Type = it.Type.ToString(),
+                        IsNullable = it.Type.ToString().Contains("?")
+                    })
+                    .ToArray()
+            })
+            .GroupBy(it => it.Name)
+            .ToDictionary(it => it.Key, v =>
+            {
+                return v.SelectMany(a => a.Props);
+            })
+            .Select(it => new
+            {
+                Name = it.Key,
+                Props = it.Value
+            })
+            .ToArray();
+        try
+        {
+            var rend = template.Render(new
+            {
+                nameContext,
+                classes = renderClasses,
+            }, member => member.Name);
+            context.AddSource("ModelToEnum.cs", SourceText.From(rend, Encoding.UTF8));
+        }
+        catch (Exception sc)
+        {
+            string s = sc.Message;
+            var dd = new DiagnosticDescriptor("models", nameof(GenerateModels), $"{sc.Message}", "models", DiagnosticSeverity.Error, true);
+            var d = Diagnostic.Create(dd, Location.None, "andrei.txt");
+            context.ReportDiagnostic(d);
+        }
+    }
+
     string obtainValueAndDiagnostic(string key, GeneratorExecutionContext context)
     {
         var val = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue($"build_property.{key}", out string value);
@@ -51,8 +146,8 @@ public class GeneratorData : ISourceGenerator
         var Provider = obtainValueAndDiagnostic("Provider", context) ?? "";
         var FolderForContext = obtainValueAndDiagnostic("FolderForContext", context) ?? "";
         var FolderForClasses = obtainValueAndDiagnostic("FolderForClasses", context) ?? "";
-
-        if ( Provider.Length * FolderForClasses.Length * FolderForContext.Length == 0)
+        var ProjectWithDesigner = obtainValueAndDiagnostic("ProjectWithDesigner", context);
+        if ( Provider.Length * FolderForClasses.Length * FolderForContext.Length * ProjectWithDesigner.Length == 0 )
             return;
 
         
@@ -69,6 +164,7 @@ public class GeneratorData : ISourceGenerator
         arguments += $" -provider {Provider}";
         arguments += $" -pathToContext {FolderForContext}";
         arguments += $" -pathToModels {FolderForClasses}";
+        arguments += $" -project {ProjectWithDesigner}";
         startInfo.Arguments = arguments;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
@@ -91,7 +187,7 @@ public class GeneratorData : ISourceGenerator
 
     public void Initialize(GeneratorInitializationContext context)
     {
-        
+        context.RegisterForSyntaxNotifications(() => new DBGeneratorSN());
     }
 }
 

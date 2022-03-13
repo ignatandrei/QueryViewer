@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -33,4 +33,13 @@
 			<TargetPathWithTargetPlatformMoniker Include="$(PKGScriban)\lib\netstandard2.0\Scriban.dll" IncludeRuntimeDependency="false" />
 		</ItemGroup>
 	</Target>
+	<ItemGroup>
+		<None Remove="Templates\context.txt" />
+		<None Remove="Templates\ModelToEnum.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Templates\ModelToEnum.txt" />
+		<EmbeddedResource Include="Templates\context.txt" />
+	</ItemGroup>
 </Project>
