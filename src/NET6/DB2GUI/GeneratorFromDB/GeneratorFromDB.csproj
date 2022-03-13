@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+	<ItemGroup>
+		<CompilerVisibleProperty Include="GenerateStep" />		
+		<CompilerVisibleProperty Include="Provider" />
+		<CompilerVisibleProperty Include="FolderForContext" />
+		<CompilerVisibleProperty Include="FolderForClasses" />
+
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\DB2GUI\DB2GUI_RSCG.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+	<PropertyGroup>
+		<GenerateStep>ContextAndClasses</GenerateStep>		
+		<Provider>Microsoft.EntityFrameworkCore.SqlServer</Provider>
+		<FolderForContext>C:\data</FolderForContext>
+		<FolderForClasses>C:\data</FolderForClasses>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
+	</ItemGroup>
+</Project>
