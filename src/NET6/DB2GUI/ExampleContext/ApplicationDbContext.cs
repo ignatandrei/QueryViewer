@@ -1,6 +1,7 @@
-﻿namespace Generated;
+﻿
+namespace Generated;
 
 public partial class ApplicationDbContext
 {
-
+    
 }
