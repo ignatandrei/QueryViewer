@@ -26,7 +26,7 @@ public partial class {{nameContext}}
     
     {{ for classLoop in queries }}
     // {{query}}    
-    public  IAsyncEnumerable<{{classLoop}}> SimpleSearch{{classLoop}}(SearchField<e{{classLoop}}Columns> search){
+    public  IAsyncEnumerable<{{classLoop}}> {{classLoop}}SimpleSearch(SearchField<e{{classLoop}}Columns> search){
         var s=new Search{{classLoop}}();
          s.SearchFields = new SearchField<e{{classLoop}}Columns>[1];
          s.SearchFields[0] = search;

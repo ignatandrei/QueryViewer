@@ -3,26 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB2GUI_RSCG", "DB2GUI\DB2GUI_RSCG.csproj", "{5F948724-1E24-49CD-824F-6EB3C635D99F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DB2GUI_RSCG", "DB2GUI\DB2GUI_RSCG.csproj", "{5F948724-1E24-49CD-824F-6EB3C635D99F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorFromDB", "GeneratorFromDB\GeneratorFromDB.csproj", "{EA8F5274-0D22-467C-AB00-3F1F45A8382D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorFromDB", "GeneratorFromDB\GeneratorFromDB.csproj", "{EA8F5274-0D22-467C-AB00-3F1F45A8382D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleModels", "ExampleModels\ExampleModels.csproj", "{21A2D749-3C78-424F-B83A-8EC670D8D316}"
-	ProjectSection(ProjectDependencies) = postProject
-		{EA8F5274-0D22-467C-AB00-3F1F45A8382D} = {EA8F5274-0D22-467C-AB00-3F1F45A8382D}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleModels", "ExampleModels\ExampleModels.csproj", "{21A2D749-3C78-424F-B83A-8EC670D8D316}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExampleApplication", "ExampleApplication", "{DCCC2845-6CC0-4C41-A85B-11F21BA4EAEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleWebAPI", "ExampleWebAPI\ExampleWebAPI.csproj", "{276E8C07-A3FB-4B89-ADD6-33F3317C1FBF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{EA8F5274-0D22-467C-AB00-3F1F45A8382D} = {EA8F5274-0D22-467C-AB00-3F1F45A8382D}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleWebAPI", "ExampleWebAPI\ExampleWebAPI.csproj", "{276E8C07-A3FB-4B89-ADD6-33F3317C1FBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleContext", "ExampleContext\ExampleContext.csproj", "{C7EF3383-4DFD-4F24-B378-7327783FE670}"
-	ProjectSection(ProjectDependencies) = postProject
-		{EA8F5274-0D22-467C-AB00-3F1F45A8382D} = {EA8F5274-0D22-467C-AB00-3F1F45A8382D}
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleContext", "ExampleContext\ExampleContext.csproj", "{C7EF3383-4DFD-4F24-B378-7327783FE670}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

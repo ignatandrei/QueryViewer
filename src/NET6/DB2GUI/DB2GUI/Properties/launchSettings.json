@@ -2,7 +2,7 @@
   "profiles": {
     "Profile 1": {
       "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\ExampleContext\\ExampleContext.csproj"
+      "targetProject": "..\\GeneratorFromDB\\GeneratorFromDB.csproj"
     }
   }
 }
