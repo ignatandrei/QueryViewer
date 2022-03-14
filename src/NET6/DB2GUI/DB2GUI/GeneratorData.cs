@@ -172,15 +172,23 @@ public class GeneratorData : ISourceGenerator
         startInfo.CreateNoWindow = true;
         var process = new Process();
         process.StartInfo = startInfo;
+        string output = "", errors = "";
+        process.OutputDataReceived += (sender, e) => { if (e.Data != null) output += e.Data; };
+        process.ErrorDataReceived += (sender, e) => { if (e.Data != null) errors += e.Data; };
+
         process.Start();
-        process.WaitForExit(2*60*1000);
-        string output = process.StandardOutput.ReadToEnd();
-        string errors = (process.StandardError.ReadToEnd()??"");
+        
+       process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+        process.WaitForExit();
+
+        //string output = process.StandardOutput.ReadToEnd();
+        //string errors = (process.StandardError.ReadToEnd()??"");
         
         if (errors.Length > 0 || output.Contains("SqlException"))
         {
             var message ="run create.ps1 with "+ arguments;
-            var dd = new DiagnosticDescriptor("PowershellError", nameof(GeneratorData), errors, "powershell", DiagnosticSeverity.Error, true, description:message);
+            var dd = new DiagnosticDescriptor("PowershellError",message, message, "powershell", DiagnosticSeverity.Error, true, description:message);
             
             var d = Diagnostic.Create(dd, Location.None, "csproj");
             context.ReportDiagnostic(d);
