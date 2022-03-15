@@ -5,6 +5,7 @@ public class GeneratorData : ISourceGenerator
 {
     public void Execute(GeneratorExecutionContext context)
     {
+        
         var val = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue($"build_property.GenerateStep", out var value);
         if (!val)
         {
@@ -24,6 +25,9 @@ public class GeneratorData : ISourceGenerator
             case "DBCONTEXT":
                 GenerateForContext(context);
                 break;
+            case "CONTROLLERS":
+                GenerateControllers(context);
+                break;
             default:
                 var dd = new DiagnosticDescriptor("StepNotFound", nameof(GeneratorData), $"Step not found:"+value,"GenerateStep", DiagnosticSeverity.Error, true);
                 var d = Diagnostic.Create(dd, Location.None, "csproj");
@@ -34,6 +38,18 @@ public class GeneratorData : ISourceGenerator
         
         
 
+    }
+
+    private void GenerateControllers(GeneratorExecutionContext context)
+    {
+        var gen = context.SyntaxReceiver as DBGeneratorSN;
+        var contexts = gen.dbcontext;
+        foreach (var item in contexts)
+        {
+            var data = context.Compilation.GetSemanticModel(item.SyntaxTree);
+            var q= data.GetTypeInfo(item);
+            var q1 = q;
+        }
     }
 
     private void GenerateForContext(GeneratorExecutionContext context)

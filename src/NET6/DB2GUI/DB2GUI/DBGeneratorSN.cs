@@ -4,8 +4,27 @@ internal class DBGeneratorSN : ISyntaxReceiver
 {
     internal List<ClassDeclarationSyntax> models=new List<ClassDeclarationSyntax>();
     internal List<PropertyDeclarationSyntax> DbContextProps = new List<PropertyDeclarationSyntax>();
+    internal List<TypeSyntax> dbcontext=new List<TypeSyntax>();
     public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
     {
+        
+        {
+            
+            if (syntaxNode is GenericNameSyntax gns && syntaxNode.ToFullString().Contains("AddDbContext"))
+            {
+                //if (syntaxNode is MemberAccessExpressionSyntax maes)
+                //{
+                //    var x = maes.Name;
+                //}
+                //if (syntaxNode is GenericNameSyntax gns)
+                {
+                    
+                    var argContext=gns.TypeArgumentList.Arguments.First();
+                    dbcontext.Add(argContext);
+
+                }
+            }
+        }
         {
             if (syntaxNode is ClassDeclarationSyntax cds)
             {
