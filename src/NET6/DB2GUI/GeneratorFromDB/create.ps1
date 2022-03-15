@@ -5,15 +5,20 @@ param (
 [Parameter(Mandatory)][string]$project
 )
  
-$connection="Data Source=.;Initial Catalog=tests;UId=sa1;pwd=yourStrong(!)Password"
+$connection="Data Source=.;Initial Catalog=test1;UId=sa1;pwd=yourStrong(!)Password"
  
 dotnet tool restore
 
-$folder= $pathToModels
-$folder = Resolve-Path $folder  -ErrorAction SilentlyContinue -ErrorVariable _frperror
-if (-not($folder)) {
-        $folder = $_frperror[0].TargetObject
-    }
+#$folder= $pathToModels
+#$folder = Resolve-Path $folder  -ErrorAction SilentlyContinue -ErrorVariable _frperror
+#if (-not($folder)) {
+#        $folder = $_frperror[0].TargetObject
+#}
+
+Remove-Item -LiteralPath $pathToModels -Force -Recurse -ErrorAction SilentlyContinue 
+Remove-Item -LiteralPath $pathToContext -Force -Recurse -ErrorAction SilentlyContinue 
+
+
 Write-Host "finding project with context " $folder
 
 

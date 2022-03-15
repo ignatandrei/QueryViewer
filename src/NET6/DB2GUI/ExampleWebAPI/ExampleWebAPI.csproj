@@ -12,6 +12,7 @@
 	  <PackageReference Include="SkinnyControllersGenerator" Version="2021.25.6.855" />
 
   </ItemGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
 			<PrivateAssets>all</PrivateAssets>
@@ -22,4 +23,15 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\ExampleContext\ExampleContext.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DB2GUI\DB2GUI_RSCG.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+	<ItemGroup>
+		<CompilerVisibleProperty Include="GenerateStep" />
+
+	</ItemGroup>
+	<PropertyGroup>
+		<GenerateStep>Controllers</GenerateStep>
+	</PropertyGroup>
 </Project>
