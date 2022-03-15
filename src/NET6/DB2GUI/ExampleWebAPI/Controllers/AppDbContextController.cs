@@ -5,7 +5,7 @@ using SkinnyControllersCommon;
 
 namespace ExampleWebAPI.Controllers
 {
-    [AutoActions(template = TemplateIndicator.AllPost, FieldsName = new[] { "*" }, ExcludeFields = new[] { "_logger" })]
+    [AutoActions(template = TemplateIndicator.NoArgs_Is_Get_Else_Post, FieldsName = new[] { "*" }, ExcludeFields = new[] { "_logger" })]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public partial class AppDbContextController : ControllerBase

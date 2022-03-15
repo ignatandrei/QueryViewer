@@ -5,7 +5,7 @@ param (
 [Parameter(Mandatory)][string]$project
 )
  
-$connection="Data Source=.;Initial Catalog=tests;UId=sa;;pwd=yourStrong(!)Password"
+$connection="Data Source=.;Initial Catalog=tests;UId=sa1;pwd=yourStrong(!)Password"
  
 dotnet tool restore
 
