@@ -20,4 +20,9 @@
 	<PropertyGroup>
 		<GenerateStep>DbContext</GenerateStep>
 	</PropertyGroup>
+
+<PropertyGroup>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)GeneratedX</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
 </Project>

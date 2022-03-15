@@ -187,7 +187,7 @@ public class GeneratorData : ISourceGenerator
         
         if (errors.Length > 0 || output.Contains("SqlException"))
         {
-            var message ="run create.ps1 with "+ arguments;
+            var message ="run powershell with "+ arguments;
             var dd = new DiagnosticDescriptor("PowershellError",message, message, "powershell", DiagnosticSeverity.Error, true, description:message);
             
             var d = Diagnostic.Create(dd, Location.None, "csproj");
