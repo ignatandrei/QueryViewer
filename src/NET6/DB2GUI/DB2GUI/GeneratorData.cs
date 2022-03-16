@@ -57,15 +57,21 @@ public class GeneratorData : ISourceGenerator
 
             var tn = ti.Type;
             var members= tn.GetMembers();
+            var content = EmbedReader.ContentFile("DB2GUI_RSCG.Templates.controller.txt"); ;
+            var template = Template.Parse(content);
 
             foreach (var member in members)
             {
 
                 if (member is IPropertySymbol ps)
                 {
+                    var t=new { Name =ps.Name};
+                    var rend = template.Render(new
+                    {
+                        table = t                        
+                    }, member => member.Name);
 
-                    var q = ps.Name;
-                    q += "asd";
+                    context.AddSource($"{ps.Name}Generated.cs", SourceText.From(rend, Encoding.UTF8));
                 }
 
 
