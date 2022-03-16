@@ -8,7 +8,7 @@ namespace Generated;
 
 [Route("api/[controller]")]
 [ApiController]
-public partial class {{table.Name}}Controller : ControllerBase
+public partial class {{table.Name}}_Generated_Controller : ControllerBase
 {
     private ApplicationDbContext  _context ;
     public {{table.Name}}Controller(ApplicationDbContext context){
