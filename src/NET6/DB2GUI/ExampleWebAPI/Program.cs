@@ -1,5 +1,6 @@
 using Generated;
 using Microsoft.EntityFrameworkCore;
+using NetCore2BlocklyNew;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,9 +28,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseBlocklyUI(app.Environment);
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseBlocklyAutomation();
 app.Run();

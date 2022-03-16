@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NetCore2Blockly" Version="5.2022.210.2007" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 	  <PackageReference Include="SkinnyControllersCommon" Version="2021.25.6.855" />
 	  <PackageReference Include="SkinnyControllersGenerator" Version="2021.25.6.855" />

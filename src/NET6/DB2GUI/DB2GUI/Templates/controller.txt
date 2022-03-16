@@ -40,17 +40,24 @@ public partial class {{table.Name}}Controller : ControllerBase
         await _context.SaveChangesAsync();
         return true; 
     } 
-    
+    [HttpPut]
+    public async Task<bool> Put({{table.Name}} val){        
+        var item=await 
+            _context.{{table.Name}}
+                .Where(it=>it.{{ firstKey.Name}} == val.{{ firstKey.Name}})
+                .FirstOrDefaultAsync();
+        if(item == null)
+            return false;
+
+        item.CopyFrom(val);        
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
     {{else}}
     //generate just for keys 1, not for {{numberKeys}}
     {{ end }}
-     [HttpPut]
-    public async Task<{{table.Name}}> Put({{table.Name}} val){        
-        _context.Add(val).State=EntityState.Modified;
-        await _context.SaveChangesAsync();
-        return val;
-    }
+     
     [HttpPost]
     public async Task<{{table.Name}}> Post({{table.Name}} val){
         _context.{{table.Name}}.Add(val);
