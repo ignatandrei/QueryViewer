@@ -57,7 +57,7 @@ public class GeneratorData : ISourceGenerator
 
             var tn = ti.Type;
             var members= tn.GetMembers();
-            var content = EmbedReader.ContentFile("DB2GUI_RSCG.Templates.controller.txt"); ;
+            var content = EmbedReader.ContentFile("DB2GUI_RSCG.Templates.controller.txt"); 
             var template = Template.Parse(content);
 
             foreach (var member in members)
@@ -65,11 +65,47 @@ public class GeneratorData : ISourceGenerator
 
                 if (member is IPropertySymbol ps)
                 {
+                    
+                    var typeDbSet = ps.Type;
+                    INamedTypeSymbol a =typeDbSet as INamedTypeSymbol;
+                    var model = a.TypeArguments.First() as INamedTypeSymbol;
+                    var membersModel=model .GetMembers();
+                    List< IPropertySymbol > keys=new List<IPropertySymbol>();
+                    foreach(var m in membersModel)
+                    {
+                        if (m is not IPropertySymbol ips)
+                            continue;
+                        
+                        var atts = m.GetAttributes();
+                        if (atts.Length == 0)
+                            continue;
+                        foreach(var att in atts)
+                        {
+                            var cls= att.AttributeClass as INamedTypeSymbol;
+                            var s = cls?.Name;
+                            if(s == "Key" || s=="KeyAttribute")
+                            {
+                                keys.Add(ips);
+                                continue;
+                            }
+
+                            
+                        }
+                    }
+
                     var t=new { Name =ps.Name};
                     var rend = template.Render(new
                     {
-                        table = t                        
-                    }, member => member.Name);
+                        table = t ,
+                        numberKeys=keys.Count,
+                        keys=keys.Select(it=>new { it.Name, TypeName= it.Type.Name }).ToArray(),
+                        firstKey = new
+                        {
+                            keys.FirstOrDefault()?.Name,
+                            TypeName = keys.FirstOrDefault()?.Type?.Name
+                        }
+
+                        }, member => member.Name);
 
                     context.AddSource($"{ps.Name}Generated.cs", SourceText.From(rend, Encoding.UTF8));
                 }

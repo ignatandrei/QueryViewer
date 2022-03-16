@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿
+
+#nullable enable
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +19,46 @@ public partial class {{table.Name}}Controller : ControllerBase
     public IAsyncEnumerable<{{table.Name}}> GetAll(){
         return _context.{{table.Name}}.AsAsyncEnumerable();
     }
+    {{ if numberKeys == 1  }}
+    [HttpGet("{{ firstKey.Name}}")]
+    public Task<{{table.Name}}> GetFromId({{firstKey.TypeName}} {{ firstKey.Name}}){
+        return 
+            _context.{{table.Name}}
+                .Where(it=>it.{{ firstKey.Name}} == {{ firstKey.Name}})
+                .FirstOrDefaultAsync();
+    } 
+    [HttpDelete("{{ firstKey.Name}}")]
+    public async Task<bool> Delete({{firstKey.TypeName}} {{ firstKey.Name}}){
+        var item=await 
+            _context.{{table.Name}}
+                .Where(it=>it.{{ firstKey.Name}} == {{ firstKey.Name}})
+                .FirstOrDefaultAsync();
+        if(item == null)
+            return false;
 
+        _context.{{table.Name}}.Remove(item);
+        await _context.SaveChangesAsync();
+        return true; 
+    } 
+    
+
+    {{else}}
+    //generate just for keys 1, not for {{numberKeys}}
+    {{ end }}
+     [HttpPut]
+    public async Task<{{table.Name}}> Put({{table.Name}} val){        
+        _context.Add(val).State=EntityState.Modified;
+        await _context.SaveChangesAsync();
+        return val;
+    }
     [HttpPost]
     public async Task<{{table.Name}}> Post({{table.Name}} val){
         _context.{{table.Name}}.Add(val);
         await _context.SaveChangesAsync();
         return val;
     }
-
+   
+   
    
 
 
