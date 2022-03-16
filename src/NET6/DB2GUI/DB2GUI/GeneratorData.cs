@@ -1,4 +1,7 @@
-﻿namespace DB2GUI_RDCG;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+
+namespace DB2GUI_RDCG;
 
 [Generator]
 public class GeneratorData : ISourceGenerator
@@ -47,8 +50,37 @@ public class GeneratorData : ISourceGenerator
         foreach (var item in contexts)
         {
             var data = context.Compilation.GetSemanticModel(item.SyntaxTree);
-            var q= data.GetTypeInfo(item);
-            var q1 = q;
+            var ti= data.GetTypeInfo(item);
+            //var orig = ti.ConvertedType;
+            //var morig = orig.GetMembers().First();
+            //var moirig = orig.GetTypeMembers();
+
+            var tn = ti.Type;
+            var members= tn.GetMembers();
+
+            foreach (var member in members)
+            {
+
+                if (member is IPropertySymbol ps)
+                {
+
+                    var q = ps.Name;
+                    q += "asd";
+                }
+
+
+
+            }
+            //var tn2 = tn.GetTypeMembers();
+
+            //var a = data.GetSymbolInfo(item);
+            //var s2 = a.Symbol;
+            
+            //var s = context.Compilation.GetTypeByMetadataName(orig.ToDisplayString());
+            //var m = s.GetTypeMembers();
+            //var m1=s.GetMembers().First();            
+            var str = "1";
+            str += "2";
         }
     }
 
@@ -201,7 +233,7 @@ public class GeneratorData : ISourceGenerator
         //string output = process.StandardOutput.ReadToEnd();
         //string errors = (process.StandardError.ReadToEnd()??"");
         
-        if (errors.Length > 0 || output.Contains("SqlException"))
+        if (errors.Length > 0 || output.Contains("SqlException") || output.Contains("Build failed"))
         {
             var message ="run powershell with "+ arguments;
             var dd = new DiagnosticDescriptor("PowershellError",message, message, "powershell", DiagnosticSeverity.Error, true, description:message);
