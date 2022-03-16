@@ -4,14 +4,33 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 namespace Generated;
 
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 [ApiController]
 public partial class {{table.Name}}Controller : ControllerBase
 {
-    [HttpGet]
-    public string Metadata(){
-        return "{{table.Name}}";
+    private ApplicationDbContext  _context ;
+    public {{table.Name}}Controller(ApplicationDbContext context){
+        _context=context;
     }
+
+    [HttpGet]
+    public IAsyncEnumerable<{{table.Name}}> GetAll(){
+        return _context.{{table.Name}}.AsAsyncEnumerable();
+    }
+
+    [HttpPost]
+    public async Task<{{table.Name}}> Post({{table.Name}} val){
+        _context.{{table.Name}}.Add(val);
+        await _context.SaveChangesAsync();
+        return val;
+    }
+
+   
+
+
+  
+
+    
 }
    
     

@@ -13,6 +13,10 @@
 		<CompilerVisibleProperty Include="GenerateStep" />
 
 	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
+	  <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+	</ItemGroup>
 	<PropertyGroup>
 		<GenerateStep>Models</GenerateStep>
 	</PropertyGroup>
