@@ -180,7 +180,7 @@ public class SearchField<TColumn>
     public string? Value { get; set; }
     public SearchCriteria Criteria { get; set; }
          
-    public string? CriteriaString { get; set; }
+    //public string? CriteriaString { get; set; }
 
 }
 public abstract class Search<TColumn, TClass>

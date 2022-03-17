@@ -64,15 +64,50 @@ public partial class {{table.Name}}Controller : ControllerBase
         await _context.SaveChangesAsync();
         return val;
     }
-   
-   
-   
-
-
-  
-
     
 }
-   
+
+[Route("api/[controller]/[action]")]
+[ApiController]
+
+public partial class {{table.Name}}MetadataController : ControllerBase
+{
+    [HttpGet]
+    public string Name(){
+        return "{{table.Name}}";
+    }
+    [HttpGet]
+    public KeyValuePair<int,string>[] Columns(){
+        return Enum.GetValues<e{{table.Name}}Columns>()
+          .Select(it=>new KeyValuePair<int,string>((int)it,it.ToString()))
+                .ToArray();        
+        ;
+    }
+
+}
+
+[Route("api/[controller]/[action]")]
+[ApiController]
+
+public partial class {{table.Name}}XController : ControllerBase
+{
+    private ApplicationDbContext  _context ;
+    public {{table.Name}}XController(ApplicationDbContext context){
+        _context=context;
+    }
+
+    [HttpPost]
+    public IAsyncEnumerable<{{table.Name}}> SimpleSearch(SearchField<e{{table.Name}}Columns> search){
+            return _context.{{table.Name}}SimpleSearch(search);
+        }
+    [HttpPost]
+    public IAsyncEnumerable<{{table.Name}}> AdvancedSearch(Search{{table.Name}} search){
+            return _context.{{table.Name}}Find_AsyncEnumerable(search);
+        }
+    [HttpPost]
+    public Task<long> Count(Search{{table.Name}} search){
+            return _context.{{table.Name}}Count(search);
+        }
+}
     
 #nullable restore
