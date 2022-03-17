@@ -110,14 +110,22 @@ public partial class {{table.Name}}XController : ControllerBase
         }
 
     {{ for col in cols}}
-    [HttpGet("{%{{}%}Criteria{%{}}%}/{%{{}%}value{%{}}%}")]
-    public IAsyncEnumerable<{{table.Name}}> Search_{{col.Name}}(SearchCriteria Criteria , {{col.TypeName}} value){
+    [HttpGet("{Criteria}/{value}/{pageSize?}/{pageNumber?}")]
+    public IAsyncEnumerable<{{table.Name}}> Search_{{col.Name}}(SearchCriteria Criteria , {{col.TypeName}} value, int? pageSize, int? pageNumber){
             System.Diagnostics.Debugger.Break();
+             
             var search =new SearchField<e{{table.Name}}Columns>();
             search.FieldName = e{{table.Name}}Columns.{{col.Name}};
             search.Value=value.ToString();
             search.Criteria=Criteria;
-            return this.Search(search);
+           
+
+            var s=new Search{{table.Name}}();
+            s.SearchFields = new SearchField<e{{table.Name}}Columns>[1];
+            s.SearchFields[0] = search;
+            s.PageSize = pageSize??10;
+            s.PageNumber = pageNumber??1;  
+            return this.AdvancedSearch(s);
         }
     {{ end }}
     [HttpPost]
