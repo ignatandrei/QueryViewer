@@ -8,7 +8,7 @@ namespace Generated;
 
 [Route("api/[controller]")]
 [ApiController]
-public partial class {{table.Name}}_Generated_Controller : ControllerBase
+public partial class {{table.Name}}Controller : ControllerBase
 {
     private ApplicationDbContext  _context ;
     public {{table.Name}}Controller(ApplicationDbContext context){
@@ -20,14 +20,14 @@ public partial class {{table.Name}}_Generated_Controller : ControllerBase
         return _context.{{table.Name}}.AsAsyncEnumerable();
     }
     {{ if numberKeys == 1  }}
-    [HttpGet("{{ firstKey.Name}}")]
+    [HttpGet("{%{{}%}{{ firstKey.Name}}{%{}}%}")]
     public Task<{{table.Name}}> GetFromId({{firstKey.TypeName}} {{ firstKey.Name}}){
         return 
             _context.{{table.Name}}
                 .Where(it=>it.{{ firstKey.Name}} == {{ firstKey.Name}})
                 .FirstOrDefaultAsync();
     } 
-    [HttpDelete("{{ firstKey.Name}}")]
+    [HttpDelete("{%{{}%}{{ firstKey.Name}}{%{}}%}")]
     public async Task<bool> Delete({{firstKey.TypeName}} {{ firstKey.Name}}){
         var item=await 
             _context.{{table.Name}}
