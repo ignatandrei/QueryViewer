@@ -71,11 +71,14 @@ public class GeneratorData : ISourceGenerator
                     var model = a.TypeArguments.First() as INamedTypeSymbol;
                     var membersModel=model .GetMembers();
                     List< IPropertySymbol > keys=new List<IPropertySymbol>();
-                    foreach(var m in membersModel)
+                    List<IPropertySymbol> cols = new List<IPropertySymbol>();
+                    foreach (var m in membersModel)
                     {
                         if (m is not IPropertySymbol ips)
                             continue;
-                        
+                        if (ips.Type.Name == "ICollection")
+                            continue;
+                        cols.Add(ips);
                         var atts = m.GetAttributes();
                         if (atts.Length == 0)
                             continue;
@@ -103,9 +106,9 @@ public class GeneratorData : ISourceGenerator
                         {
                             keys.FirstOrDefault()?.Name,
                             TypeName = keys.FirstOrDefault()?.Type?.Name
-                        }
-
-                        }, member => member.Name);
+                        },
+                        cols = cols.Select(it => new { it.Name, TypeName = it.Type.Name }).ToArray(),
+                    }, member => member.Name);
 
                     context.AddSource($"{ps.Name}Generated.cs", SourceText.From(rend, Encoding.UTF8));
                 }

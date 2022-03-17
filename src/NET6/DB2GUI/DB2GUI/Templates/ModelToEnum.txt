@@ -107,7 +107,14 @@ end
         }
         else{
         //andrei
-            var value =({{prop.Type}})((dynamic)s.Value);
+            {{ if prop.Type == "long" || prop.Type == "int" }} 
+                var value = {{prop.Type}}.Parse(s.Value);
+            {{ else if prop.Type == "string" }}
+                var value = s.Value;
+            {{ else }}
+                var value =({{prop.Type}})((dynamic)s.Value);
+            {{ end}}  
+            
             switch(s.Criteria){
                     case SearchCriteria.Equal:
                         returnValue =returnValue.Where(it=>it.{{prop.Name}}==value);
@@ -141,7 +148,7 @@ end
                         break;
                     {{end}}
                     default:
-                        throw new ArgumentException($"not found {s.Criteria} for {s.FieldName} - type");
+                        throw new ArgumentException($"not found Criteria {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
                 }
             
         }
@@ -152,7 +159,7 @@ end
                     throw new ArgumentException("{{classLoop.Name}} has not column "+s.FieldName);
             }
         }
-        return data;
+        return returnValue;
     }
 
 }

@@ -83,6 +83,14 @@ public partial class {{table.Name}}MetadataController : ControllerBase
                 .ToArray();        
         ;
     }
+    [HttpGet]
+    public KeyValuePair<int,string>[] SearchCriteria(){
+        return Enum.GetValues<SearchCriteria>()
+          .Select(it=>new KeyValuePair<int,string>((int)it,it.ToString()))
+                .ToArray();        
+        ;
+    }
+    
 
 }
 
@@ -95,11 +103,23 @@ public partial class {{table.Name}}XController : ControllerBase
     public {{table.Name}}XController(ApplicationDbContext context){
         _context=context;
     }
-
+    
     [HttpPost]
-    public IAsyncEnumerable<{{table.Name}}> SimpleSearch(SearchField<e{{table.Name}}Columns> search){
+    public IAsyncEnumerable<{{table.Name}}> Search(SearchField<e{{table.Name}}Columns> search){
             return _context.{{table.Name}}SimpleSearch(search);
         }
+
+    {{ for col in cols}}
+    [HttpGet("{%{{}%}Criteria{%{}}%}/{%{{}%}value{%{}}%}")]
+    public IAsyncEnumerable<{{table.Name}}> Search_{{col.Name}}(SearchCriteria Criteria , {{col.TypeName}} value){
+            System.Diagnostics.Debugger.Break();
+            var search =new SearchField<e{{table.Name}}Columns>();
+            search.FieldName = e{{table.Name}}Columns.{{col.Name}};
+            search.Value=value.ToString();
+            search.Criteria=Criteria;
+            return this.Search(search);
+        }
+    {{ end }}
     [HttpPost]
     public IAsyncEnumerable<{{table.Name}}> AdvancedSearch(Search{{table.Name}} search){
             return _context.{{table.Name}}Find_AsyncEnumerable(search);
