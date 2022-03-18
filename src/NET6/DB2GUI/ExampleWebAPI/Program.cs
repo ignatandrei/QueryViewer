@@ -1,3 +1,4 @@
+using AMSWebAPI;
 using Generated;
 using Microsoft.EntityFrameworkCore;
 using NetCore2BlocklyNew;
@@ -32,5 +33,6 @@ app.UseBlocklyUI(app.Environment);
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseAMS();
 app.UseBlocklyAutomation();
 app.Run();

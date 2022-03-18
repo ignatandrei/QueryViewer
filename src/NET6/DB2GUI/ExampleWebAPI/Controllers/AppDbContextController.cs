@@ -5,9 +5,9 @@ using SkinnyControllersCommon;
 
 namespace ExampleWebAPI.Controllers
 {
-    [AutoActions(template = TemplateIndicator.NoArgs_Is_Get_Else_Post, FieldsName = new[] { "*" }, ExcludeFields = new[] { "_logger" })]
+    //[AutoActions(template = TemplateIndicator.NoArgs_Is_Get_Else_Post, FieldsName = new[] { "*" }, ExcludeFields = new[] { "_logger" })]
     [Route("api/[controller]/[action]")]
-    [ApiController]
+    [ApiController]   
     public partial class AppDbContextController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -16,9 +16,19 @@ namespace ExampleWebAPI.Controllers
         {
             this.context = context;
             
+              
             
         }
-        
-    
-    }
+        //[HttpPost]
+        //public string Test()
+        //{
+        //    SearchDepartment av;
+        //    SearchField<eDepartmentColumns> a;
+        //    return "dasd";    
+               
+        //}
+
+
+
+}
 }
