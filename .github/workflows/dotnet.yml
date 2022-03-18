@@ -1,0 +1,47 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: |
+        cd src 
+        cd NET6
+        cd DB2GUI
+        dotnet restore
+    - name: Build
+      run: |
+        cd src 
+        cd NET6
+        cd DB2GUI
+        cd DB2GUI
+        dotnet build --no-restore
+    - name: pack
+      run: | 
+        cd src 
+        cd NET6
+        cd DB2GUI
+        cd DB2GUI
+        dotnet build --no-restore
+        dotnet pack -o nugetPackages --no-build --include-symbols --include-source 
+    - name: 'Upload nuget'
+      uses: actions/upload-artifact@v2
+      with:
+        name: DB2GUI_${{github.run_number}}
+        path: src/NET6/DB2GUI/DB2GUI/nugetPackages
+        retention-days: 1
+        
