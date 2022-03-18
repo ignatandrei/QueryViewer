@@ -25,19 +25,19 @@ public class GeneratorData : ISourceGenerator
                 break;
             case "MODELS":
                 {
-                    var template = FromValue(value);
+                    var template = FromValue(context,value);
                     GenerateModels(context, template);
                 }
                 break;
             case "CONTEXT":
                 {
-                    var template = FromValue(value);
+                    var template = FromValue(context, value);
                     GenerateForContext(context, template);
                 }
                 break;
             case "CONTROLLER":
                 {
-                    var template = FromValue(value);
+                    var template = FromValue(context, value);
                     GenerateControllers(context,template);
                 }
                 break;
@@ -53,13 +53,39 @@ public class GeneratorData : ISourceGenerator
 
     }
 
-    private Template FromValue(string val)
+    private Template FromValue(GeneratorExecutionContext context, string val)
     {
-        val= val.ToLower();
-        var content = EmbedReader.ContentFile($"DB2GUI_RSCG.Templates.{val}.txt"); ;
-        var template = Template.Parse(content);
-        return template;
+        try
+        {
+            val = val.ToLower();
+            var content = "";
+            var file = context.AdditionalFiles.Where(it => it.Path.EndsWith($"{val}.txt"))
+                    .Select(it => it.GetText())
+                    .FirstOrDefault();
+
+            if (file != null)
+            {
+                content = string.Join(Environment.NewLine, file.Lines.Select(it => it.ToString()));
+            }
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                content = EmbedReader.ContentFile($"DB2GUI_RSCG.Templates.{val}.txt"); ;
+            }
+            var template = Template.Parse(content);
+            return template;
+        }
+        catch (Exception ex)
+        {
+
+            string s = ex.Message;
+            var dd = new DiagnosticDescriptor("FromValue", nameof(FromValue), $"{ex.Message}", "models", DiagnosticSeverity.Error, true);
+            var d = Diagnostic.Create(dd, Location.None, $"{val}.txt");
+            context.ReportDiagnostic(d);
+            throw;
+        }
     }
+    
 
     private void GenerateControllers(GeneratorExecutionContext context, Template template)
     {
