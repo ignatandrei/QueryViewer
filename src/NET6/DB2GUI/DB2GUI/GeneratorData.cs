@@ -6,6 +6,7 @@ namespace DB2GUI_RDCG;
 [Generator]
 public class GeneratorData : ISourceGenerator
 {
+
     public void Execute(GeneratorExecutionContext context)
     {
         
@@ -23,13 +24,22 @@ public class GeneratorData : ISourceGenerator
                 GenerateContextAndClasses(context);
                 break;
             case "MODELS":
-                GenerateModels(context);
+                {
+                    var template = FromValue(value);
+                    GenerateModels(context, template);
+                }
                 break;
-            case "DBCONTEXT":
-                GenerateForContext(context);
+            case "CONTEXT":
+                {
+                    var template = FromValue(value);
+                    GenerateForContext(context, template);
+                }
                 break;
-            case "CONTROLLERS":
-                GenerateControllers(context);
+            case "CONTROLLER":
+                {
+                    var template = FromValue(value);
+                    GenerateControllers(context,template);
+                }
                 break;
             default:
                 var dd = new DiagnosticDescriptor("StepNotFound", nameof(GeneratorData), $"Step not found:"+value,"GenerateStep", DiagnosticSeverity.Error, true);
@@ -43,7 +53,15 @@ public class GeneratorData : ISourceGenerator
 
     }
 
-    private void GenerateControllers(GeneratorExecutionContext context)
+    private Template FromValue(string val)
+    {
+        val= val.ToLower();
+        var content = EmbedReader.ContentFile($"DB2GUI_RSCG.Templates.{val}.txt"); ;
+        var template = Template.Parse(content);
+        return template;
+    }
+
+    private void GenerateControllers(GeneratorExecutionContext context, Template template)
     {
         var gen = context.SyntaxReceiver as DBGeneratorSN;
         var contexts = gen.dbcontext;
@@ -57,9 +75,7 @@ public class GeneratorData : ISourceGenerator
 
             var tn = ti.Type;
             var members= tn.GetMembers();
-            var content = EmbedReader.ContentFile("DB2GUI_RSCG.Templates.controller.txt"); 
-            var template = Template.Parse(content);
-
+            
             foreach (var member in members)
             {
 
@@ -129,7 +145,7 @@ public class GeneratorData : ISourceGenerator
         }
     }
 
-    private void GenerateForContext(GeneratorExecutionContext context)
+    private void GenerateForContext(GeneratorExecutionContext context,Template template)
     {
         var gen = context.SyntaxReceiver as DBGeneratorSN;
         var classes = gen.DbContextProps;
@@ -140,8 +156,7 @@ public class GeneratorData : ISourceGenerator
         }
         var classParent = classes.First().Parent as ClassDeclarationSyntax;
         var nameContext = classParent.Identifier.ValueText;
-        var content = EmbedReader.ContentFile("DB2GUI_RSCG.Templates.context.txt"); ;
-        var template = Template.Parse(content);
+        
         try
         {
             var rend = template.Render(new
@@ -162,7 +177,7 @@ public class GeneratorData : ISourceGenerator
 
     }
 
-    private void GenerateModels(GeneratorExecutionContext context)
+    private void GenerateModels(GeneratorExecutionContext context, Template template)
     {
         var gen = context.SyntaxReceiver as DBGeneratorSN;
         var classes = gen.models;
@@ -173,8 +188,7 @@ public class GeneratorData : ISourceGenerator
         }
         var classParent = classes.First().Parent as BaseNamespaceDeclarationSyntax;
         var nameContext = classParent.ToString();
-        var content = EmbedReader.ContentFile("DB2GUI_RSCG.Templates.ModelToEnum.txt"); ;
-        var template = Template.Parse(content);
+       
         var renderClasses = classes.Select(
             it => new
             {
@@ -271,7 +285,7 @@ public class GeneratorData : ISourceGenerator
 
         process.Start();
         
-       process.BeginOutputReadLine();
+        process.BeginOutputReadLine();
         process.BeginErrorReadLine();
         process.WaitForExit();
 

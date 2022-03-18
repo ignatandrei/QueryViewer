@@ -34,12 +34,12 @@
 	<ItemGroup>
 		<None Remove="Templates\context.txt" />
 		<None Remove="Templates\controller.txt" />
-		<None Remove="Templates\ModelToEnum.txt" />
+		<None Remove="Templates\models.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Include="Templates\controller.txt" />
-		<EmbeddedResource Include="Templates\ModelToEnum.txt" />
+		<EmbeddedResource Include="Templates\models.txt" />
 		<EmbeddedResource Include="Templates\context.txt" />
 	</ItemGroup>
 

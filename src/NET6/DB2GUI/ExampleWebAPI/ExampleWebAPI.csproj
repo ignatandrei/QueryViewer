@@ -34,7 +34,7 @@
 
 	</ItemGroup>
 	<PropertyGroup>
-		<GenerateStep>Controllers</GenerateStep>
+		<GenerateStep>Controller</GenerateStep>
 	</PropertyGroup>
 	<PropertyGroup>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
