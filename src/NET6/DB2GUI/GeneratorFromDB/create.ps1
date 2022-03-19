@@ -4,7 +4,7 @@ param (
 [Parameter(Mandatory)][string]$provider,
 [Parameter(Mandatory)][string]$project
 )
- 
+//modify here and in WebAPI appsettings.json  
 $connection="Data Source=.;Initial Catalog=MyTestDatabase;UId=sa1;pwd=yourStrong(!)Password"
  
 dotnet tool restore
