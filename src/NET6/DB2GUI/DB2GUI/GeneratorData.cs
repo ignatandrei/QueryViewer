@@ -143,13 +143,13 @@ public class GeneratorData : ISourceGenerator
                     {
                         table = t ,
                         numberKeys=keys.Count,
-                        keys=keys.Select(it=>new { it.Name, TypeName= it.Type.Name }).ToArray(),
+                        keys=keys.Select(it=>new { it.Name, TypeName= (it.Type as INamedTypeSymbol).ToDisplayString() }).ToArray(),
                         firstKey = new
                         {
                             keys.FirstOrDefault()?.Name,
                             TypeName = keys.FirstOrDefault()?.Type?.Name
                         },
-                        cols = cols.Select(it => new { it.Name, TypeName = it.Type.Name }).ToArray(),
+                        cols = cols.Select(it => new { it.Name, TypeName = (it.Type as INamedTypeSymbol).ToDisplayString() }).ToArray(),
                     }, member => member.Name);
 
                     context.AddSource($"{ps.Name}Generated.cs", SourceText.From(rend, Encoding.UTF8));
@@ -325,8 +325,16 @@ public class GeneratorData : ISourceGenerator
             
             var d = Diagnostic.Create(dd, Location.None, "csproj");
             context.ReportDiagnostic(d);
+            var tempFile=  Path.GetTempFileName()+".txt";
+            File.WriteAllText(tempFile, output);
+            message = tempFile;
+            dd = new DiagnosticDescriptor("PowershellError", message, message, "powershell", DiagnosticSeverity.Error, true, description: message);
+
+            d = Diagnostic.Create(dd, Location.None, "csproj");
+            context.ReportDiagnostic(d);
+
         }
-       
+
     }
 
     public void Initialize(GeneratorInitializationContext context)
