@@ -93,7 +93,7 @@ end
 if "DateTime" == prop.Type
     hasLess=1                                
 end
-if "string" == prop.Type
+if "string" == prop.Type || "string?" == prop.Type
     hasString=1
 end
 }}                                    
@@ -106,11 +106,17 @@ end
             {{ end}}
         }
         else{
-        //andrei
+        
             {{ if prop.Type == "long" || prop.Type == "int" }} 
                 var value = {{prop.Type}}.Parse(s.Value);
-            {{ else if prop.Type == "string" }}
+            {{ else if prop.Type == "long?" || prop.Type == "int?"  }} 
+                {{prop.Type}} value= null;
+                if(s.Value != null){
+                    value= {{prop.Type  | string.remove "?" }}.Parse(s.Value);
+                }
+            {{ else if prop.Type == "string" || prop.Type == "string?" }}
                 var value = s.Value;
+
             {{ else }}
                 var value =({{prop.Type}})((dynamic)s.Value);
             {{ end}}  
