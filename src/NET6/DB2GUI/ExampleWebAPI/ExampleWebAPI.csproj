@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="controller.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <PackageReference Include="AMSWebAPI" Version="2021.7.6.628" />
 	  <PackageReference Include="AMS_Base" Version="2021.7.6.628" />
 	  <PackageReference Include="RSCG_AMS" Version="2021.7.6.628" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
@@ -36,8 +40,13 @@
 		<ProjectReference Include="..\DB2GUI\DB2GUI_RSCG.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 	<ItemGroup>
+		<AdditionalFiles Include="controller.txt"  />
+
 		<CompilerVisibleProperty Include="GenerateStep" />
 
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="controller.txt" />
 	</ItemGroup>
 	<PropertyGroup>
 		<GenerateStep>Controller</GenerateStep>

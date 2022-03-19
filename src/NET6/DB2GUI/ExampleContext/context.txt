@@ -1,0 +1,74 @@
+﻿#nullable enable
+//andrei
+using Microsoft.EntityFrameworkCore;
+namespace Generated;
+   {{ for classLoop in queries }}
+   public partial class SearchData{{classLoop}} {
+        private {{nameContext}} context;
+        public SearchData{{classLoop}} ({{nameContext}} context) {
+            this.context=context;
+        }
+        public IAsyncEnumerable<{{classLoop}}> {{classLoop}}Find_AsyncEnumerable(Search{{classLoop}}? search){
+            return context.{{classLoop}}Find_AsyncEnumerable(search);
+        }
+        public Task<{{classLoop}}[]> {{classLoop}}Find_Array( Search{{classLoop}}? search){
+            return  context.{{classLoop}}Find_Array(search);
+        }
+        public Task<long> {{classLoop}}Count( Search{{classLoop}} search){
+            return context.{{classLoop}}Count(search);
+        }
+
+   }
+
+   {{ end }}
+     
+public partial class {{nameContext}}
+{
+    
+    {{ for classLoop in queries }}
+    // {{query}}  
+    
+    public  IAsyncEnumerable<{{classLoop}}> {{classLoop}}GetAll(){
+        
+        return this.{{classLoop}}Find_AsyncEnumerable(null);
+    }
+
+    public  IAsyncEnumerable<{{classLoop}}> {{classLoop}}SimpleSearch(SearchField<e{{classLoop}}Columns> search){
+        var s=new Search{{classLoop}}();
+         s.SearchFields = new SearchField<e{{classLoop}}Columns>[1];
+         s.SearchFields[0] = search;
+        return this.{{classLoop}}Find_AsyncEnumerable(s);
+    }
+    public IAsyncEnumerable<{{classLoop}}> {{classLoop}}Find_AsyncEnumerable(Search{{classLoop}}? search){
+        
+        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+        if(search == null){
+            return data.AsAsyncEnumerable();
+        }
+        data = search.TransformToWhere(data);        
+        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        return ret.AsAsyncEnumerable();
+    }
+    public Task<{{classLoop}}[]> {{classLoop}}Find_Array( Search{{classLoop}}? search){
+        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+        if(search == null){
+            return data.ToArrayAsync();
+        }
+        data = search.TransformToWhere(data);        
+        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        return ret.ToArrayAsync();
+    }
+    public Task<long> {{classLoop}}Count( Search{{classLoop}} search){
+        
+        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+        if(search != null){
+            data = search.TransformToWhere(data);        
+        }        
+        return data.LongCountAsync();
+    }
+    {{ end }}
+    
+}
+
+    
+#nullable restore
