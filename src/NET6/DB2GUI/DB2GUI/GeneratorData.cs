@@ -292,7 +292,8 @@ public class GeneratorData : ISourceGenerator
         var startInfo = new ProcessStartInfo();
         startInfo.FileName = @"powershell.exe";
         startInfo.WorkingDirectory = directory;
-        string arguments= @"-f create.ps1 ";
+        string arguments= @"-NoProfile -NonInteractive -ExecutionPolicy ByPass ";
+        arguments += @" -f create.ps1  ";
         //arguments += $" -connection {ConnectionString}";
         arguments += $" -provider {Provider}";
         arguments += $" -pathToContext {FolderForContext}";
