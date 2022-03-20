@@ -20,7 +20,7 @@
 		<Provider>Microsoft.EntityFrameworkCore.SqlServer</Provider>
 		<FolderForContext>..\ExampleContext\Generated</FolderForContext>
 		<FolderForClasses>..\ExampleModels\Generated</FolderForClasses>
-		<ProjectWithDesigner>..\ExampleWebAPI\ExampleWebAPI.csproj</ProjectWithDesigner>
+		<ProjectWithDesigner>..\ExampleWebAPI\</ProjectWithDesigner>
 	</PropertyGroup>
 
 

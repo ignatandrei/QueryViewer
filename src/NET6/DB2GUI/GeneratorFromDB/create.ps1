@@ -2,10 +2,10 @@ param (
 [Parameter(Mandatory)][string]$pathToContext,
 [Parameter(Mandatory)][string]$pathToModels,
 [Parameter(Mandatory)][string]$provider,
-[Parameter(Mandatory)][string]$project
+[Parameter(Mandatory)][string]$projectPath
 )
-//modify here and in WebAPI appsettings.json  
-$connection="Data Source=.;Initial Catalog=MyTestDatabase;UId=sa1;pwd=yourStrong(!)Password"
+#modify here and in WebAPI appsettings.json  
+$connection="Data Source=.;Initial Catalog=test1;UId=sa1;pwd=yourStrong(!)Password"
  
 dotnet tool restore
 
@@ -17,6 +17,14 @@ dotnet tool restore
 
 Remove-Item -LiteralPath $pathToModels -Force -Recurse -ErrorAction SilentlyContinue 
 Remove-Item -LiteralPath $pathToContext -Force -Recurse -ErrorAction SilentlyContinue 
+
+Write-Host "search for csproj in $projectPath"
+
+$projectsFull = gci -Path $projectPath -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
+
+
+$project = $projectsFull.Fullname
+Write-Host "found project $project "
 
 
 Write-Host "finding project with context " $folder
