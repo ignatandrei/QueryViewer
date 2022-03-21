@@ -110,6 +110,7 @@ public partial class {{table.Name}}XController : ControllerBase
         }
 
     {{ for col in cols}}
+    {{ if col.TypeName }}
     [HttpGet("{Criteria}/{value}/{pageSize?}/{pageNumber?}")]
     public IAsyncEnumerable<{{table.Name}}> Search_{{col.Name}}(SearchCriteria Criteria , {{col.TypeName}} value, int? pageSize, int? pageNumber){
             System.Diagnostics.Debugger.Break();
@@ -127,6 +128,7 @@ public partial class {{table.Name}}XController : ControllerBase
             s.PageNumber = pageNumber??1;  
             return this.AdvancedSearch(s);
         }
+    {{ end }}
     {{ end }}
     [HttpPost]
     public IAsyncEnumerable<{{table.Name}}> AdvancedSearch(Search{{table.Name}} search){
