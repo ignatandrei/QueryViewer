@@ -37,15 +37,34 @@ public class GeneratorData : ISourceGenerator
                 break;
             case "CONTROLLER":
                 {
-                    var template = FromValue(context, value);
-                    GenerateControllers(context,template);
+                    {
+                        var dd = new DiagnosticDescriptor("test", nameof(GeneratorData), $"test" + value, "GenerateStep", DiagnosticSeverity.Warning, true);
+                        var d = Diagnostic.Create(dd, Location.None, "csproj");
+                        context.ReportDiagnostic(d);
+                    }
+                    try
+                    {
+                        var template = FromValue(context, value);
+                        GenerateControllers(context, template);
+                    }
+                    catch(Exception ex)
+                    {
+                        {
+                            string s = ex.Message + ex.StackTrace;
+                            var dd = new DiagnosticDescriptor("FromValue", nameof(FromValue), $"{ex.StackTrace}", "models", DiagnosticSeverity.Error, true);
+                            var d = Diagnostic.Create(dd, Location.None, $"{val}.txt");
+                            context.ReportDiagnostic(d);
+                        }
+                    }
                 }
                 break;
             default:
-                var dd = new DiagnosticDescriptor("StepNotFound", nameof(GeneratorData), $"Step not found:"+value,"GenerateStep", DiagnosticSeverity.Error, true);
-                var d = Diagnostic.Create(dd, Location.None, "csproj");
-                context.ReportDiagnostic(d);
-                return;
+                {
+                    var dd = new DiagnosticDescriptor("StepNotFound", nameof(GeneratorData), $"Step not found:" + value, "GenerateStep", DiagnosticSeverity.Error, true);
+                    var d = Diagnostic.Create(dd, Location.None, "csproj");
+                    context.ReportDiagnostic(d);
+                    return;
+                }
 
         }
         
@@ -149,7 +168,7 @@ public class GeneratorData : ISourceGenerator
                             keys.FirstOrDefault()?.Name,
                             TypeName = keys.FirstOrDefault()?.Type?.Name
                         },
-                        cols = cols.Select(it => new { it.Name, TypeName = (it.Type as INamedTypeSymbol).ToDisplayString() }).ToArray(),
+                        cols = cols.Select(it => new { it.Name, TypeName = (it.Type as INamedTypeSymbol)?.ToDisplayString() }).ToArray(),
                     }, member => member.Name);
 
                     context.AddSource($"{ps.Name}Generated.cs", SourceText.From(rend, Encoding.UTF8));

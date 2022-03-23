@@ -5,7 +5,7 @@ param (
 [Parameter(Mandatory)][string]$projectPath
 )
 #modify here and in WebAPI appsettings.json  
-$connection="Data Source=.;Initial Catalog=test1;UId=sa1;pwd=yourStrong(!)Password"
+$connection="Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>"
  
 dotnet tool restore
 
