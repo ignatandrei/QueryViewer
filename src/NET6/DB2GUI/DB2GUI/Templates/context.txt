@@ -2,19 +2,19 @@
 using Microsoft.EntityFrameworkCore;
 namespace Generated;
    {{ for classLoop in queries }}
-   public partial class SearchData{{classLoop}} {
+   public partial class SearchData{{classLoop.Name}} {
         private {{nameContext}} context;
-        public SearchData{{classLoop}} ({{nameContext}} context) {
+        public SearchData{{classLoop.Name}} ({{nameContext}} context) {
             this.context=context;
         }
-        public IAsyncEnumerable<{{classLoop}}> {{classLoop}}Find_AsyncEnumerable(Search{{classLoop}}? search){
-            return context.{{classLoop}}Find_AsyncEnumerable(search);
+        public IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}Find_AsyncEnumerable(Search{{classLoop.Name}}? search){
+            return context.{{classLoop.Name}}Find_AsyncEnumerable(search);
         }
-        public Task<{{classLoop}}[]> {{classLoop}}Find_Array( Search{{classLoop}}? search){
-            return  context.{{classLoop}}Find_Array(search);
+        public Task<{{classLoop.Name}}[]> {{classLoop.Name}}Find_Array( Search{{classLoop.Name}}? search){
+            return  context.{{classLoop.Name}}Find_Array(search);
         }
-        public Task<long> {{classLoop}}Count( Search{{classLoop}} search){
-            return context.{{classLoop}}Count(search);
+        public Task<long> {{classLoop.Name}}Count( Search{{classLoop.Name}} search){
+            return context.{{classLoop.Name}}Count(search);
         }
 
    }
@@ -27,20 +27,20 @@ public partial class {{nameContext}}
     {{ for classLoop in queries }}
     // {{query}}  
     
-    public  IAsyncEnumerable<{{classLoop}}> {{classLoop}}GetAll(){
+    public  IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}GetAll(){
         
-        return this.{{classLoop}}Find_AsyncEnumerable(null);
+        return this.{{classLoop.Name}}Find_AsyncEnumerable(null);
     }
 
-    public  IAsyncEnumerable<{{classLoop}}> {{classLoop}}SimpleSearch(SearchField<e{{classLoop}}Columns> search){
-        var s=new Search{{classLoop}}();
-         s.SearchFields = new SearchField<e{{classLoop}}Columns>[1];
+    public  IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}SimpleSearch(SearchField<e{{classLoop.Name}}Columns> search){
+        var s=new Search{{classLoop.Name}}();
+         s.SearchFields = new SearchField<e{{classLoop.Name}}Columns>[1];
          s.SearchFields[0] = search;
-        return this.{{classLoop}}Find_AsyncEnumerable(s);
+        return this.{{classLoop.Name}}Find_AsyncEnumerable(s);
     }
-    public IAsyncEnumerable<{{classLoop}}> {{classLoop}}Find_AsyncEnumerable(Search{{classLoop}}? search){
+    public IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}Find_AsyncEnumerable(Search{{classLoop.Name}}? search){
         
-        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+        IQueryable<{{classLoop.Name}}> data= this.{{classLoop.Name}} ;
         if(search == null){
             return data.AsAsyncEnumerable();
         }
@@ -48,8 +48,8 @@ public partial class {{nameContext}}
         var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
         return ret.AsAsyncEnumerable();
     }
-    public Task<{{classLoop}}[]> {{classLoop}}Find_Array( Search{{classLoop}}? search){
-        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+    public Task<{{classLoop.Name}}[]> {{classLoop.Name}}Find_Array( Search{{classLoop.Name}}? search){
+        IQueryable<{{classLoop.Name}}> data= this.{{classLoop.Name}} ;
         if(search == null){
             return data.ToArrayAsync();
         }
@@ -57,9 +57,9 @@ public partial class {{nameContext}}
         var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
         return ret.ToArrayAsync();
     }
-    public Task<long> {{classLoop}}Count( Search{{classLoop}} search){
+    public Task<long> {{classLoop.Name}}Count( Search{{classLoop.Name}} search){
         
-        IQueryable<{{classLoop}}> data= this.{{classLoop}} ;
+        IQueryable<{{classLoop.Name}}> data= this.{{classLoop.Name}} ;
         if(search != null){
             data = search.TransformToWhere(data);        
         }        

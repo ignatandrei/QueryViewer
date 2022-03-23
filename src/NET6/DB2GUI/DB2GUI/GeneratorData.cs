@@ -207,7 +207,10 @@ public class GeneratorData : ISourceGenerator
             var rend = template.Render(new
             {
                 nameContext,
-                queries = classes.Select(it => it.Identifier.ValueText).ToArray(),
+                queries = classes.Select(it => new
+                {
+                    Name = it.Identifier.ValueText
+                }).ToArray(),
             }, member => member.Name);
 
             context.AddSource("ApplicationDbContextGenerated.cs", SourceText.From(rend, Encoding.UTF8));

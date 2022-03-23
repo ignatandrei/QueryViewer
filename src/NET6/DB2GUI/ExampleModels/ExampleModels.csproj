@@ -12,7 +12,6 @@
 		<ProjectReference Include="..\DB2GUI\DB2GUI_RSCG.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 	<ItemGroup>
-		<AdditionalFiles Include="models.txt"  />
 		<CompilerVisibleProperty Include="GenerateStep" />
 
 	</ItemGroup>

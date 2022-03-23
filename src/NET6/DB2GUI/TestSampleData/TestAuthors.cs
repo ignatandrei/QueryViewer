@@ -53,6 +53,9 @@ public class TestAuthors
         await context.SaveChangesAsync();
         
     }
+    [Fact]
+    public async Task Delete()
+    {
+    }
 
-
-}
+    }
