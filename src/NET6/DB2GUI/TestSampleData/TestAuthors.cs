@@ -41,5 +41,18 @@ public class TestAuthors
         var all = await context.authorsCount(null);
         Assert.Equal(nrRecs, all);
     }
+    [Fact]
+    public async Task SaveNew()
+    {
+
+        var n = new authors();
+        n.au_id = "174-34-1176";
+        n.au_fname = "Andrei";
+        n.au_lname = "Ignat";
+        var all = context.authors.Add(n);
+        await context.SaveChangesAsync();
+        
+    }
+
 
 }
