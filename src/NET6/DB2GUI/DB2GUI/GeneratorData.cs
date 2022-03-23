@@ -210,6 +210,7 @@ public class GeneratorData : ISourceGenerator
                 queries = classes.Select(it => new
                 {
                     Name = it.Identifier.ValueText
+                    
                 }).ToArray(),
             }, member => member.Name);
 
