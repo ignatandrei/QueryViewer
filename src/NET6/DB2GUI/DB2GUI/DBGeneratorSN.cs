@@ -3,7 +3,7 @@
 internal class DBGeneratorSN : ISyntaxReceiver
 {
     internal List<ClassDeclarationSyntax> models=new List<ClassDeclarationSyntax>();
-    internal List<PropertyDeclarationSyntax> DbContextProps = new List<PropertyDeclarationSyntax>();
+    internal List<ClassDeclarationSyntax> DbContextProps = new List<ClassDeclarationSyntax>();
     internal List<TypeSyntax> dbcontext=new List<TypeSyntax>();
     public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
     {
@@ -54,7 +54,12 @@ internal class DBGeneratorSN : ISyntaxReceiver
                                 continue;
 
                             if (i.Identifier.ValueText == "DbContext")
-                                DbContextProps.Add(pds);
+                            {
+                                //var cds1 = pds.Parent as ClassDeclarationSyntax;
+                                if(! DbContextProps.Contains(cds))
+                                    DbContextProps.Add(cds);
+                            }
+                                
                         }
 
                         

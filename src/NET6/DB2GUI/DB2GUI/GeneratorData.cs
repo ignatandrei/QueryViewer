@@ -196,34 +196,46 @@ public class GeneratorData : ISourceGenerator
         var classes = gen.DbContextProps;
         if (classes.Count == 0)
         {
-            //not generated yet....
+            //todo: make warning
             return;
         }
-        var classParent = classes.First().Parent as ClassDeclarationSyntax;
-        var nameContext = classParent.Identifier.ValueText;
-        
-        try
+        foreach (var classParent in classes)
         {
-            var rend = template.Render(new
+            //var classParent = classes.First().Parent as ClassDeclarationSyntax;
+            var nameContext = classParent.Identifier.ValueText;
+            var dbSets = classParent.Members
+                    .Where(it=>it is PropertyDeclarationSyntax )
+                    .Select(it=>it as PropertyDeclarationSyntax)
+                    .ToArray();
+            if (!dbSets.Any())
             {
-                nameContext,
-                queries = classes.Select(it => new
+                //todo: make warning
+                continue;
+            }
+            var realDbSets = dbSets;
+
+            try
+            {
+                var rend = template.Render(new
                 {
-                    Name = it.Identifier.ValueText
-                    
-                }).ToArray(),
-            }, member => member.Name);
+                    nameContext,
+                    queries = realDbSets.Select(it => new
+                    {
+                        Name = it.Identifier.ValueText
 
-            context.AddSource("ApplicationDbContextGenerated.cs", SourceText.From(rend, Encoding.UTF8));
-        }
-        catch (Exception sc)
-        {
-            string s = sc.Message;
-            var dd = new DiagnosticDescriptor("models", nameof(GenerateForContext), $"{sc.Message}", "models", DiagnosticSeverity.Error, true);
-            var d = Diagnostic.Create(dd, Location.None, "andrei.txt");
-            context.ReportDiagnostic(d);
-        }
+                    }).ToArray(),
+                }, member => member.Name);
 
+                context.AddSource($"{nameContext}Generated.cs", SourceText.From(rend, Encoding.UTF8));
+            }
+            catch (Exception sc)
+            {
+                string s = sc.Message;
+                var dd = new DiagnosticDescriptor("models", nameof(GenerateForContext), $"{sc.Message}", "models", DiagnosticSeverity.Error, true);
+                var d = Diagnostic.Create(dd, Location.None, "andrei.txt");
+                context.ReportDiagnostic(d);
+            }
+        }
     }
 
     private void GenerateModels(GeneratorExecutionContext context, Template template)
