@@ -201,6 +201,9 @@ public class GeneratorData : ISourceGenerator
         }
         foreach (var classParent in classes)
         {
+            var data = context.Compilation.GetSemanticModel(classParent.SyntaxTree);
+
+
             //var classParent = classes.First().Parent as ClassDeclarationSyntax;
             var nameContext = classParent.Identifier.ValueText;
             var dbSets = classParent.Members
@@ -212,14 +215,18 @@ public class GeneratorData : ISourceGenerator
                 //todo: make warning
                 continue;
             }
-            var realDbSets = dbSets;
-
+            //var realDbSets = dbSets;
+            var set = dbSets.First();
+            var gns = set.Type as GenericNameSyntax;
+            var type = gns.TypeArgumentList.Arguments.FirstOrDefault();
+            var ti = data.GetTypeInfo(type);
+            var m = ti.Type.GetMembers();
             try
             {
                 var rend = template.Render(new
                 {
                     nameContext,
-                    queries = realDbSets.Select(it => new
+                    queries = dbSets.Select(it => new
                     {
                         Name = it.Identifier.ValueText
 
