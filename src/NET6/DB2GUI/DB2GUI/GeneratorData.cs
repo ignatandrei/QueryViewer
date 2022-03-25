@@ -2,7 +2,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace DB2GUI_RDCG;
-
 [Generator]
 public class GeneratorData : ISourceGenerator
 {
@@ -189,7 +188,7 @@ public class GeneratorData : ISourceGenerator
             str += "2";
         }
     }
-
+    
     private void GenerateForContext(GeneratorExecutionContext context,Template template)
     {
         var gen = context.SyntaxReceiver as DBGeneratorSN;
@@ -215,20 +214,46 @@ public class GeneratorData : ISourceGenerator
                 //todo: make warning
                 continue;
             }
+            var tables=dbSets
+                .Select(it=>it.Type as GenericNameSyntax)
+                .Where(it=>it !=null)
+                .Select(it=>it.TypeArgumentList)
+                .Where(it => it != null)
+                .Select(it=>it.Arguments)
+                .Where(it => it != null)
+                .Select(it => it.FirstOrDefault())
+                .Where(it => it != null)
+
+                .Select(it => data.GetTypeInfo(it))
+                .Select(it => new Table(it))                
+                .ToArray();
+
+
+
+
             //var realDbSets = dbSets;
-            var set = dbSets.First();
-            var gns = set.Type as GenericNameSyntax;
-            var type = gns.TypeArgumentList.Arguments.FirstOrDefault();
-            var ti = data.GetTypeInfo(type);
-            var m = ti.Type.GetMembers();
+            //var set = dbSets.First();
+            //var gns = set.Type as GenericNameSyntax;
+            //var type = gns.TypeArgumentList.Arguments.FirstOrDefault();
+            //var ti = data.GetTypeInfo(type);
+            //var m = ti.Type.GetMembers();
             try
             {
                 var rend = template.Render(new
                 {
                     nameContext,
-                    queries = dbSets.Select(it => new
+                    queries = tables.Select(it => new
                     {
-                        Name = it.Identifier.ValueText
+                        Name = it.Name,
+                        numberKeys = it.keys.Length,
+                        keys = it.keys.Select(it => new { it.Name, TypeName = it.TypeName }).ToArray(),
+                        firstKey = new
+                        {
+                            it.keys.FirstOrDefault()?.Name,
+                            it.keys.FirstOrDefault()?.TypeName 
+                        },
+                        cols = it.cols.Select(it => new { it.Name, it.TypeName }).ToArray(),
+
 
                     }).ToArray(),
                 }, member => member.Name);

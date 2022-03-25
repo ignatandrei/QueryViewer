@@ -26,6 +26,48 @@ public partial class {{nameContext}}
     
     {{ for classLoop in queries }}
     // {{query}}  
+    {{ if classLoop.numberKeys == 1  }}
+    //has a single id
+    public  Task<{{classLoop.Name}}> {{classLoop.Name}}GetSingle({{classLoop.firstKey.TypeName}} {{ classLoop.firstKey.Name}}){
+        return 
+            this.{{classLoop.Name}}
+                .Where(it=>it.{{ classLoop.firstKey.Name}} == {{ classLoop.firstKey.Name}})
+                .FirstOrDefaultAsync();
+    }
+    public  async Task<bool> {{classLoop.Name}}Delete({{classLoop.firstKey.TypeName}} {{ classLoop.firstKey.Name}}){
+        var item = await {{classLoop.Name}}GetSingle({{ classLoop.firstKey.Name}});
+        if(item == null)
+            return false;
+       this.{{classLoop.Name}}.Remove(item);
+        await this.SaveChangesAsync();
+        return true; 
+    }
+    public  async Task<bool> {{classLoop.Name}}Save({{classLoop.Name}} val ){
+        var item = await {{classLoop.Name}}GetSingle(val.{{ classLoop.firstKey.Name}});
+        if(item == null)
+            return false;
+        item.CopyFrom(val);        
+        await this.SaveChangesAsync();
+        return true; 
+    }
+    {{else}}
+    //generate just for keys 1, not for {{numberKeys}}
+    {{ end }}
+
+    public async  Task<{{classLoop.Name}}[]> {{classLoop.Name}}SaveInBD(params {{classLoop.Name}}[] values){
+        
+        if(values == null)
+            return null;
+        if(values.Length == 0)
+            return values;
+        foreach(var value in values){
+            this.{{classLoop.Name}}.Add(value);
+        }
+        await SaveChangesAsync();
+        return values;
+
+                
+    }
     
     public  IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}GetAll(){
         
