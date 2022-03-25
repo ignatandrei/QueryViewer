@@ -91,4 +91,25 @@ public class TestAuthors
         var d = await context.authorsModify(n);
         Assert.True(d); 
     }
-}
+    [Fact]
+    public async Task SearchData()
+    {
+        CreateDb();
+        var search = new Searchauthors();
+        var orderBy = new Generated.OrderBy<eauthorsColumns>();
+        orderBy.FieldName = eauthorsColumns.au_id;
+        orderBy.Asc= true;
+        search.OrderBys = new[] {orderBy};
+        search.PageNumber = 1;
+        search.PageSize= 10;
+        var s = new SearchField<eauthorsColumns>();
+        s.Criteria = SearchCriteria.Equal;
+        s.FieldName= eauthorsColumns.au_id;
+        s.Value = "q2e";
+        search.SearchFields = new[] { s };
+
+        var data = await context.authorsFind_Array(search);
+        Assert.Empty(data);
+    }
+
+    }
