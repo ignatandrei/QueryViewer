@@ -60,9 +60,11 @@ BEGIN
 END
 ELSE ALTER DATABASE [pubs] SET RECOVERY SIMPLE WITH NO_WAIT
 GO
-
+IF OBJECT_ID('dbo.id') IS NOT NULL
 execute sp_addtype id      ,'varchar(11)' ,'NOT NULL'
+IF OBJECT_ID('dbo.tid') IS NOT NULL
 execute sp_addtype tid     ,'varchar(6)'  ,'NOT NULL'
+IF OBJECT_ID('dbo.empid') IS NOT NULL
 execute sp_addtype empid   ,'char(9)'     ,'NOT NULL'
 
 --raiserror('Now at the create table section ....',0,1)
@@ -2111,7 +2113,9 @@ GO
 --raiserror('Now at the create view section ....',0,1)
 
 GO
-
+IF OBJECT_ID('dbo.titleview', 'V') IS NOT NULL
+    DROP VIEW dbo.titleview
+GO
 CREATE VIEW titleview
 AS
 select title, au_ord, au_lname, price, ytd_sales, pub_id
@@ -2121,14 +2125,29 @@ where authors.au_id = titleauthor.au_id
 
 GO
 
---raiserror('Now at the create procedure section ....',0,1)
-
+IF EXISTS (
+        SELECT type_desc, type
+        FROM sys.procedures WITH(NOLOCK)
+        WHERE NAME = 'byroyalty'
+            AND type = 'P'
+      )
+     DROP PROCEDURE dbo.byroyalty
 GO
 
 CREATE PROCEDURE byroyalty @percentage int
 AS
 select au_id from titleauthor
 where titleauthor.royaltyper = @percentage
+
+GO
+
+IF EXISTS (
+        SELECT type_desc, type
+        FROM sys.procedures WITH(NOLOCK)
+        WHERE NAME = 'reptq1'
+            AND type = 'P'
+      )
+     DROP PROCEDURE dbo.reptq1
 
 GO
 
@@ -2143,6 +2162,16 @@ order by pub_id
 
 GO
 
+IF EXISTS (
+        SELECT type_desc, type
+        FROM sys.procedures WITH(NOLOCK)
+        WHERE NAME = 'reptq2'
+            AND type = 'P'
+      )
+     DROP PROCEDURE dbo.reptq2
+
+GO
+
 CREATE PROCEDURE reptq2 AS
 select 
 	case when grouping(type) = 1 then 'ALL' else type end as type, 
@@ -2151,6 +2180,16 @@ select
 from titles
 where pub_id is NOT NULL
 group by pub_id, type with rollup
+
+GO
+
+IF EXISTS (
+        SELECT type_desc, type
+        FROM sys.procedures WITH(NOLOCK)
+        WHERE NAME = 'reptq3'
+            AND type = 'P'
+      )
+     DROP PROCEDURE dbo.reptq3
 
 GO
 

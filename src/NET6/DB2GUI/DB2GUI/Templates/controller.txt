@@ -23,35 +23,16 @@ public partial class {{table.Name}}Controller : ControllerBase
     [HttpGet("{%{{}%}{{ firstKey.Name}}{%{}}%}")]
     public Task<{{table.Name}}> GetFromId({{firstKey.TypeName}} {{ firstKey.Name}}){
         return 
-            _context.{{table.Name}}
-                .Where(it=>it.{{ firstKey.Name}} == {{ firstKey.Name}})
-                .FirstOrDefaultAsync();
+            _context.{{table.Name}}GetSingle({{firstKey.Name}});
     } 
     [HttpDelete("{%{{}%}{{ firstKey.Name}}{%{}}%}")]
-    public async Task<bool> Delete({{firstKey.TypeName}} {{ firstKey.Name}}){
-        var item=await 
-            _context.{{table.Name}}
-                .Where(it=>it.{{ firstKey.Name}} == {{ firstKey.Name}})
-                .FirstOrDefaultAsync();
-        if(item == null)
-            return false;
-
-        _context.{{table.Name}}.Remove(item);
-        await _context.SaveChangesAsync();
-        return true; 
+    public Task<bool> Delete({{firstKey.TypeName}} {{ firstKey.Name}}){
+        return _context.{{table.Name}}Delete({{firstKey.Name}});        
     } 
     [HttpPut]
-    public async Task<bool> Put({{table.Name}} val){        
-        var item=await 
-            _context.{{table.Name}}
-                .Where(it=>it.{{ firstKey.Name}} == val.{{ firstKey.Name}})
-                .FirstOrDefaultAsync();
-        if(item == null)
-            return false;
-
-        item.CopyFrom(val);        
-        await _context.SaveChangesAsync();
-        return true;
+    public Task<bool> Put({{table.Name}} val){        
+        return _context.{{table.Name}}Modify(val);
+        
     }
 
     {{else}}
@@ -59,10 +40,8 @@ public partial class {{table.Name}}Controller : ControllerBase
     {{ end }}
      
     [HttpPost]
-    public async Task<{{table.Name}}> Post({{table.Name}} val){
-        _context.{{table.Name}}.Add(val);
-        await _context.SaveChangesAsync();
-        return val;
+    public Task<{{table.Name}}> Post({{table.Name}} val){
+        return _context.{{table.Name}}Save(val);
     }
     
 }

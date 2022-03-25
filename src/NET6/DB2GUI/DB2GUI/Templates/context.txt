@@ -42,7 +42,7 @@ public partial class {{nameContext}}
         await this.SaveChangesAsync();
         return true; 
     }
-    public  async Task<bool> {{classLoop.Name}}Save({{classLoop.Name}} val ){
+    public  async Task<bool> {{classLoop.Name}}Modify({{classLoop.Name}} val ){
         var item = await {{classLoop.Name}}GetSingle(val.{{ classLoop.firstKey.Name}});
         if(item == null)
             return false;
@@ -53,8 +53,16 @@ public partial class {{nameContext}}
     {{else}}
     //generate just for keys 1, not for {{numberKeys}}
     {{ end }}
+    public async  Task<{{classLoop.Name}}> {{classLoop.Name}}Save({{classLoop.Name}} val){
+        
+        var data= await {{classLoop.Name}}SaveMultiple(val);
+        if(data == null)
+            return null;
 
-    public async  Task<{{classLoop.Name}}[]> {{classLoop.Name}}SaveInBD(params {{classLoop.Name}}[] values){
+        return data[0];
+                
+    }
+    public async  Task<{{classLoop.Name}}[]> {{classLoop.Name}}SaveMultiple(params {{classLoop.Name}}[] values){
         
         if(values == null)
             return null;
