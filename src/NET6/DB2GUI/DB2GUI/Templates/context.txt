@@ -81,6 +81,39 @@ public partial class {{nameContext}}
         
         return this.{{classLoop.Name}}Find_AsyncEnumerable(null);
     }
+    public  IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}SimpleSearch(SearchCriteria sc, e{{classLoop.Name}}Columns colToSearch, string value){
+        var search = new Search{{classLoop.Name}}();
+        var orderBy = new Generated.OrderBy<e{{classLoop.Name}}Columns>();
+        orderBy.FieldName = colToSearch;
+        orderBy.Asc = true;
+        search.OrderBys = new[] { orderBy };
+        search.PageNumber = 1;
+        search.PageSize = int.MaxValue;
+        var s = new SearchField<e{{classLoop.Name}}Columns>();
+        s.Criteria = sc;
+        s.FieldName = colToSearch;
+        s.Value = value;
+        search.SearchFields = new[] { s };
+        var data = this.{{classLoop.Name}}Find_AsyncEnumerable(search);
+        return data;
+    }   
+
+    //andrei
+    {{ for col in classLoop.cols}}
+     {{if col.TypeName}}
+     public  IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}SimpleSearch_{{col.Name}}(SearchCriteria sc,  {{col.TypeName}} value){
+        
+        return {{classLoop.Name}}SimpleSearch(sc,e{{classLoop.Name}}Columns.{{col.Name}},value.ToString());
+        
+    }
+    public  IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}SimpleSearchNull_{{col.Name}}(SearchCriteria sc){
+        
+        return {{classLoop.Name}}SimpleSearch(sc,e{{classLoop.Name}}Columns.{{col.Name}},null);
+        
+    }
+    {{end}}
+    {{ end}}
+
 
     public  IAsyncEnumerable<{{classLoop.Name}}> {{classLoop.Name}}SimpleSearch(SearchField<e{{classLoop.Name}}Columns> search){
         var s=new Search{{classLoop.Name}}();

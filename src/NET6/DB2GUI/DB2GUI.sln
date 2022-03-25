@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleContext", "ExampleCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB2GUITemplate", "DB2GUITemplate\DB2GUITemplate.csproj", "{3CB03987-13D9-4C50-85CF-E6B1820CF87E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSampleData", "TestSampleData\TestSampleData.csproj", "{2A0AFBDE-447F-4229-B231-F44CE6EC0059}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSampleData", "TestSampleData\TestSampleData.csproj", "{2A0AFBDE-447F-4229-B231-F44CE6EC0059}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoNotRun", "DoNotRun\DoNotRun.csproj", "{52635DD8-3612-42DD-9534-58F1BD64586A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,14 @@ Global
 		{2A0AFBDE-447F-4229-B231-F44CE6EC0059}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2A0AFBDE-447F-4229-B231-F44CE6EC0059}.Release|x86.ActiveCfg = Release|Any CPU
 		{2A0AFBDE-447F-4229-B231-F44CE6EC0059}.Release|x86.Build.0 = Release|Any CPU
+		{52635DD8-3612-42DD-9534-58F1BD64586A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52635DD8-3612-42DD-9534-58F1BD64586A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52635DD8-3612-42DD-9534-58F1BD64586A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{52635DD8-3612-42DD-9534-58F1BD64586A}.Debug|x86.Build.0 = Debug|Any CPU
+		{52635DD8-3612-42DD-9534-58F1BD64586A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52635DD8-3612-42DD-9534-58F1BD64586A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52635DD8-3612-42DD-9534-58F1BD64586A}.Release|x86.ActiveCfg = Release|Any CPU
+		{52635DD8-3612-42DD-9534-58F1BD64586A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

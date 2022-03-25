@@ -33,7 +33,7 @@ public class TestAuthors
     const string newAuID = "174-34-1176";
     public TestAuthors()
     {
-        
+
     }
 
     [Fact]
@@ -41,9 +41,9 @@ public class TestAuthors
     {
         CreateDb();
         var all = await context.authorsGetAll().ToArrayAsync();
-        Assert.Equal(nrRecs,all.Count());
-        
-        
+        Assert.Equal(nrRecs, all.Count());
+
+
     }
     [Fact]
     public async Task GetCount()
@@ -56,12 +56,12 @@ public class TestAuthors
     public async Task SaveNew()
     {
         CreateDb();
-        var all =await Save();
+        var all = await Save();
         Assert.NotNull(all);
     }
     private async Task<bool> Save()
     {
-        
+
         var n = new authors();
         n.au_id = newAuID;
         n.au_fname = "Andrei";
@@ -74,7 +74,7 @@ public class TestAuthors
     public async Task Delete()
     {
         CreateDb();
-        var n= Save(); 
+        var n = Save();
         var d = await context.authorsDelete(newAuID);
         Assert.True(d);
     }
@@ -89,7 +89,18 @@ public class TestAuthors
         n.au_lname = "Ignat1";
         n.phone = "test";
         var d = await context.authorsModify(n);
-        Assert.True(d); 
+        Assert.True(d);
+    }
+    [Theory]
+    [InlineData(SearchCriteria.Equal, eauthorsColumns.au_id,"asd",0)]
+    [InlineData(SearchCriteria.Equal, eauthorsColumns.au_lname, "Ringer", 2)]
+    [InlineData(SearchCriteria.Contains, eauthorsColumns.au_fname, "Ann", 2)]
+
+    public async Task SearchAdvanced(SearchCriteria sc, eauthorsColumns col,string val, int nrRecs)
+    {
+        CreateDb();
+        var data= await context.authorsSimpleSearch(SearchCriteria.Equal, col, val).ToArrayAsync();
+        Assert.Equal(nrRecs,data.Length);
     }
     [Fact]
     public async Task SearchData()
@@ -98,18 +109,18 @@ public class TestAuthors
         var search = new Searchauthors();
         var orderBy = new Generated.OrderBy<eauthorsColumns>();
         orderBy.FieldName = eauthorsColumns.au_id;
-        orderBy.Asc= true;
-        search.OrderBys = new[] {orderBy};
+        orderBy.Asc = true;
+        search.OrderBys = new[] { orderBy };
         search.PageNumber = 1;
-        search.PageSize= 10;
+        search.PageSize = int.MaxValue;
         var s = new SearchField<eauthorsColumns>();
         s.Criteria = SearchCriteria.Equal;
-        s.FieldName= eauthorsColumns.au_id;
+        s.FieldName = eauthorsColumns.au_id;
         s.Value = "q2e";
         search.SearchFields = new[] { s };
 
         var data = await context.authorsFind_Array(search);
         Assert.Empty(data);
     }
-
-    }
+    
+}
