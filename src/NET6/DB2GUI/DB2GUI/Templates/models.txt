@@ -119,21 +119,22 @@ end
         }
         else{
             {{ if "float" == prop.Type || prop.Type == "bool" || "byte" == prop.Type  || prop.Type == "short" || prop.Type == "long" || prop.Type == "int" || prop.Type == "decimal"}} 
-                var value = {{prop.Type}}.Parse(s.Value);
                 var valueArray = s.Value
                     .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Select(it=>{{prop.Type}}.Parse(s.Value))
+                    .Select(it=>{{prop.Type}}.Parse(it))
                     .ToArray();
+                var value = valueArray[0];
+                
                 ;
             {{ else if "float?" == prop.Type || prop.Type == "bool?" ||  "byte?" == prop.Type  || prop.Type == "short?" || prop.Type == "long?" || prop.Type == "decimal?"|| prop.Type == "int?"  }} 
                 {{prop.Type}} value= null;
                 {{prop.Type  | string.remove "?" }}[] valueArray= null;
                 if(s.Value != null){
-                    value= {{prop.Type  | string.remove "?" }}.Parse(s.Value);
                     valueArray = s.Value
                     .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Select(it=>{{prop.Type  | string.remove "?" }}.Parse(s.Value))
+                    .Select(it=>{{prop.Type  | string.remove "?" }}.Parse(it))
                     .ToArray();
+                    value = valueArray[0];
                 ;
                 }
             {{ else if prop.Type == "string" || prop.Type == "string?" }}
@@ -142,20 +143,21 @@ end
                     .ToArray();
 
             {{ else if "DateTime" == prop.Type}} 
-                var value=DateTime.Parse(s.Value); 
                 var valueArray=s.Value
                     .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Select(it=>DateTime.Parse(s.Value))
+                    .Select(it=>DateTime.Parse(it))
                     .ToArray();
+                var value=valueArray[0]; 
+                
             {{ else if "DateTime?" == prop.Type}} 
                 {{prop.Type}} value= null;
                 {{prop.Type  | string.remove "?" }}[] valueArray=null;
                 if(s.Value != null){
-                    value= DateTime.Parse(s.Value);
                     valueArray=s.Value
                     .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Select(it=>DateTime.Parse(s.Value))
+                    .Select(it=>DateTime.Parse(it))
                     .ToArray();
+                    value=valueArray[0]; 
 
                 }
             
@@ -173,7 +175,19 @@ end
                             {{if prop.IsNullable && hasString != 1  }}
                                 returnValue =returnValue.Where(it=>valueArray.Contains(it.{{prop.Name}}.Value));
                             {{ else }}
-                                returnValue =returnValue;
+                                returnValue =returnValue.Where(it=>valueArray.Contains(it.{{prop.Name}}));
+                            {{end}}
+                        {{ end }}
+                        break;
+                    case SearchCriteria.NotInArray:
+                        {{ if prop.IsArray || hasLess != 1}} 
+                            throw new ArgumentException("cannot contain array in array or property that is not fundamental ");
+                        {{ else }}
+                            
+                            {{if prop.IsNullable && hasString != 1  }}
+                                returnValue =returnValue.Where(it=>!valueArray.Contains(it.{{prop.Name}}.Value));
+                            {{ else }}
+                                returnValue =returnValue.Where(it=>!valueArray.Contains(it.{{prop.Name}}));
                             {{end}}
                         {{ end }}
                         break;
@@ -340,6 +354,7 @@ public enum SearchCriteria
     Contains,
     Equal,
     InArray,
+    NotInArray,
     Different,
     Greater,
     Less,
