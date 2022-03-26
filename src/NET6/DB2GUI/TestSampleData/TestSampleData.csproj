@@ -9,10 +9,14 @@
 
   <ItemGroup>
     <None Remove="insertPubs.sql" />
+    <None Remove="instnwnd.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="insertPubs.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="instnwnd.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
