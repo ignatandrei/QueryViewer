@@ -116,7 +116,11 @@ end
                 }
             {{ else if prop.Type == "string" || prop.Type == "string?" }}
                 var value = s.Value;
-
+            {{ else if prop.Type == "bool?" }}
+                {{prop.Type}} value= null;
+                if(s.Value != null) value=bool.Parse(s.Value);
+            {{ else if prop.Type == "bool"  }} 
+                var value=bool.Parse(s.Value); 
             {{ else }}
                 var value =({{prop.Type}})((dynamic)s.Value);
             {{ end}}  
