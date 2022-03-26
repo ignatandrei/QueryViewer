@@ -16,11 +16,21 @@ builder.Services.AddDbContextFactory<PubsContext>(
 
         options =>
         {
-            var cn = builder.Configuration.GetConnectionString("DefaultConnection");
+            var cn = builder.Configuration.GetConnectionString("PubsConnection");
             options.UseSqlServer(cn);
         }
      )
    ;
+builder.Services.AddDbContext<NorthwindContext>(
+
+        options =>
+        {
+            var cn = builder.Configuration.GetConnectionString("NorthwindConnection");
+            options.UseSqlServer(cn);
+        }
+     )
+   ;
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

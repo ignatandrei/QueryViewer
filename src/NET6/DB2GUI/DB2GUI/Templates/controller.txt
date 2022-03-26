@@ -11,7 +11,7 @@ namespace Generated;
 public partial class {{nameContext}}_{{table.Name}}_Controller : ControllerBase
 {
     private {{nameContext}}  _context ;
-    public {{nameContext}}_{{table.Name}}_Controller(PubsContext context){
+    public {{nameContext}}_{{table.Name}}_Controller({{nameContext}} context){
         _context=context;
     }
 
@@ -78,8 +78,8 @@ public partial class {{table.Name}}MetadataController : ControllerBase
 
 public partial class {{table.Name}}XController : ControllerBase
 {
-    private PubsContext  _context ;
-    public {{table.Name}}XController(PubsContext context){
+    private {{nameContext}}  _context ;
+    public {{table.Name}}XController({{nameContext}} context){
         _context=context;
     }
     
