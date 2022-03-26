@@ -30,7 +30,7 @@ public class TestEmployee
     }
     static TestEmployee()
     {
-        //CreateDb();
+        CreateDb();
     }
     [Theory]
     [InlineData(SearchCriteria.Equal, eemployeeColumns.minit, "M", 3)]

@@ -2,15 +2,19 @@
 
 public class TestDiscounts
 {
-    void CreateDb()
+    static TestDiscounts()
     {
-        var context = this.context;
+        CreateDb();
+    }
+    static void CreateDb()
+    {
+        var cnt = context;
         var file = File.ReadAllText("insertPubs.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
         foreach (var item in file)
         {
             try
             {
-                context.Database.ExecuteSqlRaw(item);
+                cnt.Database.ExecuteSqlRaw(item);
             }
             catch (Exception ex)
             {
@@ -20,7 +24,7 @@ public class TestDiscounts
         }
 
     }
-    ApplicationDbContext context
+    static ApplicationDbContext context
     {
         get
         {

@@ -48,7 +48,11 @@ public class TestAuthors
     [InlineData(SearchCriteria.Equal, eauthorsColumns.contract, "False", 4)]
     [InlineData(SearchCriteria.Different, eauthorsColumns.contract, "True", 4)]
     [InlineData(SearchCriteria.Equal, eauthorsColumns.contract, "True", 19)]
-    
+    [InlineData(SearchCriteria.Different, eauthorsColumns.address, null, 23)]
+    [InlineData(SearchCriteria.Equal, eauthorsColumns.address, null, 0)]
+    [InlineData(SearchCriteria.Contains, eauthorsColumns.address, "20", 3)]
+    [InlineData(SearchCriteria.StartsWith, eauthorsColumns.address, "3", 6)]
+    [InlineData(SearchCriteria.EndsWith, eauthorsColumns.address, "Av.", 5)]
     public async Task SearchAdvanced(SearchCriteria sc, eauthorsColumns col,string val, int nrRecs)
     {
         

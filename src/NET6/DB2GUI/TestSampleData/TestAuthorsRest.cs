@@ -1,7 +1,7 @@
 
 namespace TestSampleData;
 
-public class TestAuthorsRest
+public class TestRest
 {
     void CreateDb()
     {
@@ -31,7 +31,7 @@ public class TestAuthorsRest
     }
     int nrRecs = 23;
     const string newAuID = "174-34-1176";
-    public TestAuthorsRest()
+    public TestRest()
     {
 
     }
