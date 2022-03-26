@@ -275,14 +275,14 @@ public class GeneratorData : ISourceGenerator
     {
         var gen = context.SyntaxReceiver as DBGeneratorSN;
         var classes = gen.models;
-        if(classes.Count == 0)
+        if (classes.Count == 0)
         {
             //not generated yet....
             return;
         }
         var classParent = classes.First().Parent as BaseNamespaceDeclarationSyntax;
         var nameContext = classParent.ToString();
-       
+
         var renderClasses = classes.Select(
             it => new
             {
@@ -294,6 +294,7 @@ public class GeneratorData : ISourceGenerator
                     .Select(it => new {
                         Name = it.Identifier.Text,
                         Type = it.Type.ToString(),
+                        RawKindType= it.Type.Kind(),
                         IsArray= it.Type.ToString().Contains("[]"),
                         IsNullable = it.Type.ToString().Contains("?")
                     })
@@ -310,6 +311,7 @@ public class GeneratorData : ISourceGenerator
                 Props = it.Value
             })
             .ToArray();
+        
         try
         {
             var rend = template.Render(new
