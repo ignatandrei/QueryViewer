@@ -21,11 +21,11 @@ public class TestRest
         }
 
     }
-    ApplicationDbContext context
+    PubsContext context
     {
         get
         {
-            return new ApplicationDbContext();
+            return new PubsContext();
 
         }
     }

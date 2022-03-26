@@ -24,11 +24,11 @@ public class TestDiscounts
         }
 
     }
-    static ApplicationDbContext context
+    static PubsContext context
     {
         get
         {
-            return new ApplicationDbContext();
+            return new PubsContext();
 
         }
     }

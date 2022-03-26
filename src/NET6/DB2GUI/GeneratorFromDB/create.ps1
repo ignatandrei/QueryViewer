@@ -2,11 +2,13 @@ param (
 [Parameter(Mandatory)][string]$pathToContext,
 [Parameter(Mandatory)][string]$pathToModels,
 [Parameter(Mandatory)][string]$provider,
-[Parameter(Mandatory)][string]$projectPath
+[Parameter(Mandatory)][string]$projectPath,
+[Parameter(Mandatory)][string]$nameContext
+
 )
 #modify here and in WebAPI appsettings.json  
 $connection="Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>"
- 
+
 dotnet tool restore
 
 #$folder= $pathToModels
@@ -32,5 +34,5 @@ Write-Host "finding project with context " $folder
 
 
 #https://docs.microsoft.com/ro-ro/ef/core/managing-schemas/scaffolding?tabs=dotnet-core-cli
-dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --use-database-names  --context ApplicationDbContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext  --output-dir $pathToModels  --prefix-output --json
+dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext  --output-dir $pathToModels  --prefix-output --json
 

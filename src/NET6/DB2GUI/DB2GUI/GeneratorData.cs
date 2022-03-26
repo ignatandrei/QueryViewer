@@ -119,7 +119,7 @@ public class GeneratorData : ISourceGenerator
 
             var tn = ti.Type;
             var members= tn.GetMembers();
-            
+            var nameContext = tn.Name;
             foreach (var member in members)
             {
 
@@ -159,6 +159,7 @@ public class GeneratorData : ISourceGenerator
                     var t=new { Name =ps.Name};
                     var rend = template.Render(new
                     {
+                        nameContext,
                         table = t ,
                         numberKeys=keys.Count,
                         keys=keys.Select(it=>new { it.Name, TypeName= (it.Type as INamedTypeSymbol).ToDisplayString() }).ToArray(),
@@ -170,7 +171,7 @@ public class GeneratorData : ISourceGenerator
                         cols = cols.Select(it => new { it.Name, TypeName = (it.Type as INamedTypeSymbol)?.ToDisplayString() }).ToArray(),
                     }, member => member.Name);
 
-                    context.AddSource($"{ps.Name}Generated.cs", SourceText.From(rend, Encoding.UTF8));
+                    context.AddSource($"{nameContext}_{ps.Name}_Generated.cs", SourceText.From(rend, Encoding.UTF8));
                 }
 
 
@@ -347,7 +348,9 @@ public class GeneratorData : ISourceGenerator
         var FolderForContext = obtainValueAndDiagnostic("FolderForContext", context) ?? "";
         var FolderForClasses = obtainValueAndDiagnostic("FolderForClasses", context) ?? "";
         var ProjectWithDesigner = obtainValueAndDiagnostic("ProjectWithDesigner", context);
-        if ( Provider.Length * FolderForClasses.Length * FolderForContext.Length * ProjectWithDesigner.Length == 0 )
+        var contextName = obtainValueAndDiagnostic("NameContext", context);
+
+        if (contextName.Length * Provider.Length * FolderForClasses.Length * FolderForContext.Length * ProjectWithDesigner.Length == 0 )
             return;
 
         
@@ -366,6 +369,7 @@ public class GeneratorData : ISourceGenerator
         arguments += $" -pathToContext {FolderForContext}";
         arguments += $" -pathToModels {FolderForClasses}";
         arguments += $" -project {ProjectWithDesigner}";
+        arguments += $" -nameContext {contextName}";
         startInfo.Arguments = arguments;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;

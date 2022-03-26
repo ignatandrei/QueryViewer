@@ -21,15 +21,15 @@ public class TestAuthors
         }
 
     }
-    static ApplicationDbContext context
+    static PubsContext context
     {
         get
         {
-            return new ApplicationDbContext();
+            return new PubsContext();
 
         }
     }
-    int nrRecs = 23;
+    //int nrRecs = 23;
     const string newAuID = "174-34-1176";
     static TestAuthors()
     {

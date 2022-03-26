@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContextFactory<ApplicationDbContext>(
+builder.Services.AddDbContextFactory<PubsContext>(
 
         options =>
         {

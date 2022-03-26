@@ -10,9 +10,9 @@ namespace ExampleWebAPI.Controllers
     [ApiController]   
     public partial class AppDbContextController : ControllerBase
     {
-        private readonly ApplicationDbContext context;
+        private readonly PubsContext context;
 
-        public AppDbContextController(ApplicationDbContext context)
+        public AppDbContextController(PubsContext context)
         {
             this.context = context;
             

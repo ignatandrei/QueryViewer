@@ -9,7 +9,7 @@
 		<CompilerVisibleProperty Include="FolderForContext" />
 		<CompilerVisibleProperty Include="FolderForClasses" />
 		<CompilerVisibleProperty Include="ProjectWithDesigner" />
-
+		<CompilerVisibleProperty Include="NameContext" />
 	</ItemGroup>
 	<ItemGroup>
 	  <!--<PackageReference Include="QueryGenerator" Version="2022.3.19.850" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />-->
@@ -18,9 +18,11 @@
 	<PropertyGroup>
 		<GenerateStep>ContextAndClasses</GenerateStep>		
 		<Provider>Microsoft.EntityFrameworkCore.SqlServer</Provider>
-		<FolderForContext>..\ExampleContext\Generated</FolderForContext>
-		<FolderForClasses>..\ExampleModels\Generated</FolderForClasses>
+		<FolderForContext>..\ExampleContext\GeneratedPubs</FolderForContext>
+		<FolderForClasses>..\ExampleModels\GeneratedPubs</FolderForClasses>
 		<ProjectWithDesigner>..\ExampleWebAPI\</ProjectWithDesigner>
+		<NameContext>PubsContext</NameContext>
+
 	</PropertyGroup>
 
 

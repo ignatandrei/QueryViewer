@@ -6,7 +6,7 @@ var x = false;
 var y = x.ToString();
 var z= bool.Parse(y);
 Console.WriteLine("Hello, World!");
-var context = new ApplicationDbContext();
+var context = new PubsContext();
 //await SearchAdvanced1(SearchCriteria.Contains, eauthorsColumns.au_fname, "Ann", 2);
 //await SearchAdvanced1(SearchCriteria.Equal, eauthorsColumns.au_lname, "Ringer", 2);
 //await SearchAdvanced1(SearchCriteria.Different, eauthorsColumns.state, "Oakland", 18);
