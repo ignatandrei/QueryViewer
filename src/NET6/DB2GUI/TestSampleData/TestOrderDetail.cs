@@ -40,10 +40,13 @@ public class TestOrderDetail
     [InlineData(SearchCriteria.Different, eOrder_DetailsColumns.Discount, "8042", 2155)]
     [InlineData(SearchCriteria.Equal, eOrder_DetailsColumns.Discount, "0", 1317)]
     [InlineData(SearchCriteria.Different, eOrder_DetailsColumns.Discount, "0", 838)]
+    [InlineData(SearchCriteria.Greater, eOrder_DetailsColumns.Discount, "0", 838)]
+    [InlineData(SearchCriteria.Less, eOrder_DetailsColumns.Discount, "0.15", 1683)]
+    [InlineData(SearchCriteria.LessOrEqual, eOrder_DetailsColumns.Discount, "0.15", 1840)]
+
 
     public async Task SearchAdvanced(SearchCriteria sc, eOrder_DetailsColumns col, string val, int nrRecs)
     {
-        CreateDb();
         var data = await context.Order_DetailsSimpleSearch(sc, col, val).ToArrayAsync();
         Assert.Equal(nrRecs, data.Length);
     }
