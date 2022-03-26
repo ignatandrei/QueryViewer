@@ -84,10 +84,10 @@ public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{cla
 {{ 
 hasLess = 0
 hasString=0
-if "short" == prop.Type || "int" == prop.Type || "double" == prop.Type || "DateTime" == prop.Type || "decimal" == prop.Type
+if "string" == prop.Type || "short" == prop.Type || "int" == prop.Type || "double" == prop.Type || "DateTime" == prop.Type || "decimal" == prop.Type
     hasLess=1
 end
-if "short?" ==prop.Type || "int?" == prop.Type || "double?" == prop.Type || "DateTime?" == prop.Type || "decimal?" == prop.Type
+if "string?" == prop.Type || "short?" ==prop.Type || "int?" == prop.Type || "double?" == prop.Type || "DateTime?" == prop.Type || "decimal?" == prop.Type
     hasLess=1
 end
 if "string" == prop.Type || "string?" == prop.Type
@@ -142,16 +142,36 @@ end
                         break;
                     {{ if hasLess == 1 }}
                     case SearchCriteria.Less:
+                        {{ if "string" == prop.Type || "string?" == prop.Type }}
+                            returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},value) < 0 );
+                        {{ else }}
                         returnValue =returnValue.Where(it=>it.{{prop.Name}}<value);
+                        {{ end }}
                         break;
                     case SearchCriteria.LessOrEqual:
+                        {{ if "string" == prop.Type || "string?" == prop.Type }}
+                            returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},value) <= 0 );
+                        {{ else }}
+                        
                         returnValue =returnValue.Where(it=>it.{{prop.Name}}<=value);
+                        {{end}}
                         break;
                     case SearchCriteria.Greater:
+                        {{ if "string" == prop.Type || "string?" == prop.Type }}
+                            returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},value) > 0 );
+                        {{ else }}
+                        
                         returnValue =returnValue.Where(it=>it.{{prop.Name}}>value);
+                        {{end}}
                         break;
                     case SearchCriteria.GreaterOrEqual:
+                    {{ if "string" == prop.Type || "string?" == prop.Type }}
+                            returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},value) >= 0 );
+                        {{ else }}
+                        
+                        
                         returnValue =returnValue.Where(it=>it.{{prop.Name}}>=value);
+                        {{end}}
                         break;
                     {{end}}
                     {{if hasString == 1}}
