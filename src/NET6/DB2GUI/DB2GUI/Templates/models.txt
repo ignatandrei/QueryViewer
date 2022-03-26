@@ -87,7 +87,7 @@ hasString=0
 if "short" == prop.Type || "int" == prop.Type || "double" == prop.Type || "DateTime" == prop.Type || "decimal" == prop.Type
     hasLess=1
 end
-if "short" ==prop.Type || "int?" == prop.Type || "double?" == prop.Type || "DateTime?" == prop.Type || "decimal?" == prop.Type
+if "short?" ==prop.Type || "int?" == prop.Type || "double?" == prop.Type || "DateTime?" == prop.Type || "decimal?" == prop.Type
     hasLess=1
 end
 if "string" == prop.Type || "string?" == prop.Type
