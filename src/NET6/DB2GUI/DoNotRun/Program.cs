@@ -23,6 +23,7 @@ var context = new ApplicationDbContext();
 await SearchAdvanced2(SearchCriteria.Equal, ediscountsColumns.discount, "5", 1);
 async Task SearchAdvanced2(SearchCriteria sc, ediscountsColumns col, string? val, int nrRecs)
 {
+    
     while (true)
     {
         try

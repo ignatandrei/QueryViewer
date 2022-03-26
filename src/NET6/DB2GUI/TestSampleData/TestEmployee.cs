@@ -33,6 +33,9 @@ public class TestEmployee
     [InlineData(SearchCriteria.Equal, eemployeeColumns.minit, "M", 3)]
     [InlineData(SearchCriteria.Less, eemployeeColumns.minit, "M", 29)]
     [InlineData(SearchCriteria.Greater, eemployeeColumns.minit, "M", 11)]
+    [InlineData(SearchCriteria.Like, eemployeeColumns.emp_id, "%1%", 14)]
+    [InlineData(SearchCriteria.Like, eemployeeColumns.emp_id, "K%J%", 2)]
+
     public async Task SearchAdvanced(SearchCriteria sc, eemployeeColumns col, string val, int nrRecs)
     {
         //CreateDb();
