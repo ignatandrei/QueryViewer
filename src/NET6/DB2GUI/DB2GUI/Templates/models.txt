@@ -84,10 +84,10 @@ public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{cla
 {{ 
 hasLess = 0
 hasString=0
-if "string" == prop.Type || "short" == prop.Type || "int" == prop.Type || "double" == prop.Type || "DateTime" == prop.Type || "decimal" == prop.Type
+if "byte" == prop.Type || "string" == prop.Type || "short" == prop.Type || "int" == prop.Type || "long" == prop.Type  || "double" == prop.Type || "DateTime" == prop.Type || "decimal" == prop.Type
     hasLess=1
 end
-if "string?" == prop.Type || "short?" ==prop.Type || "int?" == prop.Type || "double?" == prop.Type || "DateTime?" == prop.Type || "decimal?" == prop.Type
+if "byte?" == prop.Type || "string?" == prop.Type || "short?" ==prop.Type || "int?" == prop.Type || "long?" == prop.Type  || "double?" == prop.Type || "DateTime?" == prop.Type || "decimal?" == prop.Type
     hasLess=1
 end
 if "string" == prop.Type || "string?" == prop.Type
@@ -115,9 +115,9 @@ end
         }
         else{
         
-            {{ if prop.Type == "short" || prop.Type == "long" || prop.Type == "int" || prop.Type == "decimal"}} 
+            {{ if "byte" == prop.Type  || prop.Type == "short" || prop.Type == "long" || prop.Type == "int" || prop.Type == "decimal"}} 
                 var value = {{prop.Type}}.Parse(s.Value);
-            {{ else if prop.Type == "short?" || prop.Type == "long?" || prop.Type == "decimal?"|| prop.Type == "int?"  }} 
+            {{ else if "byte?" == prop.Type  || prop.Type == "short?" || prop.Type == "long?" || prop.Type == "decimal?"|| prop.Type == "int?"  }} 
                 {{prop.Type}} value= null;
                 if(s.Value != null){
                     value= {{prop.Type  | string.remove "?" }}.Parse(s.Value);
