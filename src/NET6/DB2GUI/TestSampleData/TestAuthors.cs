@@ -95,6 +95,13 @@ public class TestAuthors
     [InlineData(SearchCriteria.Equal, eauthorsColumns.au_id,"asd",0)]
     [InlineData(SearchCriteria.Equal, eauthorsColumns.au_lname, "Ringer", 2)]
     [InlineData(SearchCriteria.Contains, eauthorsColumns.au_fname, "Ann", 2)]
+    [InlineData(SearchCriteria.StartsWith, eauthorsColumns.au_fname, "Ann", 2)]
+    [InlineData(SearchCriteria.EndsWith, eauthorsColumns.au_fname, "nne", 1)]
+    [InlineData(SearchCriteria.EndsWith, eauthorsColumns.au_fname, "e", 3)]
+    [InlineData(SearchCriteria.Different, eauthorsColumns.city, "Oakland", 18)]
+    //[InlineData(SearchCriteria.Different, eauthorsColumns.contract, "false", 19)]
+    //[InlineData(SearchCriteria.Equal, eauthorsColumns.contract, "False", 4)]
+    //[InlineData(SearchCriteria.Different, eauthorsColumns.contract, "False", 19)]
 
     public async Task SearchAdvanced(SearchCriteria sc, eauthorsColumns col,string val, int nrRecs)
     {
