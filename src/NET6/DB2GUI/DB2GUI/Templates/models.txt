@@ -84,14 +84,11 @@ public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{cla
 {{ 
 hasLess = 0
 hasString=0
-if "int" == prop.Type
+if "int" == prop.Type || "double" == prop.Type || "DateTime" == prop.Type || "decimal" == prop.Type
     hasLess=1
 end
-if "double" == prop.Type
+if "int?" == prop.Type || "double?" == prop.Type || "DateTime?" == prop.Type || "decimal?" == prop.Type
     hasLess=1
-end
-if "DateTime" == prop.Type
-    hasLess=1                                
 end
 if "string" == prop.Type || "string?" == prop.Type
     hasString=1
@@ -99,17 +96,28 @@ end
 }}                                    
         if(s.Value == null)
         {
-            {{ if prop.Type.IsNullable}}
-                data=data.Where(it=>it.{{prop.Name}}==null);
+            {{ if prop.Type.IsNullable || hasString == 1}}
+                switch(s.Criteria){
+                    case SearchCriteria.Equal:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}==null);
+                        break;
+                    case SearchCriteria.Different:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}!=null);
+                        break;
+                    default:
+                        throw new ArgumentException($"null cannot have {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
+                    }
+                
+            
             {{ else }}
                 throw new ArgumentException("{{classLoop.Name}}.{{prop.Name}} cannot be null");
             {{ end}}
         }
         else{
         
-            {{ if prop.Type == "long" || prop.Type == "int" }} 
+            {{ if prop.Type == "long" || prop.Type == "int" || prop.Type == "decimal"}} 
                 var value = {{prop.Type}}.Parse(s.Value);
-            {{ else if prop.Type == "long?" || prop.Type == "int?"  }} 
+            {{ else if prop.Type == "long?" || prop.Type == "decimal?"|| prop.Type == "int?"  }} 
                 {{prop.Type}} value= null;
                 if(s.Value != null){
                     value= {{prop.Type  | string.remove "?" }}.Parse(s.Value);

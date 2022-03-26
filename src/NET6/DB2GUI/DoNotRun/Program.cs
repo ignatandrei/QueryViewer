@@ -1,5 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Generated;
+using System.Diagnostics;
+
 var x = false;
 var y = x.ToString();
 var z= bool.Parse(y);
@@ -16,11 +18,30 @@ var context = new ApplicationDbContext();
 //    var q= await data.ToArrayAsync();
 
 //}
-await SearchAdvanced2(SearchCriteria.Equal, ediscountsColumns.stor_id, null, 2);
-async Task SearchAdvanced2(SearchCriteria sc, ediscountsColumns col, string val, int nrRecs)
+//await SearchAdvanced2(SearchCriteria.Equal, ediscountsColumns.stor_id, null, 2);
+//await SearchAdvanced2(SearchCriteria.Different, ediscountsColumns.stor_id, null, 1);
+await SearchAdvanced2(SearchCriteria.Equal, ediscountsColumns.discount, "5", 1);
+async Task SearchAdvanced2(SearchCriteria sc, ediscountsColumns col, string? val, int nrRecs)
 {
-
-    var data = context.discountsSimpleSearch(sc, col, val);
-    var q= await data.ToArrayAsync();
-
+    while (true)
+    {
+        try
+        {
+            var data = context.discountsSimpleSearch(sc, col, val);
+            var q = await data.ToArrayAsync();
+            if (nrRecs != q.Length)
+            {
+                Debugger.Break();
+            }
+            else
+            {
+                break;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debugger.Break();
+        }
+    }
 }
+Console.WriteLine("done!");
