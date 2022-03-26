@@ -45,7 +45,7 @@ var context = new PubsContext();
 //        }
 //    }
 //}
-await SearchAdvanced3(SearchCriteria.EqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 4);
+//await SearchAdvanced3(SearchCriteria.EqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 4);
 async Task SearchAdvanced3(SearchCriteria sc, eemployeeColumns col, string? val, int nrRecs)
 {
 
