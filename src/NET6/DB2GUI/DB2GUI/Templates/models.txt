@@ -200,12 +200,40 @@ end
                     case SearchCriteria.EqualYear:
                         returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(it.{{prop.Name}},value) == 0);
                         break;
-//DifferentYear,
-  //  GreaterYear,
-   // LessYear,
-   // GreaterOrEqualYear,
-    //LessOrEqualYear,
-
+                    case SearchCriteria.DifferentYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(it.{{prop.Name}},value) != 0);
+                        break;
+                    case SearchCriteria.GreaterYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(value,it.{{prop.Name}}) > 0);
+                        break;
+                    case SearchCriteria.LessYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(value,it.{{prop.Name}}) < 0);
+                        break;
+                    case SearchCriteria.GreaterOrEqualYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(value,it.{{prop.Name}}) >= 0);
+                        break;
+                    case SearchCriteria.LessOrEqualYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(value,it.{{prop.Name}}) <= 0);
+                        break;
+                    case SearchCriteria.EqualMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) == 0);
+                        break;
+                    case SearchCriteria.DifferentMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) != 0);
+                        break;
+                    case SearchCriteria.GreaterMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) > 0);
+                        break;
+                    case SearchCriteria.LessMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) < 0);
+                        break;
+                    case SearchCriteria.GreaterOrEqualMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) >= 0);
+                        break;
+                    case SearchCriteria.LessOrEqualMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) <= 0);
+                        break;
+   
                     {{end}}
                     default:
                         throw new ArgumentException($"not found Criteria {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
@@ -289,12 +317,12 @@ public enum SearchCriteria
     GreaterOrEqualYear,
     LessOrEqualYear,
 
-    EqualMonth,
-    DifferentMonth,
-    GreaterMonth,
-    LessMonth,
-    GreaterOrEqualMonth,
-    LessOrEqualMonth,
+    EqualMonthYear,
+    DifferentMonthYear,
+    GreaterMonthYear,
+    LessMonthYear,
+    GreaterOrEqualMonthYear,
+    LessOrEqualMonthYear,
     
     EqualDay,
     DifferentDay,
