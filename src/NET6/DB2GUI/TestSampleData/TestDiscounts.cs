@@ -37,6 +37,9 @@ public class TestDiscounts
     [InlineData(SearchCriteria.Equal, ediscountsColumns.discount, "5", 1)]
     [InlineData(SearchCriteria.Less, ediscountsColumns.discount, "5", 0)]
     [InlineData(SearchCriteria.LessOrEqual, ediscountsColumns.discount, "5", 1)]
+    [InlineData(SearchCriteria.Less, ediscountsColumns.discount, "10.5", 2)]
+    [InlineData(SearchCriteria.LessOrEqual, ediscountsColumns.discount, "10.5", 3)]
+    [InlineData(SearchCriteria.Equal, ediscountsColumns.lowqty, "100", 1)]
     public async Task SearchAdvanced(SearchCriteria sc, ediscountsColumns col, string val, int nrRecs)
     {
         CreateDb();
