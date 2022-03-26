@@ -45,6 +45,9 @@ public class TestOrderDetail
     [InlineData(SearchCriteria.LessOrEqual, eOrder_DetailsColumns.Discount, "0.15", 1840)]
     [InlineData(SearchCriteria.InArray, eOrder_DetailsColumns.Quantity, "10,12", 273)]
     [InlineData(SearchCriteria.NotInArray, eOrder_DetailsColumns.Quantity, "10,12", 1882)]
+    [InlineData(SearchCriteria.Between, eOrder_DetailsColumns.Quantity, "10,12", 275)]
+    [InlineData(SearchCriteria.NotBetween, eOrder_DetailsColumns.Quantity, "10,12", 1880)]
+
     public async Task SearchAdvanced(SearchCriteria sc, eOrder_DetailsColumns col, string val, int nrRecs)
     {        
         var data = await context.Order_DetailsSimpleSearch(sc, col, val).ToArrayAsync();

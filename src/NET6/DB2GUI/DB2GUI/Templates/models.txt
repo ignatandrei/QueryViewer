@@ -167,6 +167,36 @@ end
             {{ end}}  
             
             switch(s.Criteria){
+                  case SearchCriteria.Between:
+                        {{ if prop.IsArray || hasLess != 1}} 
+                            throw new ArgumentException("cannot contain array in array or property that is not fundamental ");
+                        {{ else }}
+                            if(valueArray.Length != 2){
+                                throw new ArgumentException("between must have 2 args, separated by comma");
+                            }
+                            {{ if  hasString != 1  }}
+                                returnValue =returnValue.Where(it=>it.{{prop.Name}}>= valueArray[0] && it.{{prop.Name}} <= valueArray[1]);
+                            {{ else }}
+                                returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},valueArray[0]) >= 0  && String.Compare(it.{{prop.Name}},valueArray[1]) <= 0);
+
+                            {{ end }}
+                        {{ end }}
+                        break;
+                  case SearchCriteria.NotBetween:
+                        {{ if prop.IsArray || hasLess != 1}} 
+                            throw new ArgumentException("cannot contain array in array or property that is not fundamental ");
+                        {{ else }}
+                            if(valueArray.Length != 2){
+                                throw new ArgumentException("between must have 2 args, separated by comma");
+                            }
+                            {{ if  hasString != 1  }}
+                                returnValue =returnValue.Where(it=>it.{{prop.Name}}< valueArray[0] || it.{{prop.Name}} > valueArray[1]);
+                            {{ else }}
+                                returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},valueArray[0]) < 0  || String.Compare(it.{{prop.Name}},valueArray[1]) > 0);
+
+                            {{ end }}
+                        {{ end }}
+                        break;
                     case SearchCriteria.InArray:
                         {{ if prop.IsArray || hasLess != 1}} 
                             throw new ArgumentException("cannot contain array in array or property that is not fundamental ");
@@ -355,6 +385,8 @@ public enum SearchCriteria
     Equal,
     InArray,
     NotInArray,
+    Between,
+    NotBetween,
     Different,
     Greater,
     Less,
