@@ -20,15 +20,40 @@ var context = new ApplicationDbContext();
 //}
 //await SearchAdvanced2(SearchCriteria.Equal, ediscountsColumns.stor_id, null, 2);
 //await SearchAdvanced2(SearchCriteria.Different, ediscountsColumns.stor_id, null, 1);
-await SearchAdvanced2(SearchCriteria.Equal, ediscountsColumns.discount, "5", 1);
-async Task SearchAdvanced2(SearchCriteria sc, ediscountsColumns col, string? val, int nrRecs)
+//await SearchAdvanced2(SearchCriteria.Equal, ediscountsColumns.discount, "5", 1);
+//async Task SearchAdvanced2(SearchCriteria sc, ediscountsColumns col, string? val, int nrRecs)
+//{
+
+//    while (true)
+//    {
+//        try
+//        {
+//            var data = context.discountsSimpleSearch(sc, col, val);
+//            var q = await data.ToArrayAsync();
+//            if (nrRecs != q.Length)
+//            {
+//                Debugger.Break();
+//            }
+//            else
+//            {
+//                break;
+//            }
+//        }
+//        catch (Exception ex)
+//        {
+//            Debugger.Break();
+//        }
+//    }
+//}
+//await SearchAdvanced3()
+async Task SearchAdvanced3(SearchCriteria sc, eemployeeColumns col, string? val, int nrRecs)
 {
-    
+
     while (true)
     {
         try
         {
-            var data = context.discountsSimpleSearch(sc, col, val);
+            var data = context.employeeSimpleSearch(sc, col, val);
             var q = await data.ToArrayAsync();
             if (nrRecs != q.Length)
             {
@@ -45,4 +70,6 @@ async Task SearchAdvanced2(SearchCriteria sc, ediscountsColumns col, string? val
         }
     }
 }
+
+
 Console.WriteLine("done!");

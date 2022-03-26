@@ -84,6 +84,7 @@ public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{cla
 {{ 
 hasLess = 0
 hasString=0
+hasDateTime=0
 if "byte" == prop.Type || "string" == prop.Type || "short" == prop.Type || "int" == prop.Type || "long" == prop.Type  || "double" == prop.Type || "DateTime" == prop.Type || "decimal" == prop.Type
     hasLess=1
 end
@@ -92,6 +93,9 @@ if "byte?" == prop.Type || "string?" == prop.Type || "short?" ==prop.Type || "in
 end
 if "string" == prop.Type || "string?" == prop.Type
     hasString=1
+end
+if "DateTime" == prop.Type || "DateTime?" == prop.Type
+    hasDateTime=1
 end
 }}                                    
         if(s.Value == null)
@@ -192,6 +196,17 @@ end
                         break;
                     
                     {{end}}
+                    {{if hasDateTime == 1}}
+                    case SearchCriteria.EqualYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(it.{{prop.Name}},value) == 0);
+                        break;
+//DifferentYear,
+  //  GreaterYear,
+   // LessYear,
+   // GreaterOrEqualYear,
+    //LessOrEqualYear,
+
+                    {{end}}
                     default:
                         throw new ArgumentException($"not found Criteria {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
                 }
@@ -265,7 +280,29 @@ public enum SearchCriteria
     Less,
     GreaterOrEqual,
     LessOrEqual,
-    Like
+    Like,
+
+    EqualYear,
+    DifferentYear,
+    GreaterYear,
+    LessYear,
+    GreaterOrEqualYear,
+    LessOrEqualYear,
+
+    EqualMonth,
+    DifferentMonth,
+    GreaterMonth,
+    LessMonth,
+    GreaterOrEqualMonth,
+    LessOrEqualMonth,
+    
+    EqualDay,
+    DifferentDay,
+    GreaterDay,
+    LessDay,
+    GreaterOrEqualDay,
+    LessOrEqualDay,
+    
 }
 
 #nullable restore
