@@ -3,15 +3,15 @@ namespace TestSampleData;
 
 public class TestAuthors
 {
-    void CreateDb()
+    static void CreateDb()
     {
-        var context = this.context;
+        var cnt = context;
         var file = File.ReadAllText("insertPubs.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
         foreach (var item in file)
         {
             try
             {
-                context.Database.ExecuteSqlRaw(item);
+                cnt.Database.ExecuteSqlRaw(item);
             }
             catch (Exception ex)
             {
@@ -21,7 +21,7 @@ public class TestAuthors
         }
 
     }
-    ApplicationDbContext context
+    static ApplicationDbContext context
     {
         get
         {
@@ -31,66 +31,11 @@ public class TestAuthors
     }
     int nrRecs = 23;
     const string newAuID = "174-34-1176";
-    public TestAuthors()
-    {
-
-    }
-
-    [Fact]
-    public async Task GetAll()
+    static TestAuthors()
     {
         CreateDb();
-        var all = await context.authorsGetAll().ToArrayAsync();
-        Assert.Equal(nrRecs, all.Count());
+    }
 
-
-    }
-    [Fact]
-    public async Task GetCount()
-    {
-        CreateDb();
-        var all = await context.authorsCount(null);
-        Assert.Equal(nrRecs, all);
-    }
-    [Fact]
-    public async Task SaveNew()
-    {
-        CreateDb();
-        var all = await Save();
-        Assert.NotNull(all);
-    }
-    private async Task<bool> Save()
-    {
-
-        var n = new authors();
-        n.au_id = newAuID;
-        n.au_fname = "Andrei";
-        n.au_lname = "Ignat";
-        var all = await context.authorsSave(n);
-        return all != null;
-
-    }
-    [Fact]
-    public async Task Delete()
-    {
-        CreateDb();
-        var n = Save();
-        var d = await context.authorsDelete(newAuID);
-        Assert.True(d);
-    }
-    [Fact]
-    public async Task Modify()
-    {
-        CreateDb();
-        await SaveNew();
-        var n = new authors();
-        n.au_id = newAuID;
-        n.au_fname = "Andrei1";
-        n.au_lname = "Ignat1";
-        n.phone = "test";
-        var d = await context.authorsModify(n);
-        Assert.True(d);
-    }
     [Theory]
     [InlineData(SearchCriteria.Equal, eauthorsColumns.au_id,"asd",0)]
     [InlineData(SearchCriteria.Equal, eauthorsColumns.au_lname, "Ringer", 2)]
@@ -106,14 +51,14 @@ public class TestAuthors
     
     public async Task SearchAdvanced(SearchCriteria sc, eauthorsColumns col,string val, int nrRecs)
     {
-        CreateDb();
+        
         var data= await context.authorsSimpleSearch(sc, col, val).ToArrayAsync();
         Assert.Equal(nrRecs,data.Length);
     }
     [Fact]
     public async Task SearchData()
     {
-        CreateDb();
+        
         var search = new Searchauthors();
         var orderBy = new Generated.OrderBy<eauthorsColumns>();
         orderBy.FieldName = eauthorsColumns.au_id;
