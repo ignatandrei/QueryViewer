@@ -100,7 +100,7 @@ end
 }}                                    
         if(s.Value == null)
         {
-            {{ if prop.Type.IsNullable || hasString == 1}}
+            {{ if prop.IsNullable || hasString == 1}}
                 switch(s.Criteria){
                     case SearchCriteria.Equal:
                         returnValue =returnValue.Where(it=>it.{{prop.Name}}==null);
@@ -118,29 +118,55 @@ end
             {{ end}}
         }
         else{
-        
             {{ if "float" == prop.Type || prop.Type == "bool" || "byte" == prop.Type  || prop.Type == "short" || prop.Type == "long" || prop.Type == "int" || prop.Type == "decimal"}} 
                 var value = {{prop.Type}}.Parse(s.Value);
+                var valueArray = s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=>{{prop.Type}}.Parse(s.Value))
+                    .ToArray();
+                ;
             {{ else if "float?" == prop.Type || prop.Type == "bool?" ||  "byte?" == prop.Type  || prop.Type == "short?" || prop.Type == "long?" || prop.Type == "decimal?"|| prop.Type == "int?"  }} 
                 {{prop.Type}} value= null;
+                {{prop.Type  | string.remove "?" }}[] valueArray= null;
                 if(s.Value != null){
                     value= {{prop.Type  | string.remove "?" }}.Parse(s.Value);
+                    valueArray = s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=>{{prop.Type  | string.remove "?" }}.Parse(s.Value))
+                    .ToArray();
+                ;
                 }
             {{ else if prop.Type == "string" || prop.Type == "string?" }}
                 var value = s.Value;
+                var valueArray= s.Value?.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .ToArray();
+
             {{ else if "DateTime" == prop.Type}} 
                 var value=DateTime.Parse(s.Value); 
+                var valueArray=s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=>DateTime.Parse(s.Value))
+                    .ToArray();
             {{ else if "DateTime?" == prop.Type}} 
                 {{prop.Type}} value= null;
+                {{prop.Type  | string.remove "?" }}[] valueArray=null;
                 if(s.Value != null){
                     value= DateTime.Parse(s.Value);
+                    valueArray=s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=>DateTime.Parse(s.Value))
+                    .ToArray();
+
                 }
             
             {{ else }}
                 var value =({{prop.Type}})((dynamic)s.Value);
+                {{prop.Type}}[] valueArray=null;
             {{ end}}  
             
             switch(s.Criteria){
+                    case SearchCriteria.InArray:
+                        break;
                     case SearchCriteria.Equal:
                         returnValue =returnValue.Where(it=>it.{{prop.Name}}==value);
                         break;
@@ -303,6 +329,7 @@ public enum SearchCriteria
     EndsWith,
     Contains,
     Equal,
+    InArray,
     Different,
     Greater,
     Less,

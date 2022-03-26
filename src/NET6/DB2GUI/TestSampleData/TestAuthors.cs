@@ -37,7 +37,7 @@ public class TestAuthors
     }
 
     [Theory]
-    [InlineData(SearchCriteria.Equal, eauthorsColumns.au_id,"asd",0)]
+    [InlineData(SearchCriteria.Equal, eauthorsColumns.au_id, "asd", 0)]
     [InlineData(SearchCriteria.Equal, eauthorsColumns.au_lname, "Ringer", 2)]
     [InlineData(SearchCriteria.Contains, eauthorsColumns.au_fname, "Ann", 2)]
     [InlineData(SearchCriteria.StartsWith, eauthorsColumns.au_fname, "Ann", 2)]
@@ -53,9 +53,8 @@ public class TestAuthors
     [InlineData(SearchCriteria.Contains, eauthorsColumns.address, "20", 3)]
     [InlineData(SearchCriteria.StartsWith, eauthorsColumns.address, "3", 6)]
     [InlineData(SearchCriteria.EndsWith, eauthorsColumns.address, "Av.", 5)]
-    public async Task SearchAdvanced(SearchCriteria sc, eauthorsColumns col,string val, int nrRecs)
+    public async Task SearchAdvanced(SearchCriteria sc, eauthorsColumns col, string val, int nrRecs)
     {
-        
         var data= await context.authorsSimpleSearch(sc, col, val).ToArrayAsync();
         Assert.Equal(nrRecs,data.Length);
     }

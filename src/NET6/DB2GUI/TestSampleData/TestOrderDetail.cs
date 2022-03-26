@@ -46,7 +46,7 @@ public class TestOrderDetail
 
 
     public async Task SearchAdvanced(SearchCriteria sc, eOrder_DetailsColumns col, string val, int nrRecs)
-    {
+    {        
         var data = await context.Order_DetailsSimpleSearch(sc, col, val).ToArrayAsync();
         Assert.Equal(nrRecs, data.Length);
     }

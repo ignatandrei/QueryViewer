@@ -294,6 +294,7 @@ public class GeneratorData : ISourceGenerator
                     .Select(it => new {
                         Name = it.Identifier.Text,
                         Type = it.Type.ToString(),
+                        IsArray= it.Type.ToString().Contains("[]"),
                         IsNullable = it.Type.ToString().Contains("?")
                     })
                     .ToArray()
