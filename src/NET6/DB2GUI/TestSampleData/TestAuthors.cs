@@ -99,7 +99,7 @@ public class TestAuthors
     public async Task SearchAdvanced(SearchCriteria sc, eauthorsColumns col,string val, int nrRecs)
     {
         CreateDb();
-        var data= await context.authorsSimpleSearch(SearchCriteria.Equal, col, val).ToArrayAsync();
+        var data= await context.authorsSimpleSearch(sc, col, val).ToArrayAsync();
         Assert.Equal(nrRecs,data.Length);
     }
     [Fact]
