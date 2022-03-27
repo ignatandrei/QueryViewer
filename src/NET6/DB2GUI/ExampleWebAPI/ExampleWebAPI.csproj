@@ -13,7 +13,7 @@
 	  <PackageReference Include="RSCG_AMS" Version="2021.7.6.628" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
 
 	  <PackageReference Include="NetCore2Blockly" Version="5.2022.210.2007" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
 	  <PackageReference Include="SkinnyControllersCommon" Version="2021.25.6.855" />
 	  <PackageReference Include="SkinnyControllersGenerator" Version="2021.25.6.855" />
 
@@ -39,6 +39,9 @@
 
 		<CompilerVisibleProperty Include="GenerateStep" />
 
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Controllers\" />
 	</ItemGroup>
 	<PropertyGroup>
 		<GenerateStep>Controller</GenerateStep>

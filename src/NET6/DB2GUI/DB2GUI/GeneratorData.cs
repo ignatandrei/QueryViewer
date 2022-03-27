@@ -395,6 +395,7 @@ public class GeneratorData : ISourceGenerator
         
         if (errors.Length > 0 || output.Contains("SqlException") || output.Contains("Build failed"))
         {
+            
             var message ="run powershell with "+ arguments;
             var dd = new DiagnosticDescriptor("PowershellError",message, message, "powershell", DiagnosticSeverity.Error, true, description:message);
             
@@ -403,11 +404,19 @@ public class GeneratorData : ISourceGenerator
             var tempFile=  Path.GetTempFileName()+".txt";
             File.WriteAllText(tempFile, output);
             message = tempFile;
+            
             dd = new DiagnosticDescriptor("PowershellError", message, message, "powershell", DiagnosticSeverity.Error, true, description: message);
 
             d = Diagnostic.Create(dd, Location.None, "csproj");
             context.ReportDiagnostic(d);
+            try
+            {
+                Process.Start("notepad.exe", tempFile);
+            }
+            catch (Exception)
+            {
 
+            }
         }
 
     }

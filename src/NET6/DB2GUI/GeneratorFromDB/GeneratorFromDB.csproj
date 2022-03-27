@@ -18,10 +18,10 @@
 	<PropertyGroup>
 		<GenerateStep>ContextAndClasses</GenerateStep>		
 		<Provider>Microsoft.EntityFrameworkCore.SqlServer</Provider>
-		<FolderForContext>..\ExampleContext\GeneratedNorthwind</FolderForContext>
-		<FolderForClasses>..\ExampleModels\GeneratedNorthwind</FolderForClasses>
+		<FolderForContext>..\ExampleContext\GeneratedPubs</FolderForContext>
+		<FolderForClasses>..\ExampleModels\GeneratedPubs</FolderForClasses>
 		<ProjectWithDesigner>..\ExampleWebAPI\</ProjectWithDesigner>
-		<NameContext>NorthwindContext</NameContext>
+		<NameContext>PubsContext</NameContext>
 
 	</PropertyGroup>
 

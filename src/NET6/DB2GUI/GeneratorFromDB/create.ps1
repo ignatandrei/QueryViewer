@@ -8,7 +8,7 @@ param (
 )
 #modify here and in WebAPI appsettings.json  
 $connection="Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>"
-$connection="Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>"
+#$connection="Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>"
 
 dotnet tool restore
 
