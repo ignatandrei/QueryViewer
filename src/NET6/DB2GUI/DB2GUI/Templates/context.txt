@@ -1,5 +1,5 @@
 ﻿#nullable enable
-//version 2022.03.27.1124
+//version 2022.03.29.121
 using Microsoft.EntityFrameworkCore;
 namespace Generated;
    {{ for classLoop in queries }}
