@@ -1,0 +1,27 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>GeneratorFromDB</Name>
+    <Description>
+    </Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>GeneratorFromDB</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="GeneratorFromDB.csproj" File="GeneratorFromDB.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="false" TargetFileName="create.ps1">create.ps1</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="DemoText.cs">DemoText.cs</ProjectItem>
+	  <Folder Name=".config" TargetFolderName=".config">
+			<ProjectItem ReplaceParameters="true" TargetFileName="dotnet-tools.json">dotnet-tools.json</ProjectItem>
+	  </Folder>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

@@ -1,0 +1,33 @@
+<VSTemplate Version="2.0.0" Type="ProjectGroup"
+    xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+    <TemplateData>
+        <Name>GeneratorFromDB 2022.03.29</Name>
+        <Description>Version 2022.03.29 . See https://github.com/ignatandrei/queryViewer/</Description>
+        <!-- <Icon>Icon.ico</Icon> -->
+        <ProjectType>CSharp</ProjectType>
+    </TemplateData>
+	
+    <TemplateContent>
+		<CustomParameters>
+			<CustomParameter Name="$orig$" Value="$safeprojectname$"/>
+			
+		</CustomParameters>
+        <ProjectCollection>
+            <SolutionFolder Name="ReBuildOnceWhenDBChanges">
+				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorFromDB" CopyParameters="true">
+                    GeneratorFromDB\MyTemplate.vstemplate
+                </ProjectTemplateLink>
+			</SolutionFolder>
+                <ProjectTemplateLink ProjectName="$safeprojectname$.Context" CopyParameters="true">
+                    ExampleContext\MyTemplate.vstemplate
+                </ProjectTemplateLink>
+                <ProjectTemplateLink ProjectName="$safeprojectname$.Models" CopyParameters="true">
+                    ExampleModels\MyTemplate.vstemplate
+                </ProjectTemplateLink>
+				<ProjectTemplateLink ProjectName="$safeprojectname$.WebAPI" CopyParameters="true">
+                    ExampleWebAPI\MyTemplate.vstemplate
+                </ProjectTemplateLink>
+                      
+        </ProjectCollection>
+    </TemplateContent>
+</VSTemplate>
