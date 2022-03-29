@@ -60,7 +60,7 @@
 		<Description>
 			It works with the templates from https://github.com/ignatandrei/QueryViewer/
 		</Description>
-		<Version>2022.03.29.1956</Version>
+		<Version>2022.3.29.1956</Version>
 		<Authors>Andrei Ignat</Authors>
 		<PackageTags>RoslynCodeGenerators;C#;CSharp;site generator from database</PackageTags>
 		<PackageProjectUrl>https://github.com/ignatandrei/QueryViewer/</PackageProjectUrl>
