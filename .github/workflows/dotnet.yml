@@ -36,7 +36,7 @@ jobs:
         cd NET6
         cd DB2GUI
         cd DB2GUITemplate
-        msbuild /p:Configuration=Release
+        msbuild 
     - name: pack
       run: | 
         cd src 
