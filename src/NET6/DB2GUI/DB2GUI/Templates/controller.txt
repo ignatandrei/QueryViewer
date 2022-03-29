@@ -79,7 +79,7 @@ public partial class {{nameContext}}_{{table.Name}}_MetadataController : Control
 public partial class {{nameContext}}_{{table.Name}}_XController : ControllerBase
 {
     private {{nameContext}}  _context ;
-    public {{nameContext}}_{{table.Name}}XController({{nameContext}} context){
+    public {{nameContext}}_{{table.Name}}_XController({{nameContext}} context){
         _context=context;
     }
     
