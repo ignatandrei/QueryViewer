@@ -9,8 +9,8 @@ on:
 jobs:
   build:
 
-    #runs-on: ubuntu-latest
-    runs-on: windows-2022 
+    runs-on: ubuntu-latest
+    #runs-on: windows-2022 
 
     steps:
     - uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
         cd NET6
         cd DB2GUI
         cd DB2GUITemplate
-        msbuild 
+        # msbuild 
     - name: pack
       run: | 
         cd src 
