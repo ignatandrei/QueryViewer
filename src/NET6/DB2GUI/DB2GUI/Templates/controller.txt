@@ -49,7 +49,7 @@ public partial class {{nameContext}}_{{table.Name}}_Controller : ControllerBase
 [Route("api/[controller]/[action]")]
 [ApiController]
 
-public partial class {{table.Name}}MetadataController : ControllerBase
+public partial class {{nameContext}}_{{table.Name}}_MetadataController : ControllerBase
 {
     [HttpGet]
     public string Name(){
@@ -76,10 +76,10 @@ public partial class {{table.Name}}MetadataController : ControllerBase
 [Route("api/[controller]/[action]")]
 [ApiController]
 
-public partial class {{table.Name}}XController : ControllerBase
+public partial class {{nameContext}}_{{table.Name}}_XController : ControllerBase
 {
     private {{nameContext}}  _context ;
-    public {{table.Name}}XController({{nameContext}} context){
+    public {{nameContext}}_{{table.Name}}XController({{nameContext}} context){
         _context=context;
     }
     
