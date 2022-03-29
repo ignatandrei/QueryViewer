@@ -23,13 +23,20 @@ jobs:
         cd NET6
         cd DB2GUI
         dotnet restore
-    - name: Build
+    - name: Build nuget
       run: |
         cd src 
         cd NET6
         cd DB2GUI
         cd DB2GUI
         dotnet build --no-restore
+    - name: Build vsix
+      run: |
+        cd src 
+        cd NET6
+        cd DB2GUI
+        cd DB2GUITemplate
+        msbuild /p:Configuration=Release
     - name: pack
       run: | 
         cd src 
