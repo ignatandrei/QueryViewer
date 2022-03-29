@@ -26,8 +26,7 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContextFactory<PubsContext>(
+builder.Services.AddDbContextFactory<ApplicationDBContext>(
 
         options =>
         {
@@ -36,15 +35,24 @@ builder.Services.AddDbContextFactory<PubsContext>(
         }
      )
    ;
-builder.Services.AddDbContext<NorthwindContext>(
+//builder.Services.AddDbContextFactory<PubsContext>(
 
-        options =>
-        {
-            var cn = builder.Configuration.GetConnectionString("NorthwindConnection");
-            options.UseSqlServer(cn);
-        }
-     )
-   ;
+//        options =>
+//        {
+//            var cn = builder.Configuration.GetConnectionString("PubsConnection");
+//            options.UseSqlServer(cn);
+//        }
+//     )
+//   ;
+//builder.Services.AddDbContext<NorthwindContext>(
+
+//        options =>
+//        {
+//            var cn = builder.Configuration.GetConnectionString("NorthwindConnection");
+//            options.UseSqlServer(cn);
+//        }
+//     )
+//   ;
 
 var app = builder.Build();
 

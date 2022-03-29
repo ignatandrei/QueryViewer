@@ -1,0 +1,13 @@
+﻿{
+	"version":"2022.03.29.121",
+	"connections":[
+	{
+		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
+		"FolderForContext": "..\\ExampleContext\\GeneratedPubs",
+		"FolderForClasses": "..\\ExampleModels\\GeneratedPubs",
+		"ProjectWithDesigner": "..\\ExampleWebAPI\\",
+		"NameContext": "ApplicationDBContext",
+		"ConnectionString":"Data Source=.;Initial Catalog=test1;UId=sa1;pwd=yourStrong(!)Password"
+	}
+	]
+}

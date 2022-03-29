@@ -1,0 +1,122 @@
+﻿//version 2022.03.29.121
+
+#nullable enable
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+namespace Generated;
+
+[Route("api/[controller]")]
+[ApiController]
+public partial class {{nameContext}}_{{table.Name}}_Controller : ControllerBase
+{
+    private {{nameContext}}  _context ;
+    public {{nameContext}}_{{table.Name}}_Controller({{nameContext}} context){
+        _context=context;
+    }
+
+    [HttpGet]
+    public IAsyncEnumerable<{{table.Name}}> GetAll(){
+        return _context.{{table.Name}}.AsAsyncEnumerable();
+    }
+    {{ if numberKeys == 1  }}
+    [HttpGet("{%{{}%}{{ firstKey.Name}}{%{}}%}")]
+    public Task<{{table.Name}}> GetFromId({{firstKey.TypeName}} {{ firstKey.Name}}){
+        return 
+            _context.{{table.Name}}GetSingle({{firstKey.Name}});
+    } 
+    [HttpDelete("{%{{}%}{{ firstKey.Name}}{%{}}%}")]
+    public Task<bool> Delete({{firstKey.TypeName}} {{ firstKey.Name}}){
+        return _context.{{table.Name}}Delete({{firstKey.Name}});        
+    } 
+    [HttpPut]
+    public Task<bool> Put({{table.Name}} val){        
+        return _context.{{table.Name}}Modify(val);
+        
+    }
+
+    {{else}}
+    //generate just for keys 1, not for {{numberKeys}}
+    {{ end }}
+     
+    [HttpPost]
+    public Task<{{table.Name}}> Post({{table.Name}} val){
+        return _context.{{table.Name}}Save(val);
+    }
+    
+}
+
+[Route("api/[controller]/[action]")]
+[ApiController]
+
+public partial class {{table.Name}}MetadataController : ControllerBase
+{
+    [HttpGet]
+    public string Name(){
+        return "{{table.Name}}";
+    }
+    [HttpGet]
+    public KeyValuePair<int,string>[] Columns(){
+        return Enum.GetValues<e{{table.Name}}Columns>()
+          .Select(it=>new KeyValuePair<int,string>((int)it,it.ToString()))
+                .ToArray();        
+        ;
+    }
+    [HttpGet]
+    public KeyValuePair<int,string>[] SearchCriteria(){
+        return Enum.GetValues<SearchCriteria>()
+          .Select(it=>new KeyValuePair<int,string>((int)it,it.ToString()))
+                .ToArray();        
+        ;
+    }
+    
+
+}
+
+[Route("api/[controller]/[action]")]
+[ApiController]
+
+public partial class {{table.Name}}XController : ControllerBase
+{
+    private {{nameContext}}  _context ;
+    public {{table.Name}}XController({{nameContext}} context){
+        _context=context;
+    }
+    
+    [HttpPost]
+    public IAsyncEnumerable<{{table.Name}}> Search(SearchField<e{{table.Name}}Columns> search){
+            return _context.{{table.Name}}SimpleSearch(search);
+        }
+
+    {{ for col in cols}}
+    {{ if col.TypeName }}
+    [HttpGet("{Criteria}/{value}/{pageSize?}/{pageNumber?}")]
+    public IAsyncEnumerable<{{table.Name}}> Search_{{col.Name}}(SearchCriteria Criteria , {{col.TypeName}} value, int? pageSize, int? pageNumber){
+            System.Diagnostics.Debugger.Break();
+             
+            var search =new SearchField<e{{table.Name}}Columns>();
+            search.FieldName = e{{table.Name}}Columns.{{col.Name}};
+            search.Value=value.ToString();
+            search.Criteria=Criteria;
+           
+
+            var s=new Search{{table.Name}}();
+            s.SearchFields = new SearchField<e{{table.Name}}Columns>[1];
+            s.SearchFields[0] = search;
+            s.PageSize = pageSize??10;
+            s.PageNumber = pageNumber??1;  
+            return this.AdvancedSearch(s);
+        }
+    {{ end }}
+    {{ end }}
+    [HttpPost]
+    public IAsyncEnumerable<{{table.Name}}> AdvancedSearch(Search{{table.Name}} search){
+            return _context.{{table.Name}}Find_AsyncEnumerable(search);
+        }
+    [HttpPost]
+    public Task<long> Count(Search{{table.Name}} search){
+            return _context.{{table.Name}}Count(search);
+        }
+}
+    
+#nullable restore

@@ -3,12 +3,14 @@ param (
 [Parameter(Mandatory)][string]$pathToModels,
 [Parameter(Mandatory)][string]$provider,
 [Parameter(Mandatory)][string]$projectPath,
-[Parameter(Mandatory)][string]$nameContext
+[Parameter(Mandatory)][string]$nameContext,
+[Parameter(Mandatory)][string]$connection
 
 )
 #modify here and in WebAPI appsettings.json  
-$connection="Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>"
+#$connection="Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>"
 #$connection="Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>"
+#$connection="Data Source=.;Initial Catalog=test1;UId=sa1;pwd=yourStrong(!)Password"
 
 dotnet tool restore
 

@@ -1,11 +1,9 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-
+﻿
 namespace DB2GUI_RDCG;
 [Generator]
 public class GeneratorData : ISourceGenerator
 {
-
+    private Root root;
     public void Execute(GeneratorExecutionContext context)
     {
         
@@ -20,6 +18,7 @@ public class GeneratorData : ISourceGenerator
         switch (value.ToUpper())
         {
             case "CONTEXTANDCLASSES":
+                
                 GenerateContextAndClasses(context);
                 break;
             case "MODELS":
@@ -345,16 +344,41 @@ public class GeneratorData : ISourceGenerator
     }
     private void GenerateContextAndClasses(GeneratorExecutionContext context)
     {
+        var file = context.AdditionalFiles.Where(it => it.Path.Contains("connectionDetails")).FirstOrDefault();
+        if (file == null)
+        {
+            var dd = new DiagnosticDescriptor("connectionDetails", nameof(GeneratorData), $"No connectionDetails", "No connectionDetails", DiagnosticSeverity.Error, true);
+            var d = Diagnostic.Create(dd, Location.None, "csproj");
+            context.ReportDiagnostic(d);
+            return;
+        }
+        var text = file.GetText().ToString();
+
+        root = JsonConvert.DeserializeObject<Root>(text);
+        //root = new Root();
 
         //var ConnectionString = obtainValueAndDiagnostic("ConnectionString", context)??"";
-        var Provider = obtainValueAndDiagnostic("Provider", context) ?? "";
-        var FolderForContext = obtainValueAndDiagnostic("FolderForContext", context) ?? "";
-        var FolderForClasses = obtainValueAndDiagnostic("FolderForClasses", context) ?? "";
-        var ProjectWithDesigner = obtainValueAndDiagnostic("ProjectWithDesigner", context);
-        var contextName = obtainValueAndDiagnostic("NameContext", context);
-
-        if (contextName.Length * Provider.Length * FolderForClasses.Length * FolderForContext.Length * ProjectWithDesigner.Length == 0 )
-            return;
+        //var Provider = obtainValueAndDiagnostic("Provider", context) ?? "";
+        //var FolderForContext = obtainValueAndDiagnostic("FolderForContext", context) ?? "";
+        //var FolderForClasses = obtainValueAndDiagnostic("FolderForClasses", context) ?? "";
+        //var ProjectWithDesigner = obtainValueAndDiagnostic("ProjectWithDesigner", context);
+        //var contextName = obtainValueAndDiagnostic("NameContext", context);
+        int nrCon= 0;
+        foreach(var item in root.connections) { 
+            nrCon++;
+            var Provider = item.Provider??"";
+            var FolderForContext = item.FolderForContext ?? "";
+            var FolderForClasses = item.FolderForClasses ?? "";
+            var ProjectWithDesigner = item.ProjectWithDesigner ?? "";
+            var contextName = item.NameContext ?? "";
+            var connection = item.ConnectionString ?? "";
+            if (connection.Length * contextName.Length * Provider.Length * FolderForClasses.Length * FolderForContext.Length * ProjectWithDesigner.Length == 0)
+            {
+                var dd = new DiagnosticDescriptor($"missingData for connection {nrCon}", nameof(GeneratorData), $"Please verify file with connection {nrCon}", $"Please verify file with connection {nrCon}", DiagnosticSeverity.Error, true);
+                var d = Diagnostic.Create(dd, Location.None, "csproj");
+                context.ReportDiagnostic(d);
+                return;
+            }
 
         
         var mainSyntaxTree = context.Compilation.SyntaxTrees
@@ -373,6 +397,7 @@ public class GeneratorData : ISourceGenerator
         arguments += $" -pathToModels {FolderForClasses}";
         arguments += $" -project {ProjectWithDesigner}";
         arguments += $" -nameContext {contextName}";
+        arguments += $" -connection \"{connection}\"";
         startInfo.Arguments = arguments;
         startInfo.RedirectStandardOutput = true;
         startInfo.RedirectStandardError = true;
@@ -390,32 +415,33 @@ public class GeneratorData : ISourceGenerator
         process.BeginErrorReadLine();
         process.WaitForExit();
 
-        //string output = process.StandardOutput.ReadToEnd();
-        //string errors = (process.StandardError.ReadToEnd()??"");
-        
-        if (errors.Length > 0 || output.Contains("SqlException") || output.Contains("Build failed"))
-        {
-            
-            var message ="run powershell with "+ arguments;
-            var dd = new DiagnosticDescriptor("PowershellError",message, message, "powershell", DiagnosticSeverity.Error, true, description:message);
-            
-            var d = Diagnostic.Create(dd, Location.None, "csproj");
-            context.ReportDiagnostic(d);
-            var tempFile=  Path.GetTempFileName()+".txt";
-            File.WriteAllText(tempFile, output);
-            message = tempFile;
-            
-            dd = new DiagnosticDescriptor("PowershellError", message, message, "powershell", DiagnosticSeverity.Error, true, description: message);
+            //string output = process.StandardOutput.ReadToEnd();
+            //string errors = (process.StandardError.ReadToEnd()??"");
 
-            d = Diagnostic.Create(dd, Location.None, "csproj");
-            context.ReportDiagnostic(d);
-            try
-            {
-                Process.Start("notepad.exe", tempFile);
-            }
-            catch (Exception)
+            if (errors.Length > 0 || output.Contains("SqlException") || output.Contains("Build failed"))
             {
 
+                var message = "run powershell with " + arguments;
+                var dd = new DiagnosticDescriptor("PowershellError", message, message, "powershell", DiagnosticSeverity.Error, true, description: message);
+
+                var d = Diagnostic.Create(dd, Location.None, "csproj");
+                context.ReportDiagnostic(d);
+                var tempFile = Path.GetTempFileName() + ".txt";
+                File.WriteAllText(tempFile, output + errors);
+                message = tempFile;
+
+                dd = new DiagnosticDescriptor("PowershellError", message, message, "powershell", DiagnosticSeverity.Error, true, description: message);
+
+                d = Diagnostic.Create(dd, Location.None, "csproj");
+                context.ReportDiagnostic(d);
+                try
+                {
+                    Process.Start("notepad.exe", tempFile);
+                }
+                catch (Exception)
+                {
+
+                }
             }
         }
 
