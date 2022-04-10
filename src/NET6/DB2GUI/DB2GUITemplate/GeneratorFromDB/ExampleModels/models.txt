@@ -1,0 +1,421 @@
+﻿//version 2022.3.29.1956
+#nullable enable
+using Microsoft.EntityFrameworkCore;
+namespace Generated;
+{{ for classLoop in classes }}
+
+public partial class {{classLoop.Name}} {
+    public void CopyFrom({{classLoop.Name}} other)  {
+        {{ for prop in classLoop.Props }}
+            this.{{prop.Name}} = other.{{prop.Name}};
+        {{ end }}
+    }
+}
+
+//for {{classLoop.Name}} : props: {{classLoop.Props}} 
+public enum e{{classLoop.Name}}Columns {
+    None = 0
+{{ for prop in classLoop.Props }}
+    ,{{prop.Name}}
+{{ end }}
+}
+
+
+public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{classLoop.Name}}>
+{
+
+    public override IOrderedQueryable<{{classLoop.Name}}> TransformToOrder(IQueryable<{{classLoop.Name}}> data){
+        if(OrderBys == null || OrderBys.Length ==0){
+           //first item
+           {{ for prop in classLoop.Props  limit:1 }}
+                return data.OrderByDescending(it=>it.{{prop.Name}});
+           {{ end }}
+        }
+        var order = OrderBys[0]!;
+        
+        IOrderedQueryable<{{classLoop.Name}}> ret;
+        switch(order.FieldName){
+        {{ for prop in classLoop.Props }}
+            case e{{classLoop.Name}}Columns.{{prop.Name}}:
+                if(order.Asc)
+                    ret = data.OrderBy(it=>it.{{prop.Name}});
+                else
+                    ret = data.OrderByDescending(it=>it.{{prop.Name}});
+                
+                break;
+        {{end}}
+            default:
+                throw new ArgumentException(" cannot order {{classLoop.Name}} by "+ order.FieldName);
+            
+        }
+        for(var i=1;i<OrderBys.Length;i++){
+            order=OrderBys[i];
+            switch(order.FieldName){
+        {{ for prop in classLoop.Props }}
+            case e{{classLoop.Name}}Columns.{{prop.Name}}:
+                if(order.Asc)
+                    ret = ret.ThenBy(it=>it.{{prop.Name}});
+                else
+                    ret = ret.ThenByDescending(it=>it.{{prop.Name}});
+                
+                break;
+        {{end}}
+            default:
+                throw new ArgumentException(" cannot order {{classLoop.Name}} by "+ order.FieldName);
+            
+        }
+        }
+        return ret;
+
+        
+    }
+
+
+    public override  IQueryable<{{classLoop.Name}}> TransformToWhere(IQueryable<{{classLoop.Name}}> data){
+        if(SearchFields == null || SearchFields.Length ==0)        
+            return data;
+        var returnValue = data;
+        foreach(var s in SearchFields){
+            switch(s.FieldName ){
+                case e{{classLoop.Name}}Columns.None :
+                    break;
+{{ for prop in classLoop.Props }}
+    case e{{classLoop.Name}}Columns.{{prop.Name}}:
+        //{{prop.Type}}
+{{ 
+hasLess = 0
+hasString=0
+hasDateTime=0
+if "float" == prop.Type ||  "byte" == prop.Type || "string" == prop.Type || "short" == prop.Type || "int" == prop.Type || "long" == prop.Type  || "double" == prop.Type || "DateTime" == prop.Type || "decimal" == prop.Type
+    hasLess=1
+end
+if "float?" == prop.Type || "byte?" == prop.Type || "string?" == prop.Type || "short?" ==prop.Type || "int?" == prop.Type || "long?" == prop.Type  || "double?" == prop.Type || "DateTime?" == prop.Type || "decimal?" == prop.Type
+    hasLess=1
+end
+if "string" == prop.Type || "string?" == prop.Type
+    hasString=1
+end
+if "DateTime" == prop.Type || "DateTime?" == prop.Type
+    hasDateTime=1
+end
+}}                                    
+        if(s.Value == null)
+        {
+            {{ if prop.IsNullable || hasString == 1}}
+                switch(s.Criteria){
+                    case SearchCriteria.Equal:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}==null);
+                        break;
+                    case SearchCriteria.Different:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}!=null);
+                        break;
+                    default:
+                        throw new ArgumentException($"null cannot have {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
+                    }
+                
+            
+            {{ else }}
+                throw new ArgumentException("{{classLoop.Name}}.{{prop.Name}} cannot be null");
+            {{ end}}
+        }
+        else{
+            {{ if "float" == prop.Type || prop.Type == "bool" || "byte" == prop.Type  || prop.Type == "short" || prop.Type == "long" || prop.Type == "int" || prop.Type == "decimal"}} 
+                var valueArray = s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=>{{prop.Type}}.Parse(it))
+                    .ToArray();
+                var value = valueArray[0];
+                
+                ;
+            {{ else if "float?" == prop.Type || prop.Type == "bool?" ||  "byte?" == prop.Type  || prop.Type == "short?" || prop.Type == "long?" || prop.Type == "decimal?"|| prop.Type == "int?"  }} 
+                {{prop.Type}} value= null;
+                {{prop.Type  | string.remove "?" }}[] valueArray= null;
+                if(s.Value != null){
+                    valueArray = s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=>{{prop.Type  | string.remove "?" }}.Parse(it))
+                    .ToArray();
+                    value = valueArray[0];
+                ;
+                }
+            {{ else if prop.Type == "string" || prop.Type == "string?" }}
+                var value = s.Value;
+                var valueArray= s.Value?.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .ToArray();
+
+            {{ else if "DateTime" == prop.Type}} 
+                var valueArray=s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=>DateTime.Parse(it))
+                    .ToArray();
+                var value=valueArray[0]; 
+                
+            {{ else if "DateTime?" == prop.Type}} 
+                {{prop.Type}} value= null;
+                {{prop.Type  | string.remove "?" }}[] valueArray=null;
+                if(s.Value != null){
+                    valueArray=s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=>DateTime.Parse(it))
+                    .ToArray();
+                    value=valueArray[0]; 
+
+                }
+            
+            {{ else }}
+                var value =({{prop.Type}})((dynamic)s.Value);
+                {{prop.Type}}[] valueArray=null;
+            {{ end}}  
+            
+            switch(s.Criteria){
+                  case SearchCriteria.Between:
+                        {{ if prop.IsArray || hasLess != 1}} 
+                            throw new ArgumentException("cannot contain array in array or property that is not fundamental ");
+                        {{ else }}
+                            if(valueArray.Length != 2){
+                                throw new ArgumentException("between must have 2 args, separated by comma");
+                            }
+                            {{ if  hasString != 1  }}
+                                returnValue =returnValue.Where(it=>it.{{prop.Name}}>= valueArray[0] && it.{{prop.Name}} <= valueArray[1]);
+                            {{ else }}
+                                returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},valueArray[0]) >= 0  && String.Compare(it.{{prop.Name}},valueArray[1]) <= 0);
+
+                            {{ end }}
+                        {{ end }}
+                        break;
+                  case SearchCriteria.NotBetween:
+                        {{ if prop.IsArray || hasLess != 1}} 
+                            throw new ArgumentException("cannot contain array in array or property that is not fundamental ");
+                        {{ else }}
+                            if(valueArray.Length != 2){
+                                throw new ArgumentException("between must have 2 args, separated by comma");
+                            }
+                            {{ if  hasString != 1  }}
+                                returnValue =returnValue.Where(it=>it.{{prop.Name}}< valueArray[0] || it.{{prop.Name}} > valueArray[1]);
+                            {{ else }}
+                                returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},valueArray[0]) < 0  || String.Compare(it.{{prop.Name}},valueArray[1]) > 0);
+
+                            {{ end }}
+                        {{ end }}
+                        break;
+                    case SearchCriteria.InArray:
+                        {{ if prop.IsArray || hasLess != 1}} 
+                            throw new ArgumentException("cannot contain array in array or property that is not fundamental ");
+                        {{ else }}
+                            
+                            {{if prop.IsNullable && hasString != 1  }}
+                                returnValue =returnValue.Where(it=>valueArray.Contains(it.{{prop.Name}}.Value));
+                            {{ else }}
+                                returnValue =returnValue.Where(it=>valueArray.Contains(it.{{prop.Name}}));
+                            {{end}}
+                        {{ end }}
+                        break;
+                    case SearchCriteria.NotInArray:
+                        {{ if prop.IsArray || hasLess != 1}} 
+                            throw new ArgumentException("cannot contain array in array or property that is not fundamental ");
+                        {{ else }}
+                            
+                            {{if prop.IsNullable && hasString != 1  }}
+                                returnValue =returnValue.Where(it=>!valueArray.Contains(it.{{prop.Name}}.Value));
+                            {{ else }}
+                                returnValue =returnValue.Where(it=>!valueArray.Contains(it.{{prop.Name}}));
+                            {{end}}
+                        {{ end }}
+                        break;
+                    case SearchCriteria.Equal:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}==value);
+                        break;
+                    case SearchCriteria.Different:
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}!=value);
+                        break;
+                    {{ if hasLess == 1 }}
+                    case SearchCriteria.Less:
+                        {{ if "string" == prop.Type || "string?" == prop.Type }}
+                            returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},value) < 0 );
+                        {{ else }}
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}<value);
+                        {{ end }}
+                        break;
+                    case SearchCriteria.LessOrEqual:
+                        {{ if "string" == prop.Type || "string?" == prop.Type }}
+                            returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},value) <= 0 );
+                        {{ else }}
+                        
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}<=value);
+                        {{end}}
+                        break;
+                    case SearchCriteria.Greater:
+                        {{ if "string" == prop.Type || "string?" == prop.Type }}
+                            returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},value) > 0 );
+                        {{ else }}
+                        
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}>value);
+                        {{end}}
+                        break;
+                    case SearchCriteria.GreaterOrEqual:
+                    {{ if "string" == prop.Type || "string?" == prop.Type }}
+                            returnValue =returnValue.Where(it=>String.Compare(it.{{prop.Name}},value) >= 0 );
+                        {{ else }}
+                        
+                        
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}>=value);
+                        {{end}}
+                        break;
+                    {{end}}
+                    {{if hasString == 1}}
+                    case SearchCriteria.Contains:
+                        returnValue =returnValue.Where(it=>(it.{{prop.Name}}).Contains(value));
+                        break;
+                    case SearchCriteria.StartsWith:
+                        returnValue =returnValue.Where(it=>(it.{{prop.Name}}).StartsWith(value));
+                        break;
+                    case SearchCriteria.EndsWith:
+                        returnValue =returnValue.Where(it=>(it.{{prop.Name}}).EndsWith(value));
+                        break;
+                    case SearchCriteria.Like:
+                        returnValue =returnValue.Where(it=> EF.Functions.Like(it.{{prop.Name}},value));
+                        break;
+                    
+                    {{end}}
+                    {{if hasDateTime == 1}}
+                    case SearchCriteria.EqualYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(it.{{prop.Name}},value) == 0);
+                        break;
+                    case SearchCriteria.DifferentYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(it.{{prop.Name}},value) != 0);
+                        break;
+                    case SearchCriteria.GreaterYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(value,it.{{prop.Name}}) > 0);
+                        break;
+                    case SearchCriteria.LessYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(value,it.{{prop.Name}}) < 0);
+                        break;
+                    case SearchCriteria.GreaterOrEqualYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(value,it.{{prop.Name}}) >= 0);
+                        break;
+                    case SearchCriteria.LessOrEqualYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(value,it.{{prop.Name}}) <= 0);
+                        break;
+                    case SearchCriteria.EqualMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) == 0);
+                        break;
+                    case SearchCriteria.DifferentMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) != 0);
+                        break;
+                    case SearchCriteria.GreaterMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) > 0);
+                        break;
+                    case SearchCriteria.LessMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) < 0);
+                        break;
+                    case SearchCriteria.GreaterOrEqualMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) >= 0);
+                        break;
+                    case SearchCriteria.LessOrEqualMonthYear:
+                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffMonth(it.{{prop.Name}},value) <= 0);
+                        break;
+   
+                    {{end}}
+                    default:
+                        throw new ArgumentException($"not found Criteria {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
+                }
+            
+        }
+        break;
+{{ end }}
+
+                default:
+                    throw new ArgumentException("{{classLoop.Name}} has not column "+s.FieldName);
+            }
+        }
+        return returnValue;
+    }
+
+}
+/*
+public class OrderBy{{classLoop.Name}} :  OrderBy<e{{classLoop.Name}}Columns>
+{
+}
+
+public class SearchField{{classLoop.Name}} :  SearchField<e{{classLoop.Name}}Columns>
+{
+}
+*/
+{{ end }}
+
+public class OrderBy<TColumn>
+    where TColumn : System.Enum
+{
+    public TColumn? FieldName { get; set; }
+    public bool Asc { get; set; }
+}
+public class SearchField<TColumn>
+    where TColumn : System.Enum
+{
+    public TColumn? FieldName { get; set; }        
+    public string? Value { get; set; }
+    public SearchCriteria Criteria { get; set; }
+         
+    //public string? CriteriaString { get; set; }
+
+}
+public abstract class Search<TColumn, TClass>
+    where TColumn : System.Enum
+    where TClass: class
+{
+    public Search(){
+        PageSize=10;
+        PageNumber=1;
+    }
+    public SearchField<TColumn>[]? SearchFields { get; set; }
+    public OrderBy<TColumn>[]? OrderBys { get; set; }
+    public int PageSize{get;set;}
+    public int PageNumber{get;set;}
+    public abstract IQueryable<TClass> TransformToWhere(IQueryable<TClass> data);
+    public abstract IOrderedQueryable<TClass> TransformToOrder(IQueryable<TClass> data);
+    //public abstract IOrderedQueryable<TClass> TransformToPaging(IOrderedQueryable<TClass>  data);
+
+}
+
+public enum SearchCriteria
+{
+    None = 0,
+    StartsWith,
+    EndsWith,
+    Contains,
+    Equal,
+    InArray,
+    NotInArray,
+    Between,
+    NotBetween,
+    Different,
+    Greater,
+    Less,
+    GreaterOrEqual,
+    LessOrEqual,
+    Like,
+
+    EqualYear,
+    DifferentYear,
+    GreaterYear,
+    LessYear,
+    GreaterOrEqualYear,
+    LessOrEqualYear,
+
+    EqualMonthYear,
+    DifferentMonthYear,
+    GreaterMonthYear,
+    LessMonthYear,
+    GreaterOrEqualMonthYear,
+    LessOrEqualMonthYear,
+    
+    EqualDay,
+    DifferentDay,
+    GreaterDay,
+    LessDay,
+    GreaterOrEqualDay,
+    LessOrEqualDay,
+    
+}
+
+#nullable restore
