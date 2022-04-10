@@ -1,7 +1,7 @@
 cls
 Remove-Item -Path .\a.zip -Force -Recurse -ErrorAction SilentlyContinue 
-Remove-Item -Path .\GeneratorFromDB -Force -Recurse -ErrorAction SilentlyContinue 
-Expand-Archive ./GeneratorFromDB.zip -DestinationPath GeneratorFromDB
+# Remove-Item -Path .\GeneratorFromDB -Force -Recurse -ErrorAction SilentlyContinue 
+# Expand-Archive ./GeneratorFromDB.zip -DestinationPath GeneratorFromDB
 Remove-Item -Path GeneratorFromDB\ExampleContext\context.txt -Force
 Remove-Item -Path GeneratorFromDB\ExampleModels\models.txt -Force
 Remove-Item -Path GeneratorFromDB\ExampleWebAPI\controller.txt -Force
