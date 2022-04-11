@@ -6,7 +6,7 @@ var x = false;
 var y = x.ToString();
 var z= bool.Parse(y);
 Console.WriteLine("Hello, World!");
-var context = new PubsContext();
+//var context = new PubsContext();
 //await SearchAdvanced1(SearchCriteria.Contains, eauthorsColumns.au_fname, "Ann", 2);
 //await SearchAdvanced1(SearchCriteria.Equal, eauthorsColumns.au_lname, "Ringer", 2);
 //await SearchAdvanced1(SearchCriteria.Different, eauthorsColumns.state, "Oakland", 18);
@@ -46,30 +46,30 @@ var context = new PubsContext();
 //    }
 //}
 //await SearchAdvanced3(SearchCriteria.EqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 4);
-async Task SearchAdvanced3(SearchCriteria sc, eemployeeColumns col, string? val, int nrRecs)
-{
+//async Task SearchAdvanced3(SearchCriteria sc, eemployeeColumns col, string? val, int nrRecs)
+//{
 
-    while (true)
-    {
-        try
-        {
-            var data = context.employeeSimpleSearch(sc, col, val);
-            var q = await data.ToArrayAsync();
-            if (nrRecs != q.Length)
-            {
-                Debugger.Break();
-            }
-            else
-            {
-                break;
-            }
-        }
-        catch (Exception ex)
-        {
-            Debugger.Break();
-        }
-    }
-}
+//    while (true)
+//    {
+//        try
+//        {
+//            var data = context.employeeSimpleSearch(sc, col, val);
+//            var q = await data.ToArrayAsync();
+//            if (nrRecs != q.Length)
+//            {
+//                Debugger.Break();
+//            }
+//            else
+//            {
+//                break;
+//            }
+//        }
+//        catch (Exception ex)
+//        {
+//            Debugger.Break();
+//        }
+//    }
+//}
 
 
 Console.WriteLine("done!");

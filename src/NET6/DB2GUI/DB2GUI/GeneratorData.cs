@@ -230,33 +230,31 @@ public class GeneratorData : ISourceGenerator
 
 
 
-
+            var test = tables.FirstOrDefault();
             //var realDbSets = dbSets;
             //var set = dbSets.First();
             //var gns = set.Type as GenericNameSyntax;
             //var type = gns.TypeArgumentList.Arguments.FirstOrDefault();
             //var ti = data.GetTypeInfo(type);
             //var m = ti.Type.GetMembers();
+            var dataToRender = new
+            {
+                nameContext,
+                queries = tables.Select(it => new
+                {
+                    Name = it.Name,
+                    numberKeys = it.keys.Length,
+                    keys = it.keys.ToArray(),
+                    firstKey = it.keys.FirstOrDefault(),
+                    cols = it.cols.ToArray(),
+
+
+                }).ToArray()
+            };
+            var q = dataToRender.queries.FirstOrDefault();
             try
             {
-                var rend = template.Render(new
-                {
-                    nameContext,
-                    queries = tables.Select(it => new
-                    {
-                        Name = it.Name,
-                        numberKeys = it.keys.Length,
-                        keys = it.keys.Select(it => new { it.Name, TypeName = it.TypeName }).ToArray(),
-                        firstKey = new
-                        {
-                            it.keys.FirstOrDefault()?.Name,
-                            it.keys.FirstOrDefault()?.TypeName 
-                        },
-                        cols = it.cols.Select(it => new { it.Name, it.TypeName }).ToArray(),
-
-
-                    }).ToArray(),
-                }, member => member.Name);
+                var rend = template.Render(dataToRender, member => member.Name);
 
                 context.AddSource($"{nameContext}Generated.cs", SourceText.From(rend, Encoding.UTF8));
             }
