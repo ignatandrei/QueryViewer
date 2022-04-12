@@ -288,7 +288,15 @@ end
                     {{end}}
                     {{if hasDateTime == 1}}
                     case SearchCriteria.EqualYear:
-                        returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(it.{{prop.Name}},value) == 0);
+                        //returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(it.{{prop.Name}},value) == 0);
+                        {{ if prop.IsNullable}}
+                            var year=  value.Value.Year;
+                        {{ else }}
+                            var year=  value.Year;
+                        {{ end }}
+                        var yearStart=new DateTime(year,1,1);
+                        var yearEnd=new DateTime(year+1,1,1);
+                        returnValue =returnValue.Where(it=>it.{{prop.Name}}>=yearStart && it.{{prop.Name}}<yearEnd);
                         break;
                     case SearchCriteria.DifferentYear:
                         returnValue =returnValue.Where(it=>EF.Functions.DateDiffYear(it.{{prop.Name}},value) != 0);
