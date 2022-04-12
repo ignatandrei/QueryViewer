@@ -93,16 +93,16 @@ namespace Generated;
 hasLess = 0
 hasString=0
 hasDateTime=0
-if "float" == prop.TheTypeName ||  "byte" == prop.TheTypeName || "string" == prop.TheTypeName || "short" == prop.TheTypeName || "int" == prop.TheTypeName || "long" == prop.TheTypeName  || "double" == prop.TheTypeName || "DateTime" == prop.TheTypeName || "decimal" == prop.TheTypeName
+if "float" == prop.TheTypeName ||  "byte" == prop.TheTypeName || "string" == prop.TheTypeName || "short" == prop.TheTypeName || "int" == prop.TheTypeName || "long" == prop.TheTypeName  || "double" == prop.TheTypeName || "DateTime" == prop.TheTypeName || "System.DateTime" == prop.TheTypeName || "decimal" == prop.TheTypeName
     hasLess=1
 end
-if "float?" == prop.TheTypeName || "byte?" == prop.TheTypeName || "string?" == prop.TheTypeName || "short?" ==prop.TheTypeName || "int?" == prop.TheTypeName || "long?" == prop.TheTypeName  || "double?" == prop.TheTypeName || "DateTime?" == prop.TheTypeName || "decimal?" == prop.TheTypeName
+if "float?" == prop.TheTypeName || "byte?" == prop.TheTypeName || "string?" == prop.TheTypeName || "short?" ==prop.TheTypeName || "int?" == prop.TheTypeName || "long?" == prop.TheTypeName  || "double?" == prop.TheTypeName ||"System.DateTime?" == prop.TheTypeName || "DateTime?" == prop.TheTypeName || "decimal?" == prop.TheTypeName
     hasLess=1
 end
 if "string" == prop.TheTypeName || "string?" == prop.TheTypeName
     hasString=1
 end
-if "DateTime" == prop.TheTypeName || "DateTime?" == prop.TheTypeName
+if "DateTime" == prop.TheTypeName || "DateTime?" == prop.TheTypeName || "System.DateTime" == prop.TheTypeName || "System.DateTime?" == prop.TheTypeName
     hasDateTime=1
 end
 }}                                    
@@ -150,14 +150,14 @@ end
                 var valueArray= s.Value?.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                     .ToArray();
 
-            {{ else if "DateTime" == prop.TheTypeName}} 
+            {{ else if "DateTime" == prop.TheTypeName || "System.DateTime" == prop.TheTypeName }} 
                 var valueArray=s.Value
                     .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                     .Select(it=>DateTime.Parse(it))
                     .ToArray();
                 var value=valueArray[0]; 
                 
-            {{ else if "DateTime?" == prop.TheTypeName}} 
+            {{ else if "DateTime?" == prop.TheTypeName || "System.DateTime?" == prop.TheTypeName }} 
                 {{prop.TheTypeName}} value= null;
                 {{prop.TheTypeName  | string.remove "?" }}[] valueArray=null;
                 if(s.Value != null){

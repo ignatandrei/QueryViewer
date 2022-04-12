@@ -24,11 +24,11 @@ public class TestOrderDetail
         }
 
     }
-    static NorthwindContext context
+    static NorthwindDBContext context
     {
         get
         {
-            return new NorthwindContext();
+            return new NorthwindDBContext();
 
         }
     }

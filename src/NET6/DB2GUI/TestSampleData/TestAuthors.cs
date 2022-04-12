@@ -21,11 +21,11 @@ public class TestAuthors
         }
 
     }
-    static PubsContext context
+    static PubsDBContext context
     {
         get
         {
-            return new PubsContext();
+            return new PubsDBContext ();
 
         }
     }

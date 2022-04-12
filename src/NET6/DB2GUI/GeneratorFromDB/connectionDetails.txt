@@ -16,6 +16,14 @@
 		"ProjectWithDesigner": "..\\ExampleWebAPI\\",
 		"NameContext": "PubsDBContext",
 		"ConnectionString":"Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>"
+	},
+	{
+		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
+		"FolderForContext": "..\\ExampleContext\\GeneratedNorthwind",
+		"FolderForClasses": "..\\ExampleModels\\GeneratedNorthwind",
+		"ProjectWithDesigner": "..\\ExampleWebAPI\\",
+		"NameContext": "NorthwindDBContext",
+		"ConnectionString":"Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>"
 	}
 	]
 }
