@@ -2,6 +2,10 @@
 //version 2022.3.29.1956
 using Microsoft.EntityFrameworkCore;
 namespace Generated;
+
+
+
+
    {{ for classLoop in queries }}
    public partial class SearchData{{classLoop.Name}} {
         private {{nameContext}} context;
@@ -19,7 +23,7 @@ namespace Generated;
         }
 
    }
-   public class AndreiSearch{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{classLoop.Name}}>
+   public class Search{{classLoop.Name}} :  Search<e{{classLoop.Name}}Columns,{{classLoop.Name}}>
     {
     
     public override IOrderedQueryable<{{classLoop.Name}}> TransformToOrder(IQueryable<{{classLoop.Name}}> data){
@@ -78,6 +82,11 @@ namespace Generated;
                 case e{{classLoop.Name}}Columns.None :
                     break;
 {{ for prop in classLoop.cols }}
+            {{ if !prop.TheTypeName 
+                    continue
+                end
+            }}
+
     case e{{classLoop.Name}}Columns.{{prop.Name}}:
         //{{prop.TheTypeName}}
 {{ 

@@ -188,9 +188,90 @@ public class GeneratorData : ISourceGenerator
             str += "2";
         }
     }
+    string GeneraLText()
+    {
+        return @"
+
+namespace Generated;
+public class OrderBy<TColumn>
+    where TColumn : System.Enum
+{
+    public TColumn? FieldName { get; set; }
+    public bool Asc { get; set; }
+}
+public class SearchField<TColumn>
+    where TColumn : System.Enum
+{
+    public TColumn? FieldName { get; set; }        
+    public string? Value { get; set; }
+    public SearchCriteria Criteria { get; set; }
+         
+    //public string? CriteriaString { get; set; }
+
+}
+public abstract class Search<TColumn, TClass>
+    where TColumn : System.Enum
+    where TClass: class
+{
+    public Search(){
+        PageSize=10;
+        PageNumber=1;
+    }
+    public SearchField<TColumn>[]? SearchFields { get; set; }
+    public OrderBy<TColumn>[]? OrderBys { get; set; }
+    public int PageSize{get;set;}
+    public int PageNumber{get;set;}
+    public abstract IQueryable<TClass> TransformToWhere(IQueryable<TClass> data);
+    public abstract IOrderedQueryable<TClass> TransformToOrder(IQueryable<TClass> data);
+    //public abstract IOrderedQueryable<TClass> TransformToPaging(IOrderedQueryable<TClass>  data);
+
+}
+
+public enum SearchCriteria
+{
+    None = 0,
+    StartsWith,
+    EndsWith,
+    Contains,
+    Equal,
+    InArray,
+    NotInArray,
+    Between,
+    NotBetween,
+    Different,
+    Greater,
+    Less,
+    GreaterOrEqual,
+    LessOrEqual,
+    Like,
+
+    EqualYear,
+    DifferentYear,
+    GreaterYear,
+    LessYear,
+    GreaterOrEqualYear,
+    LessOrEqualYear,
+
+    EqualMonthYear,
+    DifferentMonthYear,
+    GreaterMonthYear,
+    LessMonthYear,
+    GreaterOrEqualMonthYear,
+    LessOrEqualMonthYear,
     
+    EqualDay,
+    DifferentDay,
+    GreaterDay,
+    LessDay,
+    GreaterOrEqualDay,
+    LessOrEqualDay,
+    
+}
+";
+    }
     private void GenerateForContext(GeneratorExecutionContext context,Template template)
     {
+        context.AddSource("general.cs", GeneraLText());
         var gen = context.SyntaxReceiver as DBGeneratorSN;
         var classes = gen.DbContextProps;
         if (classes.Count == 0)

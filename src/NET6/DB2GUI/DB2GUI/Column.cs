@@ -16,14 +16,14 @@ public class Column
     {
         get
         {
-            return TheTypeName.Contains("?");
+            return (TheTypeName??"").Contains("?");
         }
     }
     public bool IsArray
     {
         get
         {
-            return TheTypeName.Contains("[]");
+            return (TheTypeName ?? "").Contains("[]");
         }
     }
     public string TheTypeName
