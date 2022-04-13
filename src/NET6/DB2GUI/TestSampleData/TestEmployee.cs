@@ -57,10 +57,10 @@ public class TestEmployee
     [InlineData(SearchCriteria.LessOrEqualYear, eemployeeColumns.hire_date, "1993-08-19", 40)]
     [InlineData(SearchCriteria.EqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 1)]
     [InlineData(SearchCriteria.DifferentMonthYear, eemployeeColumns.hire_date, "1993-08-19", 42)]
-    [InlineData(SearchCriteria.GreaterMonthYear, eemployeeColumns.hire_date, "1993-08-19", 37)]
-    [InlineData(SearchCriteria.GreaterOrEqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 38)]
-    [InlineData(SearchCriteria.LessMonthYear, eemployeeColumns.hire_date, "1993-08-19", 5)]
-    [InlineData(SearchCriteria.LessOrEqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 6)]
+    [InlineData(SearchCriteria.GreaterMonthYear, eemployeeColumns.hire_date, "1992-08-27", 12)]
+    [InlineData(SearchCriteria.GreaterOrEqualMonthYear, eemployeeColumns.hire_date, "1992-08-27", 13)]
+    [InlineData(SearchCriteria.LessMonthYear, eemployeeColumns.hire_date, "1993-08-19", 37)]
+    [InlineData(SearchCriteria.LessOrEqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 38)]
 
     public async Task SearchAdvanced(SearchCriteria sc, eemployeeColumns col, string val, int nrRecs)
     {
