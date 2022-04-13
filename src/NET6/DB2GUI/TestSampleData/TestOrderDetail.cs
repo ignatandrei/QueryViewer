@@ -4,7 +4,7 @@ public class TestOrderDetail
 {
     static TestOrderDetail()
     {
-        //CreateDb();
+        CreateDb();
     }
     static void CreateDb()
     {

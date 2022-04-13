@@ -243,7 +243,7 @@ public enum SearchCriteria
     Less,
     GreaterOrEqual,
     LessOrEqual,
-    Like,
+    //Like,
 
     EqualYear,
     DifferentYear,

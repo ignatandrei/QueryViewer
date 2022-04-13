@@ -281,10 +281,10 @@ end
                     case SearchCriteria.EndsWith:
                         returnValue =returnValue.Where(it=>(it.{{prop.Name}}).EndsWith(value));
                         break;
-                    case SearchCriteria.Like:
-                        returnValue =returnValue.Where(it=> EF.Functions.Like(it.{{prop.Name}},value));
+                    /*case SearchCriteria.Contains:
+                        returnValue =returnValue.Where(it=> it.{{prop.Name}}.Contains(value));
                         break;
-                    
+                    */
                     {{end}}
                     {{if hasDateTime == 1}}
                     case SearchCriteria.EqualYear:
