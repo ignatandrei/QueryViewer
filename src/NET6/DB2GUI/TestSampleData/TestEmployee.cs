@@ -4,20 +4,22 @@ public class TestEmployee
 {
     static void CreateDb()
     {
-        var context1 = context;
-        var file = File.ReadAllText("insertPubs.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in file)
-        {
-            try
-            {
-                context1.Database.ExecuteSqlRaw(item);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(item, ex);
+        DatabaseOperations.Restore(context, "Pubs");
 
-            }
-        }
+        //var context1 = context;
+        //var file = File.ReadAllText("insertPubs.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
+        //foreach (var item in file)
+        //{
+        //    try
+        //    {
+        //        context1.Database.ExecuteSqlRaw(item);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ArgumentException(item, ex);
+
+        //    }
+        //}
 
     }
     static PubsDBContext  context

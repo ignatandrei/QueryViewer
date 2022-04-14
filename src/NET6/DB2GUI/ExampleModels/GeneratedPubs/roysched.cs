@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Generated
 {
     [Keyless]
+    [Index("title_id", Name = "titleidind")]
     public partial class roysched
     {
         [StringLength(6)]

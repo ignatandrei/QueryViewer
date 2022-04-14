@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Generated
 {
+    [Index("au_lname", "au_fname", Name = "aunmind")]
     public partial class authors
     {
         public authors()

@@ -8,20 +8,22 @@ public class TestOrderDetail
     }
     static void CreateDb()
     {
-        var cnt = context;
-        var file = File.ReadAllText("instnwnd.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in file)
-        {
-            try
-            {
-                cnt.Database.ExecuteSqlRaw(item);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(item, ex);
+        DatabaseOperations.Restore(context, "northwind");
 
-            }
-        }
+        //var cnt = context;
+        //var file = File.ReadAllText("instnwnd.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
+        //foreach (var item in file)
+        //{
+        //    try
+        //    {
+        //        cnt.Database.ExecuteSqlRaw(item);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ArgumentException(item, ex);
+
+        //    }
+        //}
 
     }
     static NorthwindDBContext context

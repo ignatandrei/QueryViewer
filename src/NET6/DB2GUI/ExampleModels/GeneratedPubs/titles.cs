@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Generated
 {
+    [Index("title", Name = "titleind")]
     public partial class titles
     {
         public titles()

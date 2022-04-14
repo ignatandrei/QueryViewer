@@ -32,6 +32,7 @@ builder.Services.AddDbContextFactory<ApplicationDBContext>(
         {
             var cn = builder.Configuration.GetConnectionString("PubsConnection");
             options.UseSqlServer(cn);
+            //options.UseSqlite(cn);
         }
      )
    ;

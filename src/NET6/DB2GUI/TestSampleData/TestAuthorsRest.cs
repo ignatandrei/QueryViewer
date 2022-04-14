@@ -5,20 +5,21 @@ public class TestRest
 {
     void CreateDb()
     {
-        var context = this.context;
-        var file = File.ReadAllText("insertPubs.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in file)
-        {
-            try
-            {
-                context.Database.ExecuteSqlRaw(item);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(item, ex);
+        DatabaseOperations.Restore(context, "Pubs");
+        //var context = this.context;
+        //var file = File.ReadAllText("insertPubs.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
+        //foreach (var item in file)
+        //{
+        //    try
+        //    {
+        //        context.Database.ExecuteSqlRaw(item);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ArgumentException(item, ex);
 
-            }
-        }
+        //    }
+        //}
 
     }
     PubsDBContext  context

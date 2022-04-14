@@ -8,20 +8,22 @@ public class TestDiscounts
     }
     static void CreateDb()
     {
-        var cnt = context;
-        var file = File.ReadAllText("insertPubs.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in file)
-        {
-            try
-            {
-                cnt.Database.ExecuteSqlRaw(item);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(item, ex);
+        DatabaseOperations.Restore(context, "Pubs");
 
-            }
-        }
+        //var cnt = context;
+        //var file = File.ReadAllText("insertPubs.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
+        //foreach (var item in file)
+        //{
+        //    try
+        //    {
+        //        cnt.Database.ExecuteSqlRaw(item);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new ArgumentException(item, ex);
+
+        //    }
+        //}
 
     }
     static PubsDBContext  context

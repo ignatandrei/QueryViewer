@@ -34,7 +34,9 @@ namespace Generated
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>");
+                //optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>");
+                optionsBuilder.UseSqlite(@"DataSource=C:\Users\Surface1\Documents\GitHub\QueryViewer\src\NET6\DB2GUI\pubs.db");
+
             }
         }
 
@@ -61,7 +63,7 @@ namespace Generated
                 entity.HasOne(d => d.stor)
                     .WithMany()
                     .HasForeignKey(d => d.stor_id)
-                    .HasConstraintName("FK__discounts__stor___0ED60AD8");
+                    .HasConstraintName("FK__discounts__stor___7482D2A6");
             });
 
             modelBuilder.Entity<employee>(entity =>
@@ -69,6 +71,9 @@ namespace Generated
                 entity.HasKey(e => e.emp_id)
                     .HasName("PK_emp_id")
                     .IsClustered(false);
+
+                entity.HasIndex(e => new { e.lname, e.fname, e.minit }, "employee_ind")
+                    .IsClustered();
 
                 entity.Property(e => e.emp_id).IsFixedLength();
 
@@ -88,19 +93,19 @@ namespace Generated
                     .WithMany(p => p.employee)
                     .HasForeignKey(d => d.job_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__employee__job_id__1B3BE1BD");
+                    .HasConstraintName("FK__employee__job_id__00E8A98B");
 
                 entity.HasOne(d => d.pub)
                     .WithMany(p => p.employee)
                     .HasForeignKey(d => d.pub_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__employee__pub_id__1E184E68");
+                    .HasConstraintName("FK__employee__pub_id__03C51636");
             });
 
             modelBuilder.Entity<jobs>(entity =>
             {
                 entity.HasKey(e => e.job_id)
-                    .HasName("PK__jobs__6E32B6A5A8E23818");
+                    .HasName("PK__jobs__6E32B6A5CFE3FA3A");
 
                 entity.Property(e => e.job_desc).HasDefaultValueSql("('New Position - title not formalized yet')");
             });
@@ -116,7 +121,7 @@ namespace Generated
                     .WithOne(p => p.pub_info)
                     .HasForeignKey<pub_info>(d => d.pub_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__pub_info__pub_id__16772CA0");
+                    .HasConstraintName("FK__pub_info__pub_id__7C23F46E");
             });
 
             modelBuilder.Entity<publishers>(entity =>
@@ -137,7 +142,7 @@ namespace Generated
                     .WithMany()
                     .HasForeignKey(d => d.title_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__roysched__title___0CEDC266");
+                    .HasConstraintName("FK__roysched__title___729A8A34");
             });
 
             modelBuilder.Entity<sales>(entity =>
@@ -151,13 +156,13 @@ namespace Generated
                     .WithMany(p => p.sales)
                     .HasForeignKey(d => d.stor_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__sales__stor_id__0A1155BB");
+                    .HasConstraintName("FK__sales__stor_id__6FBE1D89");
 
                 entity.HasOne(d => d.title)
                     .WithMany(p => p.sales)
                     .HasForeignKey(d => d.title_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__sales__title_id__0B0579F4");
+                    .HasConstraintName("FK__sales__title_id__70B241C2");
             });
 
             modelBuilder.Entity<stores>(entity =>
@@ -181,13 +186,13 @@ namespace Generated
                     .WithMany(p => p.titleauthor)
                     .HasForeignKey(d => d.au_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__titleauth__au_id__04587C65");
+                    .HasConstraintName("FK__titleauth__au_id__6A054433");
 
                 entity.HasOne(d => d.title)
                     .WithMany(p => p.titleauthor)
                     .HasForeignKey(d => d.title_id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__titleauth__title__054CA09E");
+                    .HasConstraintName("FK__titleauth__title__6AF9686C");
             });
 
             modelBuilder.Entity<titles>(entity =>
@@ -206,7 +211,7 @@ namespace Generated
                 entity.HasOne(d => d.pub)
                     .WithMany(p => p.titles)
                     .HasForeignKey(d => d.pub_id)
-                    .HasConstraintName("FK__titles__pub_id__0087EB81");
+                    .HasConstraintName("FK__titles__pub_id__6634B34F");
             });
 
             modelBuilder.Entity<titleview>(entity =>
