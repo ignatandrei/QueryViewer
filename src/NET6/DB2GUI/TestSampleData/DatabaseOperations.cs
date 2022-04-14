@@ -9,10 +9,11 @@
         {
 
             File.Copy(file, file.Replace("Backup",""),true);
+            return;
 
         }
-        var file = File.ReadAllText($"Insert{nameDB}.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
-        foreach (var item in file)
+        var fileText = File.ReadAllText($"Insert{nameDB}.sql").Split("GO", StringSplitOptions.RemoveEmptyEntries);
+        foreach (var item in fileText)
         {
             try
             {

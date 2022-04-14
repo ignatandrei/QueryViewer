@@ -37,7 +37,7 @@ public class TestOrderDetail
 
     [Theory] 
     [InlineData(SearchCriteria.Equal, eOrder_DetailsColumns.Quantity, "8042", 0)]
-    [InlineData(SearchCriteria.Equal, eOrder_DetailsColumns.UnitPrice, "8042", 0)]
+    [InlineData(SearchCriteria.Equal, eOrder_DetailsColumns.OrderID, "8042", 0)]
     [InlineData(SearchCriteria.Equal, eOrder_DetailsColumns.Discount, "8042", 0)]
     [InlineData(SearchCriteria.Different, eOrder_DetailsColumns.Discount, "8042", 2155)]
     [InlineData(SearchCriteria.Equal, eOrder_DetailsColumns.Discount, "0", 1317)]
