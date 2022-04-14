@@ -126,7 +126,7 @@ end
             {{ end}}
         }
         else{
-            {{ if "float" == prop.TheTypeName || prop.TheTypeName == "bool" || "byte" == prop.TheTypeName  || prop.TheTypeName == "short" || prop.TheTypeName == "long" || prop.TheTypeName == "int" || prop.TheTypeName == "decimal"}} 
+            {{ if "double" == prop.TheTypeName || "float" == prop.TheTypeName || prop.TheTypeName == "bool" || "byte" == prop.TheTypeName  || prop.TheTypeName == "short" || prop.TheTypeName == "long" || prop.TheTypeName == "int" || prop.TheTypeName == "decimal"}} 
                 var valueArray = s.Value
                     .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                     .Select(it=>{{prop.TheTypeName}}.Parse(it))
@@ -134,7 +134,7 @@ end
                 var value = valueArray[0];
                 
                 ;
-            {{ else if "float?" == prop.TheTypeName || prop.TheTypeName == "bool?" ||  "byte?" == prop.TheTypeName  || prop.TheTypeName == "short?" || prop.TheTypeName == "long?" || prop.TheTypeName == "decimal?"|| prop.TheTypeName == "int?"  }} 
+            {{ else if "double?" == prop.TheTypeName ||  "float?" == prop.TheTypeName || prop.TheTypeName == "bool?" ||  "byte?" == prop.TheTypeName  || prop.TheTypeName == "short?" || prop.TheTypeName == "long?" || prop.TheTypeName == "decimal?"|| prop.TheTypeName == "int?"  }} 
                 {{prop.TheTypeName}} value= null;
                 {{prop.TheTypeName  | string.remove "?" }}[] valueArray= null;
                 if(s.Value != null){
