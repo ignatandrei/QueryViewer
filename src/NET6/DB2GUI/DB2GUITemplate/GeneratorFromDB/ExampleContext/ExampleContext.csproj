@@ -14,7 +14,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<!--<ProjectReference Include="..\DB2GUI\DB2GUI_RSCG.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />-->
-		<PackageReference Include="QueryGenerator" Version="2022.3.29.1956" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<PackageReference Include="QueryGenerator" Version="2022.4.15.615" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 
 		<ProjectReference Include="..\$ext_safeprojectname$.Models\$ext_safeprojectname$.Models.csproj" />
 	</ItemGroup>

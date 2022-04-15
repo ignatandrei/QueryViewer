@@ -1,5 +1,5 @@
 ﻿{
-	"version":"2022.3.29.1956",
+	"version":"2022.4.15.615",
 	"connections":[
 	{
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",

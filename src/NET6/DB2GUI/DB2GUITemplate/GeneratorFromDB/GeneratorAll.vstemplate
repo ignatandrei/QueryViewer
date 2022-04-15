@@ -1,8 +1,8 @@
 <VSTemplate Version="2.0.0" Type="ProjectGroup"
     xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
     <TemplateData>
-        <Name>GeneratorFromDB 2022.4.11.52</Name>
-        <Description>Version 2022.4.11.52 . See https://github.com/ignatandrei/queryViewer/</Description>
+        <Name>GeneratorFromDB 2022.4.15.615</Name>
+        <Description>Version 2022.4.15.615 . See https://github.com/ignatandrei/queryViewer/</Description>
         <Icon>Icon.ico</Icon>
         <ProjectType>CSharp</ProjectType>
     </TemplateData>
