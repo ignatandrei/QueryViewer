@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿//version 2022.4.15.615
+
+#nullable enable
 namespace Generated;
    {{ for classLoop in queries }}
    public partial class SearchData{{classLoop}} {
