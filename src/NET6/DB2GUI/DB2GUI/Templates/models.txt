@@ -1,13 +1,59 @@
-﻿//version 2022.4.15.615
+﻿//version 2022.4.25.615
 #nullable enable
 using Microsoft.EntityFrameworkCore;
 namespace Generated;
 {{ for classLoop in classes }}
+public interface I_{{classLoop.Name}}_Table {
+    {{ for prop in classLoop.Props }}
+            {{ if prop.RawKindType == "PredefinedType" || prop.RawKindType == "NullableType"}}
+            {{prop.Type}} {{prop.Name}} {get;set;}
+            {{ end }}
+     {{ end }}
+}
 
-public partial class {{classLoop.Name}} {
+public partial class {{classLoop.Name}}_Table: I_{{classLoop.Name}}_Table  {
+    {{ for prop in classLoop.Props }}
+            {{ if prop.RawKindType == "PredefinedType" || prop.RawKindType == "NullableType"}}
+            public {{prop.Type}} {{prop.Name}} {get;set;}
+            {{ end }}
+     {{ end }}
+     public void CopyFrom(I_{{classLoop.Name}}_Table other)  {
+        {{ for prop in classLoop.Props }}
+            {{ if prop.RawKindType == "PredefinedType" || prop.RawKindType == "NullableType"}}           
+           this.{{prop.Name}} = other.{{prop.Name}};
+           {{end}}
+        {{ end }}
+    }
+     public static implicit operator {{classLoop.Name}}_Table({{classLoop.Name}} obj) { 
+        if(obj == null)
+            return null;
+            System.Diagnostics.Debugger.Break();
+         var ret= new {{classLoop.Name}}_Table();
+         ret.CopyFrom(obj as I_{{classLoop.Name}}_Table );
+         return ret;
+     }
+     public static implicit operator {{classLoop.Name}}({{classLoop.Name}}_Table obj) { 
+        if(obj == null)
+            return null;
+            System.Diagnostics.Debugger.Break();
+         var ret= new {{classLoop.Name}}();
+         ret.CopyFrom(obj as I_{{classLoop.Name}}_Table) ;
+         return ret;
+     }
+}
+
+
+public partial class {{classLoop.Name}} : I_{{classLoop.Name}}_Table {
     public void CopyFrom({{classLoop.Name}} other)  {
         {{ for prop in classLoop.Props }}
             this.{{prop.Name}} = other.{{prop.Name}};
+        {{ end }}
+    }
+    public void CopyFrom(I_{{classLoop.Name}}_Table other)  {
+        {{ for prop in classLoop.Props }}
+            {{ if prop.RawKindType == "PredefinedType" || prop.RawKindType == "NullableType"}}           
+           this.{{prop.Name}} = other.{{prop.Name}};
+           {{end}}
         {{ end }}
     }
 }

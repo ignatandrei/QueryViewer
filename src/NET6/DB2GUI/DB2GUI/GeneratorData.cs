@@ -10,13 +10,15 @@ public class GeneratorData : ISourceGenerator
         var val = context.AnalyzerConfigOptions.GlobalOptions.TryGetValue($"build_property.GenerateStep", out var value);
         if (!val)
         {
-            var dd = new DiagnosticDescriptor("noStep", nameof(GeneratorData), $"No GenerateStep", "GenerateStep", DiagnosticSeverity.Error, true);
+            var dd = new DiagnosticDescriptor("noStep", nameof(GeneratorData), $"No GenerateStep", "GenerateStep", DiagnosticSeverity.Warning, true);
             var d = Diagnostic.Create(dd, Location.None, "csproj");
             context.ReportDiagnostic(d);
             return;
         }
         switch (value.ToUpper())
         {
+            case "NOSTEP":
+                return;
             case "CONTEXTANDCLASSES":
                 
                 GenerateContextAndClasses(context);
@@ -515,7 +517,7 @@ public enum SearchCriteria
                 context.ReportDiagnostic(d);
                 try
                 {
-                    Process.Start("notepad.exe", tempFile);
+                    //Process.Start("notepad.exe", tempFile);
                 }
                 catch (Exception)
                 {

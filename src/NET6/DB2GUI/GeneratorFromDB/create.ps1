@@ -7,21 +7,12 @@ param (
 [Parameter(Mandatory)][string]$connection
 
 )
-#modify here and in WebAPI appsettings.json  
-#$connection="Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>"
-#$connection="Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>"
-#$connection="Data Source=.;Initial Catalog=test1;UId=sa1;pwd=yourStrong(!)Password"
 
 dotnet tool restore
 
-#$folder= $pathToModels
-#$folder = Resolve-Path $folder  -ErrorAction SilentlyContinue -ErrorVariable _frperror
-#if (-not($folder)) {
-#        $folder = $_frperror[0].TargetObject
-#}
 
-Remove-Item -LiteralPath $pathToModels -Force -Recurse -ErrorAction SilentlyContinue 
-Remove-Item -LiteralPath $pathToContext -Force -Recurse -ErrorAction SilentlyContinue 
+#Remove-Item -LiteralPath $pathToModels -Force -Recurse -ErrorAction SilentlyContinue 
+#Remove-Item -LiteralPath $pathToContext -Force -Recurse -ErrorAction SilentlyContinue 
 
 Write-Host "search for csproj in $projectPath"
 

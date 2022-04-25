@@ -15,6 +15,7 @@ builder.Services.AddDbContextFactory<ApplicationDbContext>(
         {
             var cn = builder.Configuration.GetConnectionString("DefaultConnection");
             options.UseSqlServer(cn);
+            //options.UseSqlite(cn);
         }
      )
    ;

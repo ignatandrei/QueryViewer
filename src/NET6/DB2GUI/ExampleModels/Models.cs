@@ -5,5 +5,5 @@ namespace ExampleModels;
 
 public partial class Models
 {
-    public string s { get; set; }
+    
 }

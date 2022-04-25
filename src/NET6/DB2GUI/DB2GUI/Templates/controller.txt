@@ -1,4 +1,4 @@
-﻿//version 2022.4.15.615
+﻿//version 2022.4.25.615
 
 #nullable enable
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +8,10 @@ namespace Generated;
 
 [Route("api/[controller]")]
 [ApiController]
-public partial class {{nameContext}}_{{table.Name}}_Controller : ControllerBase
+public partial class {{nameContext}}_{{table.Name}}Controller : ControllerBase
 {
     private {{nameContext}}  _context ;
-    public {{nameContext}}_{{table.Name}}_Controller({{nameContext}} context){
+    public {{nameContext}}_{{table.Name}}Controller({{nameContext}} context){
         _context=context;
     }
 
@@ -21,16 +21,16 @@ public partial class {{nameContext}}_{{table.Name}}_Controller : ControllerBase
     }
     {{ if numberKeys == 1  }}
     [HttpGet("{%{{}%}{{ firstKey.Name}}{%{}}%}")]
-    public Task<{{table.Name}}> GetFromId({{firstKey.TypeName}} {{ firstKey.Name}}){
-        return 
-            _context.{{table.Name}}GetSingle({{firstKey.Name}});
+    public async Task<{{table.Name}}_Table> GetFromId({{firstKey.TypeName}} {{ firstKey.Name}}){
+        var data= await _context.{{table.Name}}GetSingle({{firstKey.Name}});
+        return data;
     } 
     [HttpDelete("{%{{}%}{{ firstKey.Name}}{%{}}%}")]
     public Task<bool> Delete({{firstKey.TypeName}} {{ firstKey.Name}}){
         return _context.{{table.Name}}Delete({{firstKey.Name}});        
     } 
     [HttpPut]
-    public Task<bool> Put({{table.Name}} val){        
+    public Task<bool> Put({{table.Name}}_Table val){        
         return _context.{{table.Name}}Modify(val);
         
     }
@@ -40,7 +40,7 @@ public partial class {{nameContext}}_{{table.Name}}_Controller : ControllerBase
     {{ end }}
      
     [HttpPost]
-    public Task<{{table.Name}}> Post({{table.Name}} val){
+    public Task<{{table.Name}}> Post({{table.Name}}_Table val){
         return _context.{{table.Name}}Save(val);
     }
     
@@ -51,6 +51,16 @@ public partial class {{nameContext}}_{{table.Name}}_Controller : ControllerBase
 
 public partial class {{nameContext}}_{{table.Name}}_MetadataController : ControllerBase
 {
+    [HttpGet]
+    public async Task<bool> TableExists([FromServices] {{nameContext}} context){
+        try{
+            var data= await context.{{table.Name}}.Where(it=>false).CountAsync();
+            return (data == 0);
+        }
+        catch(Exception){
+            return false;
+        }
+    }
     [HttpGet]
     public string Name(){
         return "{{table.Name}}";
@@ -76,10 +86,10 @@ public partial class {{nameContext}}_{{table.Name}}_MetadataController : Control
 [Route("api/[controller]/[action]")]
 [ApiController]
 
-public partial class {{nameContext}}_{{table.Name}}_XController : ControllerBase
+public partial class {{nameContext}}_{{table.Name}}_SearchController : ControllerBase
 {
     private {{nameContext}}  _context ;
-    public {{nameContext}}_{{table.Name}}_XController({{nameContext}} context){
+    public {{nameContext}}_{{table.Name}}_SearchController({{nameContext}} context){
         _context=context;
     }
     
@@ -116,6 +126,11 @@ public partial class {{nameContext}}_{{table.Name}}_XController : ControllerBase
     [HttpPost]
     public Task<long> Count(Search{{table.Name}} search){
             return _context.{{table.Name}}Count(search);
+        }
+
+        [HttpGet]
+    public Task<long> CountAll(){
+            return _context.{{table.Name}}Count(null);
         }
 }
     
