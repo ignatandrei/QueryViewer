@@ -1,4 +1,4 @@
-﻿//version 2022.4.25.615
+﻿//version 2022.7.11.615
 
 #nullable enable
 using Microsoft.EntityFrameworkCore;
@@ -102,7 +102,7 @@ public partial class {{nameContext}}_{{table.Name}}_SearchController : Controlle
     {{ if col.TypeName }}
     [HttpGet("{Criteria}/{value}/{pageSize?}/{pageNumber?}")]
     public IAsyncEnumerable<{{table.Name}}> Search_{{col.Name}}(SearchCriteria Criteria , {{col.TypeName}} value, int? pageSize, int? pageNumber){
-            System.Diagnostics.Debugger.Break();
+            //System.Diagnostics.Debugger.Break();
              
             var search =new SearchField<e{{table.Name}}Columns>();
             search.FieldName = e{{table.Name}}Columns.{{col.Name}};
