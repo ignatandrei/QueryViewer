@@ -18,7 +18,7 @@ public partial class {{classLoop.Name}}_Table: I_{{classLoop.Name}}_Table  {
             {{ end }}
      {{ end }}
      public void CopyFrom(I_{{classLoop.Name}}_Table other)  {
-        using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}_Table","CopyFrom");
+        //using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}_Table","CopyFrom");
         {{ for prop in classLoop.Props }}
             {{ if prop.RawKindType == "PredefinedType" || prop.RawKindType == "NullableType"}}           
            this.{{prop.Name}} = other.{{prop.Name}};
@@ -26,7 +26,7 @@ public partial class {{classLoop.Name}}_Table: I_{{classLoop.Name}}_Table  {
         {{ end }}
     }
      public static implicit operator {{classLoop.Name}}_Table({{classLoop.Name}} obj) { 
-        using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}_Table","operatorTable");
+        //using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}_Table","operatorTable");
         if(obj == null)
             return null;
             //System.Diagnostics.Debugger.Break();
@@ -35,7 +35,7 @@ public partial class {{classLoop.Name}}_Table: I_{{classLoop.Name}}_Table  {
          return ret;
      }
      public static implicit operator {{classLoop.Name}}({{classLoop.Name}}_Table obj) { 
-     using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}_Table","operator");
+     //using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}_Table","operator");
         if(obj == null)
             return null;
             //System.Diagnostics.Debugger.Break();
@@ -48,13 +48,13 @@ public partial class {{classLoop.Name}}_Table: I_{{classLoop.Name}}_Table  {
 
 public partial class {{classLoop.Name}} : I_{{classLoop.Name}}_Table {
     public void CopyFrom({{classLoop.Name}} other)  {
-    using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}","CopyFromClass");
+    //using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}","CopyFromClass");
         {{ for prop in classLoop.Props }}
             this.{{prop.Name}} = other.{{prop.Name}};
         {{ end }}
     }
     public void CopyFrom(I_{{classLoop.Name}}_Table other)  {
-    using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}","CopyFromTable");
+    //using var _= NetTilt.Models.Models.StartMethod("{{classLoop.Name}}","CopyFromTable");
         {{ for prop in classLoop.Props }}
             {{ if prop.RawKindType == "PredefinedType" || prop.RawKindType == "NullableType"}}           
            this.{{prop.Name}} = other.{{prop.Name}};
