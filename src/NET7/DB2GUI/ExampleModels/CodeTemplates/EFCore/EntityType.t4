@@ -79,7 +79,7 @@ public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
 #>
     }
 
-    public static implicit operator <#= EntityType.Name #>_Table?(<#= EntityType.Name #>? obj) { 
+    public static explicit operator <#= EntityType.Name #>_Table?(<#= EntityType.Name #> obj) { 
         if(obj == null)
             return null;
             //System.Diagnostics.Debugger.Break();
@@ -87,7 +87,7 @@ public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
          ret.CopyFrom(obj as I_<#= EntityType.Name #>_Table );
          return ret;
      }
-     public static implicit operator <#= EntityType.Name #>?(<#= EntityType.Name #>_Table? obj) { 
+     public static explicit operator <#= EntityType.Name #>?(<#= EntityType.Name #>_Table obj) { 
         if(obj == null)
             return null;
             //System.Diagnostics.Debugger.Break();
