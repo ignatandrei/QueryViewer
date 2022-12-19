@@ -5,7 +5,7 @@
 		"Enabled":true,
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext.csproj",
-		"ProjectForClasses": "..ExampleModels\\ExampleModels.csproj",
+		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
 		"ProjectWithDesigner": "..\\ExampleWebAPI\\",
 		"NameContext": "ApplicationDBContext",
 		"ConnectionString":"Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"

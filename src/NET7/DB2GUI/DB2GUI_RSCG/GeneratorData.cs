@@ -10,9 +10,6 @@ public class GeneratorData : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var cp = context.CompilationProvider
-            .Select((it, ct) => it.SyntaxTrees.First(x => x.HasCompilationUnitRoot)
-                .FilePath);
 
 
         var additionalTexts = context.AdditionalTextsProvider;
@@ -24,16 +21,16 @@ public class GeneratorData : IIncrementalGenerator
             })
             .Select((it,data)=>
             {
-                return it.GetText(data);
+                return new { path = it.Path, text = it.GetText(data) };
             });
 
-        var all=cnDetails.Combine(cp);
+        var all = cnDetails;//.Combine(cp);
         context.RegisterSourceOutput(all, (spc, source) =>
         {
-            var pathGenerateFromDB = source.Right;
+            var pathGenerateFromDB = source.path;
             var directory = Path.GetDirectoryName(pathGenerateFromDB);
 
-            string text = source.Left.ToString();
+            string text = source.text.ToString();
 
             var root= JsonConvert.DeserializeObject<Root>(text);
             int nrCon = 0;
@@ -94,16 +91,19 @@ public class GeneratorData : IIncrementalGenerator
     }
     private IEnumerable<string> RunPowerShell(Connection item,string directory)
     {
+        var file = Path.Combine(directory, "create.ps1");
         var startInfo = new ProcessStartInfo();
         startInfo.FileName = @"powershell.exe";
         startInfo.WorkingDirectory = directory;
         string arguments = @"-NoProfile -NonInteractive -ExecutionPolicy ByPass ";
-        arguments += @" -f create.ps1  ";
+        arguments += $"""
+            -f "{file}"  
+            """; 
         //arguments += $" -connection {ConnectionString}";
         arguments += $" -provider {item.Provider}";
         arguments += $" -projectContext {item.ProjectForContext}";
         arguments += $" -projectModels {item.ProjectForClasses}";
-        arguments += $" -project {item.ProjectWithDesigner}";
+        arguments += $" -projectWeb {item.ProjectWithDesigner}";
         arguments += $" -nameContext {item.NameContext}";
         arguments += $" -connection \"{item.ConnectionString}\"";
         startInfo.Arguments = arguments;        
