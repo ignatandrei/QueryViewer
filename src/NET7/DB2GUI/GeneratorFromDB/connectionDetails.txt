@@ -2,26 +2,29 @@
 	"version":"2022.7.11.615",
 	"connections":[
 	{
+		"Enabled":true,
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
-		"FolderForContext": "..\\ExampleContext\\GeneratedTestData",
-		"FolderForClasses": "..\\ExampleModels\\GeneratedTestData",
-		"ProjectWithDesigner": "..\\ExampleWebAPI.csproj",
+		"ProjectForContext": "..\\ExampleContext.csproj",
+		"ProjectForClasses": "..ExampleModels\\ExampleModels.csproj",
+		"ProjectWithDesigner": "..\\ExampleWebAPI\\",
 		"NameContext": "ApplicationDBContext",
 		"ConnectionString":"Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>"
 	},
 	{
+		"Enabled":false,
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
-		"FolderForContext": "..\\ExampleContext.csproj",
-		"FolderForClasses": "..\\ExampleModels..csproj",
-		"ProjectWithDesigner": "..\\ExampleWebAPI.csproj",
+		"ProjectForContext": "..\\ExampleContext\\GeneratedPubs",
+		"ProjectForClasses": "..\\ExampleModels\\GeneratedPubs",
+		"ProjectWithDesigner": "..\\ExampleWebAPI\\",
 		"NameContext": "PubsDBContext",
 		"ConnectionString":"Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>"
 	},
 	{
+		"Enabled":false,
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
-		"FolderForContext": "..\\ExampleContext.csproj",
-		"FolderForClasses": "..\\ExampleModels.csproj",
-		"ProjectWithDesigner": "..\\ExampleWebAPI.csproj",
+		"ProjectForContext": "..\\ExampleContext\\GeneratedNorthwind",
+		"ProjectForClasses": "..\\ExampleModels\\GeneratedNorthwind",
+		"ProjectWithDesigner": "..\\ExampleWebAPI\\",
 		"NameContext": "NorthwindDBContext",
 		"ConnectionString":"Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>"
 	}

@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DB2GUI_RDCG;
+﻿
+namespace DB2GUI_RSCG;
 
 // 
 internal class Connection
 {
+    public bool Enabled { get; set; }
     public string Provider { get; set; }
-    public string FolderForContext { get; set; }
-    public string FolderForClasses { get; set; }
+    public string ProjectForContext { get; set; }
+    public string ProjectForClasses { get; set; }
     public string ProjectWithDesigner { get; set; }
     public string NameContext { get; set; }
     public string ConnectionString { get; set; }
-    
 }
 
 internal class Root
