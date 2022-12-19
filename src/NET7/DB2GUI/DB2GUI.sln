@@ -5,7 +5,11 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DB2GUI_RSCG", "DB2GUI_RSCG\DB2GUI_RSCG.csproj", "{7700C5FA-D2AF-4414-92E2-BF80B4736EB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorFromDB", "GeneratorFromDB\GeneratorFromDB.csproj", "{7BF83C55-7795-496B-981B-DDE2C22EAC4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorFromDB", "GeneratorFromDB\GeneratorFromDB.csproj", "{7BF83C55-7795-496B-981B-DDE2C22EAC4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExampleApplication", "ExampleApplication", "{32477C5C-D2F1-4EA4-87E7-72CC422157C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleModels", "ExampleModels\ExampleModels.csproj", "{B21B8973-E574-47D2-98B6-B7D87AABB0DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +25,16 @@ Global
 		{7BF83C55-7795-496B-981B-DDE2C22EAC4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BF83C55-7795-496B-981B-DDE2C22EAC4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BF83C55-7795-496B-981B-DDE2C22EAC4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B21B8973-E574-47D2-98B6-B7D87AABB0DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B21B8973-E574-47D2-98B6-B7D87AABB0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B21B8973-E574-47D2-98B6-B7D87AABB0DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B21B8973-E574-47D2-98B6-B7D87AABB0DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B21B8973-E574-47D2-98B6-B7D87AABB0DD} = {32477C5C-D2F1-4EA4-87E7-72CC422157C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8B29C98-4A58-4C42-A62E-86627195E788}
