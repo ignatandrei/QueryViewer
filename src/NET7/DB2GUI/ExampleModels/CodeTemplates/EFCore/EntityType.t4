@@ -42,6 +42,80 @@
 #>
 namespace <#= NamespaceHint #>;
 
+//ADDED by code generator
+public interface I_<#= EntityType.Name #>_Table 
+{
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        #>
+        <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }
+        <#
+    } // foreach property 
+#>
+}
+
+public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
+{
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        #>
+        public <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }
+        <#
+    } // foreach property 
+#>
+     public void CopyFrom(I_<#= EntityType.Name #>_Table other)  {
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        #>
+        this.<#= property.Name #> = other.<#= property.Name #>;
+        <#
+    } // foreach property 
+#>
+    }
+
+    public static implicit operator <#= EntityType.Name #>_Table?(<#= EntityType.Name #>? obj) { 
+        if(obj == null)
+            return null;
+            //System.Diagnostics.Debugger.Break();
+         var ret= new <#= EntityType.Name #>_Table();
+         ret.CopyFrom(obj as I_<#= EntityType.Name #>_Table );
+         return ret;
+     }
+     public static implicit operator <#= EntityType.Name #>?(<#= EntityType.Name #>_Table? obj) { 
+        if(obj == null)
+            return null;
+            //System.Diagnostics.Debugger.Break();
+         var ret= new <#= EntityType.Name #>();
+         ret.CopyFrom(obj as I_<#= EntityType.Name #>_Table) ;
+         return ret;
+     }
+
+
+
+}
+public partial class <#= EntityType.Name #> : I_<#= EntityType.Name #>_Table
+{
+     public void CopyFrom(I_<#= EntityType.Name #>_Table other)  {
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        #>
+        this.<#= property.Name #> = other.<#= property.Name #>;
+        <#
+    } // foreach property 
+#>
+    }
+
+}
+//finish ADDED by code generator
+
 <#
     }
 
@@ -64,7 +138,7 @@ namespace <#= NamespaceHint #>;
         }
     }
 #>
-//andrei - here is entity name
+
 public partial class <#= EntityType.Name #>
 {
 <#
