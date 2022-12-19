@@ -28,4 +28,17 @@ $pathToContext= "Context"
 
 
 #https://docs.microsoft.com/ro-ro/ef/core/managing-schemas/scaffolding?tabs=dotnet-core-cli
+# dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json --no-build
+
+
+Write-Host "search for csproj in $projectContext"
+
+$projectsFull = gci -Path $projectContext -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
+
+
+$project = $projectsFull.Fullname
+Write-Host "found project $project "
+$pathToModels = "Models"
+$pathToContext= "Context"
+
 dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json --no-build
