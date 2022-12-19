@@ -114,6 +114,20 @@ public partial class <#= EntityType.Name #> : I_<#= EntityType.Name #>_Table
     }
 
 }
+
+//for <#= EntityType.Name #> 
+public enum e<#= EntityType.Name #>Columns {
+    None = 0
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        #>
+        ,<#= property.Name #> 
+        <#
+    } // foreach property 
+#>
+}
+
 //finish ADDED by code generator
 
 <#
