@@ -123,6 +123,106 @@ public partial class Search<#= EntityType.Name #>:  GeneratorFromDB.Search<e<#= 
         
     }
     public override  IQueryable<<#= EntityType.Name #>> TransformToWhere(IQueryable<<#= EntityType.Name #>> data){
+        if(SearchFields == null || SearchFields.Length ==0)        
+            return data;
+        var returnValue = data;
+        foreach(var s in SearchFields){
+            switch(s.FieldName ){
+                case e<#= EntityType.Name #>Columns.None :
+                    break;
+        <# foreach (var prop in properties){ 
+        var hasLess = 0;
+        var hasString=0;
+        var hasDateTime=0;
+        var propType=code.Reference(prop.ClrType);
+        var needsNullable = Options.UseNullableReferenceTypes && prop.IsNullable && !prop.ClrType.IsValueType;
+        var isNullable = prop.IsNullable && !prop.ClrType.IsValueType;
+        var propTypeNotNull= propType.Replace("?","");
+
+if ("float" == propTypeNotNull ||  "byte" == propTypeNotNull || "string" == propTypeNotNull || "short" == propTypeNotNull || "int" == propTypeNotNull || "long" == propTypeNotNull  || "double" == propTypeNotNull || "DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull || "decimal" == propTypeNotNull)
+    hasLess=1;
+
+if ("string" == propType) 
+    hasString=1;
+
+if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
+    hasDateTime=1;
+        #>
+            
+            case e<#= EntityType.Name #>Columns.<#= prop.Name #>:
+                //<#= propType #> isNullable <#= isNullable  #>
+                if(s.Value == null)
+        {
+            <# if (isNullable || hasString == 1) { #>
+                switch(s.Criteria){
+                    case GeneratorFromDB.SearchCriteria.Equal:
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #>==null);
+                        continue;
+                    case GeneratorFromDB.SearchCriteria.Different:
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #>!=null);
+                        continue;
+                    default:
+                        throw new ArgumentException($"null cannot have {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
+                    }
+                
+            
+            <# } else { #>
+                throw new ArgumentException("<#= EntityType.Name #>.<#= prop.Name #> cannot be null");
+            <# } // end if from needs nullable and has string #>
+            <# var hasValueDefined=false; #>
+        }//end if s.value is null -search for null
+        //if we are here, s.Value is not null
+        { //use this to define value in smaller scope
+        <# if ("DateTime" == propTypeNotNull || "double" == propTypeNotNull || "float" == propTypeNotNull || propTypeNotNull == "bool" || "byte" == propTypeNotNull  || propTypeNotNull == "short" || propTypeNotNull == "long" || propTypeNotNull == "int" || propTypeNotNull == "decimal") 
+        { hasValueDefined=true;
+        #>
+                var valueArray = s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=><#=propTypeNotNull#>.Parse(it))
+                    .ToArray();
+                var value = valueArray[0];
+        <# } //endif many numeric #>
+        <# if (propType == "string") 
+        {  hasValueDefined=true; 
+        #>
+                var value = s.Value;
+                var valueArray= s.Value?.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .ToArray();
+                ;
+        <# } //endif string #>  
+        <# if(!hasValueDefined) { #>
+        //hoping will convert
+        <#=propType#> value;
+        try{
+            value =(<#=propType#>)((dynamic)s.Value);
+        }
+        catch(Exception ex){
+            throw new ArgumentException("cannot convert to <#=propType#> :"+s.Value);
+        }
+        <#= propType #>[] valueArray=null;
+        <# } //endif !hasValueDefined #>  
+        switch(s.Criteria){
+            case GeneratorFromDB.SearchCriteria.Between:
+                if(valueArray.Length != 2){
+                    throw new ArgumentException("between must have 2 args, separated by comma");
+                }
+                <# if(hasString != 1) { #>
+                    returnValue =returnValue.Where(it=>it.<#= prop.Name #> >= valueArray[0] && it.<#= prop.Name #> <= valueArray[1]);
+                <# } else { #>
+                    returnValue =returnValue.Where(it=>String.Compare(it.<#= prop.Name #>,valueArray[0]) >= 0  && String.Compare(it.<#= prop.Name #>,valueArray[1]) <= 0);
+
+                <# } //endif !hasString #>  
+                continue;
+            default:
+                throw new ArgumentException($"not found Criteria {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
+        }//end switch after s.Criteria
+
+                continue;
+        } //end use this to define value in smaller scope
+        <# } // foreach property #>
+        }//end switch  
+       }//end foreach
+    
     throw new NotImplementedException("not");
     }
 

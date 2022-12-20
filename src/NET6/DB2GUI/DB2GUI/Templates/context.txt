@@ -188,7 +188,7 @@ end
         {
             {{ if prop.IsNullable || hasString == 1}}
                 switch(s.Criteria){
-                    case SearchCriteria.Equal:
+                    case GeneratorFromDB.SearchCriteria.Equal:
                         returnValue =returnValue.Where(it=>it.{{prop.Name}}==null);
                         break;
                     case SearchCriteria.Different:
