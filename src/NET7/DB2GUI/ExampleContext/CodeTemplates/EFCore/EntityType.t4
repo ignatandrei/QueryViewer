@@ -203,8 +203,8 @@ if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
         <# } //endif !hasValueDefined #>  
         switch(s.Criteria){
             case GeneratorFromDB.SearchCriteria.Between:
-                if(valueArray.Length != 2){
-                    throw new ArgumentException("between must have 2 args, separated by comma");
+                if(valueArray?.Length != 2){
+                    throw new ArgumentException("between must have 2 args, separated by comma => value is:" + s.Value);
                 }
                 <# if(hasString != 1) { #>
                     returnValue =returnValue.Where(it=>it.<#= prop.Name #> >= valueArray[0] && it.<#= prop.Name #> <= valueArray[1]);
