@@ -136,7 +136,7 @@ public partial class Search<#= EntityType.Name #>:  GeneratorFromDB.Search<e<#= 
         var hasDateTime=0;
         var propType=code.Reference(prop.ClrType);
         var needsNullable = Options.UseNullableReferenceTypes && prop.IsNullable && !prop.ClrType.IsValueType;
-        var isNullable = prop.IsNullable && !prop.ClrType.IsValueType;
+        var isNullable = prop.IsNullable ;
         var propTypeNotNull= propType.Replace("?","");
 
 if ("float" == propTypeNotNull ||  "byte" == propTypeNotNull || "string" == propTypeNotNull || "short" == propTypeNotNull || "int" == propTypeNotNull || "long" == propTypeNotNull  || "double" == propTypeNotNull || "DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull || "decimal" == propTypeNotNull)
@@ -213,6 +213,38 @@ if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
 
                 <# } //endif !hasString #>  
                 continue;
+            case GeneratorFromDB.SearchCriteria.NotBetween:
+            if(valueArray?.Length != 2){
+                    throw new ArgumentException("not between must have 2 args, separated by comma => value is:" + s.Value);
+                }
+                <# if(hasString != 1) { #>
+                    returnValue =returnValue.Where(it=>it.<#= prop.Name #> < valueArray[0] || it.<#= prop.Name #> > valueArray[1]);
+                <# } else { #>
+                    returnValue =returnValue.Where(it=>String.Compare(it.<#= prop.Name #>,valueArray[0]) < 0  || String.Compare(it.<#= prop.Name #>,valueArray[1]) > 0);
+
+                <# } //endif !hasString #>  
+                continue;
+            case GeneratorFromDB.SearchCriteria.InArray:
+            <# if(isNullable && hasString != 1) { #>
+            returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null && valueArray!.Contains(it.<#= prop.Name #>.Value));
+                <# } else { #>
+            returnValue =returnValue.Where(it=> valueArray!.Contains(it.<#= prop.Name #>));
+                <# } //endif #>  
+                continue;
+            case GeneratorFromDB.SearchCriteria.NotInArray:
+            <# if(isNullable && hasString != 1) { #>
+            returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null && !valueArray!.Contains(it.<#= prop.Name #>.Value));
+                <# } else { #>
+            returnValue =returnValue.Where(it=> !valueArray!.Contains(it.<#= prop.Name #>));
+                <# } //endif #>  
+                continue;
+            case GeneratorFromDB.SearchCriteria.Equal:
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #>==value);
+                break;
+            case GeneratorFromDB.SearchCriteria.Different:
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #>!=value);
+                break;
+
             default:
                 throw new ArgumentException($"not found Criteria {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
         }//end switch after s.Criteria
