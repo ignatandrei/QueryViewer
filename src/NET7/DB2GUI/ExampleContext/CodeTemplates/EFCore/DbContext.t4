@@ -323,6 +323,28 @@ public partial class <#= Options.ContextName #> : DbContext
 }
 
 //added new
+public partial class <#= Options.ContextName #> : DbContext
+{
+<#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+#>
+
+    public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
+        IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
+        if(search == null){
+            return data.AsAsyncEnumerable();
+        }
+        data = search.TransformToWhere(data);        
+        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        return ret.AsAsyncEnumerable();
+    
+    }
+<#
+}//foreach 
+#>
+
+}
 public interface I_InsertData<#= Options.ContextName #>{
 <#
     foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
@@ -406,7 +428,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
    
         
         public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
-            throw new ArgumentException();
+            return context.<#= entityType.Name #>Find_AsyncEnumerable(search);
         }
     <# if(hasOneKey ){
         var pk=key.Properties[0].FindContainingPrimaryKey() ;
