@@ -372,9 +372,21 @@ public class InsertData<#= Options.ContextName #>: I_InsertData<#= Options.Conte
 <#
     foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
     {
+    var key = entityType.FindPrimaryKey();
+var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+    
 #>
+
    public interface ISearchData<#= entityType.Name #> {
         IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search);
+    <# if(hasOneKey ){
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        var s= code.Lambda(key.Properties, "e") ;
+    #>
+    //oneKey    
+    public Task<<#= entityType.Name #>> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id);
+<# } // has onekey #>
+    
     <#
     foreach (var property in entityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
     {
@@ -384,13 +396,53 @@ public class InsertData<#= Options.ContextName #>: I_InsertData<#= Options.Conte
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value);
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearchNull_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc);
     <# } //property #>
-    } //interface    
+    } //interface searchdata   
+
+   public class SearchData<#= entityType.Name #>: ISearchData<#= entityType.Name #>{
+        private <#= Options.ContextName #> context;
+        public SearchData<#= entityType.Name #> (<#= Options.ContextName #> context) {
+            this.context=context;
+        }
+   
+        
+        public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
+            throw new ArgumentException();
+        }
+    <# if(hasOneKey ){
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        var s= code.Lambda(key.Properties, "e") ;
+    #>
+    //oneKey    
+    public Task<<#= entityType.Name #>> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
+            throw new ArgumentException();
+    }
+<# } // has onekey #>
+    
+    <#
+    foreach (var property in entityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+    #>
+
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
+            throw new ArgumentException();
+    
+    }
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearchNull_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc){
+            throw new ArgumentException();
+    }
+    <# } //property #>
+    } //class searchdata
+
+
+
+
     <# } //entity #>
 
    
 
 
-//added new
+//end added new
 
 
 
