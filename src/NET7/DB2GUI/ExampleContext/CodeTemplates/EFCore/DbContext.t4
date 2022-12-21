@@ -328,7 +328,20 @@ public partial class <#= Options.ContextName #> : DbContext
 <#
     foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
     {
+        var key = entityType.FindPrimaryKey();
+var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+
 #>
+<# if(hasOneKey ){
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        var s= code.Lambda(key.Properties, "e") ;
+    #>
+    //oneKey    
+    public Task<<#= entityType.Name #>?> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
+        return this.<#= entityType.Name #>.FirstOrDefaultAsync(<#= s #> == id);
+    }
+<# } // has onekey #>
+    
 
     public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
         IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
@@ -406,7 +419,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         var s= code.Lambda(key.Properties, "e") ;
     #>
     //oneKey    
-    public Task<<#= entityType.Name #>> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id);
+    public Task<<#= entityType.Name #>?> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id);
 <# } // has onekey #>
     
     <#
@@ -435,8 +448,8 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         var s= code.Lambda(key.Properties, "e") ;
     #>
     //oneKey    
-    public Task<<#= entityType.Name #>> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
-            throw new ArgumentException();
+    public Task<<#= entityType.Name #>?> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
+            return context.<#= entityType.Name #>GetSingle(id);
     }
 <# } // has onekey #>
     
