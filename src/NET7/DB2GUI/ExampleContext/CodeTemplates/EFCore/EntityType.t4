@@ -281,7 +281,7 @@ if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
             <# } //end if has less #>
             <# if (hasString == 1) { #>
                     case GeneratorFromDB.SearchCriteria.Contains:
-                        returnValue =returnValue.Where(it=>(it.<#= prop.Name #>).Contains(value));
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null && it.<#= prop.Name #>.Contains(value));
                         continue;
                     case GeneratorFromDB.SearchCriteria.StartsWith:
                         returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null &&  it.<#= prop.Name #>.StartsWith(value));
@@ -293,8 +293,60 @@ if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
                         returnValue =returnValue.Where(it=> it.<#= prop.Name #> != null && it.<#= prop.Name #>.Contains(value));
                         continue;
                     */
-            <# } //end if has string#>
+            <# } //end if has string #>
+            <# if (hasDateTime == 1) { #>
+            case GeneratorFromDB.SearchCriteria.EqualYear:
+            {//for variable year
+                var year=  value.Year;
+                var yearStart=new DateTime(year,1,1);
+                var yearEnd=new DateTime(year+1,1,1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #>>=yearStart && it.<#= prop.Name #><yearEnd);
+                }//end for variable year
+                continue;
+            case GeneratorFromDB.SearchCriteria.DifferentYear:
+            {//for variable year
+                var year=  value.Year;
+                var yearStart=new DateTime(year,1,1);
+                var yearEnd=new DateTime(year+1,1,1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #>>=yearStart && it.<#= prop.Name #><yearEnd);
+                }//end for variable year
+                continue;
+            case GeneratorFromDB.SearchCriteria.GreaterYear:
+            {//for variable year
+                var year=  value.Year;
+                
+                var yearStart=new DateTime(year+1,1,1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #> > yearStart);
+                }//end for variable year
+                continue;
+            case GeneratorFromDB.SearchCriteria.GreaterOrEqualYear:
+            {//for variable year
+                var year=  value.Year;
+                
+                var yearStart=new DateTime(year,1,1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #> > yearStart);
+                }//end for variable year
+                continue;
                     
+            case GeneratorFromDB.SearchCriteria.LessYear:
+            {//for variable year
+                var year=  value.Year;
+                
+                var yearEnd=new DateTime(year,1,1).AddMicroseconds(-1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #> <= yearEnd);
+                }//end for variable year
+                continue;
+            case GeneratorFromDB.SearchCriteria.LessOrEqualYear:
+            {//for variable year
+                var year=  value.Year;
+                
+                var yearEnd=new DateTime(year+1,1,1).AddMicroseconds(-1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #> <= yearEnd);
+                }//end for variable year
+                continue;
+
+            <# } //end if hasDateTime #>
+                                    
 
             default:
                 throw new ArgumentException($"not found Criteria {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
