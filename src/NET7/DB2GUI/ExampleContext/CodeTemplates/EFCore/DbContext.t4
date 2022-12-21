@@ -452,20 +452,45 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
             return context.<#= entityType.Name #>GetSingle(id);
     }
 <# } // has onekey #>
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch(GeneratorFromDB.SearchCriteria sc, e<#= entityType.Name #>Columns colToSearch, string? value){
+
+            var search = new Search<#= entityType.Name #>();
+            var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
+            orderBy.FieldName = colToSearch;
+            orderBy.Asc = true;
+            search.OrderBys = new[] { orderBy };
+            search.PageNumber = 1;
+            search.PageSize = int.MaxValue;
+            var s = new GeneratorFromDB.SearchField<e<#= entityType.Name #>Columns>();
+            s.Criteria = sc;
+            s.FieldName = colToSearch;
+            s.Value = value;
+            search.SearchFields = new[] { s };
+            var data = this.<#= entityType.Name #>Find_AsyncEnumerable(search);
+            return data;
+        }
+
     
     <#
     foreach (var property in entityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
     {
         var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        var val="value";
+        if(property.IsNullable )
+            val="value?";
     #>
-
+    //<#=property.IsNullable #>
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
-            throw new ArgumentException();
+         return <#= entityType.Name #>SimpleSearch(sc,e<#= entityType.Name #>Columns.<#= property.Name #>,<#=val#>.ToString());
+
     
     }
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearchNull_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc){
-            throw new ArgumentException();
+        return <#= entityType.Name #>SimpleSearch(sc,e<#= entityType.Name #>Columns.<#= property.Name #>,null);
+
     }
+
+
     <# } //property #>
     } //class searchdata
 
