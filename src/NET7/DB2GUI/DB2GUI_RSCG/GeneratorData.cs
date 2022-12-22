@@ -52,7 +52,13 @@ public class GeneratorData : IIncrementalGenerator
                     spc.ReportDiagnostic(d);
                     continue;
                 }
-                foreach(var errMessage in RunPowerShell(item, directory))
+                var message = $"""
+runPowershell connection {nrCon} at { DateTime.Now.ToString("hh:MM:ss")}
+""";
+                var ddReport = new DiagnosticDescriptor(message, nameof(GeneratorData), message, message, DiagnosticSeverity.Warning, true);
+                var dReport = Diagnostic.Create(ddReport, Location.None, "csproj");
+                spc.ReportDiagnostic(dReport);
+                foreach (var errMessage in RunPowerShell(item, directory))
                 {
 
                     var dd = new DiagnosticDescriptor($"error for connection {nrCon}", nameof(GeneratorData), errMessage, $"Please verify file with connection {nrCon}", DiagnosticSeverity.Error, true);
@@ -61,9 +67,16 @@ public class GeneratorData : IIncrementalGenerator
 
 
                 }
-            }
 
-        } );
+                     message = $"""
+end runPowershell connection { nrCon} at { DateTime.Now.ToString("hh:MM:ss")}
+""";
+                        ddReport = new DiagnosticDescriptor(message, nameof(GeneratorData), message, message, DiagnosticSeverity.Warning, true);
+                        dReport = Diagnostic.Create(ddReport    , Location.None, "csproj");
+                        spc.ReportDiagnostic(dReport);
+                    }
+
+                } );
         //            )
         //            return value;
 

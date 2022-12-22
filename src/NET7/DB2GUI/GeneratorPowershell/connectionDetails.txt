@@ -1,0 +1,32 @@
+﻿{
+	"version":"2022.7.11.615",
+	"connections":[
+	{
+		"Enabled":true,
+		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
+		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
+		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
+		"ProjectWithDesigner": "..\\ExampleWebAPI\\ExampleWebAPI.csproj",
+		"NameContext": "ApplicationDBContext",
+		"ConnectionString":"Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
+	},
+	{
+		"Enabled":true,
+		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
+		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
+		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
+		"ProjectWithDesigner": "..\\ExampleWebAPI\\ExampleWebAPI.csproj",
+		"NameContext": "PubsDBContext",
+		"ConnectionString":"Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
+	},
+	{
+		"Enabled":true,
+		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
+		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
+		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
+		"ProjectWithDesigner": "..\\ExampleWebAPI\\ExampleWebAPI.csproj",
+		"NameContext": "NorthwindDBContext",
+		"ConnectionString":"Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
+	}
+	]
+}
