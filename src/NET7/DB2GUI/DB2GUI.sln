@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSampleData", "TestSampl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorPowershell", "GeneratorPowershell\GeneratorPowershell.csproj", "{91F3E8E2-EFA2-4CDB-9BCA-02760FEA98F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleWebAPI", "ExampleWebAPI\ExampleWebAPI.csproj", "{352F2400-3178-4E4A-90DD-34D724618CCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{91F3E8E2-EFA2-4CDB-9BCA-02760FEA98F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91F3E8E2-EFA2-4CDB-9BCA-02760FEA98F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91F3E8E2-EFA2-4CDB-9BCA-02760FEA98F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{352F2400-3178-4E4A-90DD-34D724618CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{352F2400-3178-4E4A-90DD-34D724618CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{352F2400-3178-4E4A-90DD-34D724618CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{352F2400-3178-4E4A-90DD-34D724618CCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B21B8973-E574-47D2-98B6-B7D87AABB0DD} = {32477C5C-D2F1-4EA4-87E7-72CC422157C6}
 		{58F53B7F-E082-4D8A-9F99-C0D5C5BA1271} = {32477C5C-D2F1-4EA4-87E7-72CC422157C6}
+		{352F2400-3178-4E4A-90DD-34D724618CCB} = {32477C5C-D2F1-4EA4-87E7-72CC422157C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8B29C98-4A58-4C42-A62E-86627195E788}

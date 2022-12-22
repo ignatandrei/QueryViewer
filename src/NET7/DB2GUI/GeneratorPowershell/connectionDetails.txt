@@ -3,11 +3,11 @@
 	"connections":[
 	{
 		"Enabled":true,
+		"NameContext": "ApplicationDBContext",
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
 		"ProjectWithDesigner": "..\\ExampleWebAPI\\ExampleWebAPI.csproj",
-		"NameContext": "ApplicationDBContext",
 		"ConnectionString":"Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
 	},
 	{

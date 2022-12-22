@@ -52,7 +52,7 @@ erDiagram
 <#
         foreach (var foreignKey in entityType.GetForeignKeys())
         {
-            break;
+            
 #>
     <#= entityType.Name #> <#= foreignKey.IsUnique ? "|" : "}" #>o--<#= foreignKey.IsRequired ? "|" : "o" #>| <#= foreignKey.PrincipalEntityType.Name #> : <#= foreignKey.GetConstraintName() #>
 <#
