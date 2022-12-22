@@ -215,12 +215,9 @@ public partial class <#= Options.ContextName #> : DbContext
             {
                 WriteLine("");
             }
-            if(foreignKey.PrincipalToDependent != null){            
-
 #>
             entity.HasOne(d => d.<#= foreignKey.DependentToPrincipal.Name #>).<#= foreignKey.IsUnique ? "WithOne" : "WithMany" #>(p => p.<#= foreignKey.PrincipalToDependent.Name #>)<#= code.Fragment(foreignKeyFluentApiCalls, indent: 4) #>;
 <#
-            }
             anyEntityTypeConfiguration = true;
         }
 

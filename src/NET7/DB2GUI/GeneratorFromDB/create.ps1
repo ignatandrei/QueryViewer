@@ -7,8 +7,8 @@ param (
 [Parameter(Mandatory)][string]$connection
 
 )
-
-dotnet tool restore
+dotnet tool update --global dotnet-ef --version 7.0.1
+#dotnet tool restore
 
 
 #Remove-Item -LiteralPath $projectModels -Force -Recurse -ErrorAction SilentlyContinue 

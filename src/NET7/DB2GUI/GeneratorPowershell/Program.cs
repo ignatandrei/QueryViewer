@@ -14,7 +14,7 @@ if (root == null)
     Console.WriteLine($"do not have anything in {file}");
     return -3;
 }
-    
+
 int nrCon = 0;
 foreach (var item in root.connections)
 {
@@ -87,6 +87,7 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     arguments += $" -nameContext {item.NameContext}";
     arguments += $" -connection \"{item.ConnectionString}\"";
     startInfo.Arguments = arguments;
+    Console.WriteLine(arguments);
     startInfo.RedirectStandardOutput = true;
     startInfo.RedirectStandardError = true;
     startInfo.UseShellExecute = false;
