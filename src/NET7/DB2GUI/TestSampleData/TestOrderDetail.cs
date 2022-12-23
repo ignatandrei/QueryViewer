@@ -30,7 +30,7 @@ public class TestOrderDetail
     {
         get
         {
-            return new NorthwindDBContext();
+            return new NorthwindDBContext(null);
 
         }
     }

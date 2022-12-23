@@ -350,6 +350,68 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>GetAll(){
         return this.<#= entityType.Name #>Find_AsyncEnumerable(null);
     }
+        public async  Task<<#= entityType.Name #>> <#= entityType.Name #>Save(<#= entityType.Name #> val){
+
+        var data= await <#= entityType.Name #>SaveMultiple(val);
+        if(data == null)
+            return null;
+
+        return data[0];
+                
+    }
+    public async  Task<<#= entityType.Name #>[]> <#= entityType.Name #>SaveMultiple(params <#= entityType.Name #>[] values){
+
+        if(values == null)
+            return null;
+        if(values.Length == 0)
+            return values;
+        foreach(var value in values){
+            this.<#= entityType.Name #>.Add(value);
+        }
+        await SaveChangesAsync();
+        return values;
+
+                
+    }
+
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch(GeneratorFromDB.SearchCriteria sc, e<#= entityType.Name #>Columns colToSearch, string value){
+        
+ var search = new Search<#= entityType.Name #>();
+        var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
+        orderBy.FieldName = colToSearch;
+        orderBy.Asc = true;
+        search.OrderBys = new[] { orderBy };
+        search.PageNumber = 1;
+        search.PageSize = int.MaxValue;
+        var s = new GeneratorFromDB.SearchField<e<#= entityType.Name #>Columns>();
+        s.Criteria = sc;
+        s.FieldName = colToSearch;
+        s.Value = value;
+        search.SearchFields = new[] { s };
+        var data = this.<#= entityType.Name #>Find_AsyncEnumerable(search);
+        return data;
+    }   
+/*
+    public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
+ 
+        IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
+        if(search == null){
+            return data.AsAsyncEnumerable();
+        }
+        data = search.TransformToWhere(data);        
+        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        return ret.AsAsyncEnumerable();
+    }
+*/
+    public Task<long> <#= entityType.Name #>Count( Search<#= entityType.Name #> search){
+     
+        IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
+        if(search != null){
+            data = search.TransformToWhere(data);        
+        }        
+        return data.LongCountAsync();
+    }
+    
 
 <# if(hasOneKey ){
         var pk=key.Properties[0].FindContainingPrimaryKey() ;

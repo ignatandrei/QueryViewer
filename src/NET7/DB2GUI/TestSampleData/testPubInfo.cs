@@ -30,7 +30,7 @@ public class testPubInfo
     {
         get
         {
-            return new PubsDBContext ();
+            return new PubsDBContext (null);
 
         }
     }

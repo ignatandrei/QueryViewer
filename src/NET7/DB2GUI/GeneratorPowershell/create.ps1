@@ -21,8 +21,8 @@ $projectsFull = gci -Path $projectModels -File  -Filter *.csproj | Select-Object
 
 $project = $projectsFull.Fullname
 Write-Host "found project $project "
-$pathToModels = "Models/"+$nameContext
-$pathToContext= "Context/"+$nameContext
+$pathToModels = "Generated/Models/"+$nameContext
+$pathToContext= "Generated/Context/"+$nameContext
 Write-Host "pathToModels" $pathToModels
 
 
@@ -38,8 +38,8 @@ $projectsFull = gci -Path $projectContext -File  -Filter *.csproj | Select-Objec
 
 $project = $projectsFull.Fullname
 Write-Host "found project context $project "
-$pathToModels = "Models/"+$nameContext
-$pathToContext= "Context/"+$nameContext
+$pathToModels = "Generated/Models/"+$nameContext
+$pathToContext= "Generated/Context/"+$nameContext
  dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring  --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json 
 
 
@@ -50,7 +50,7 @@ $projectsFull = gci -Path $projectWeb -File  -Filter *.csproj | Select-Object  F
 
 $project = $projectsFull.Fullname
 Write-Host "found project $project "
-$pathToModels = "Controllers/"+$nameContext
-$pathToContext= "Controllers/"+$nameContext
+$pathToModels = "Controllers/Generated/"+$nameContext
+$pathToContext= "Controllers/Generated/"+$nameContext
 
 dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring  --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json #--no-build

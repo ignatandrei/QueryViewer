@@ -1,6 +1,8 @@
 
 
 
+using Generated;
+
 namespace TestSampleData;
 
 public class TestAuthors
@@ -66,7 +68,7 @@ public class TestAuthors
     {
         
         var search = new Searchauthors();
-        var orderBy = new Generated.OrderBy<eauthorsColumns>();
+        var orderBy = new OrderBy<eauthorsColumns>();
         orderBy.FieldName = eauthorsColumns.au_id;
         orderBy.Asc = true;
         search.OrderBys = new[] { orderBy };

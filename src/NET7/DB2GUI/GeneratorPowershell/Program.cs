@@ -7,7 +7,7 @@ AnsiConsole.MarkupLine($":play_button: Running in folder {pathGenerateFromDB}");
 string file = "connectionDetails.txt";
 string text = await File.ReadAllTextAsync(file);
 var root = System.Text.Json.JsonSerializer.Deserialize<Root>(text);
-if (root == null)
+if (root == null) 
 {
     Console.WriteLine($"do not have anything in {file}");
     return -3;
@@ -88,7 +88,7 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     arguments += $" -nameContext {item.NameContext}";
     arguments += $" -connection \"{item.ConnectionString}\"";
     startInfo.Arguments = arguments;
-    Console.WriteLine(arguments);
+    //Console.WriteLine(arguments);
     startInfo.RedirectStandardOutput = true;
     startInfo.RedirectStandardError = true;
     startInfo.UseShellExecute = false;
