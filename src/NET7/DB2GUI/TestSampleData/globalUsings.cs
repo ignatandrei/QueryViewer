@@ -7,6 +7,7 @@ global using Generated;
 global using Xunit;
 global using Microsoft.EntityFrameworkCore;
 global using System.IO;
+global using GeneratorFromDB;
 
 //[assembly: CollectionBehavior(MaxParallelThreads = 1)]
 [assembly: CollectionBehavior(DisableTestParallelization = true)] 

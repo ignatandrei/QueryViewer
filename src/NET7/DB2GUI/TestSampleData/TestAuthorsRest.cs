@@ -26,7 +26,7 @@ public class TestRest
     {
         get
         {
-            return new PubsDBContext ();
+            return new PubsDBContext (null);
 
         }
     }

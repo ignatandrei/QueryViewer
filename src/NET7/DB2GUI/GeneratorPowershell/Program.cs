@@ -1,13 +1,11 @@
 ﻿using Spectre.Console;
 using System.Diagnostics;
-
 var pathGenerateFromDB = Environment.CurrentDirectory;
 var directory = (pathGenerateFromDB);
 AnsiConsole.MarkupLine($":play_button: Running in folder {pathGenerateFromDB}");
-//Console.WriteLine(pathGenerateFromDB);
+//Console.WriteLine(pathGenerateFromDB); 
 string file = "connectionDetails.txt";
 string text = await File.ReadAllTextAsync(file);
-
 var root = System.Text.Json.JsonSerializer.Deserialize<Root>(text);
 if (root == null)
 {
@@ -20,14 +18,14 @@ foreach (var item in root.connections)
 {
     nrCon++;
     var message = $"""
-start connection {nrCon} {item.NameContext} at {DateTime.Now.ToString("hh:mm:ss")}
+start connection {nrCon} {item.NameContext} at {DateTime.Now:hh:mm:ss}
 """;
 
     AnsiConsole.MarkupLine($":person_running:[blue]{message}[/]");
     if (!item.Enabled)
     {
         message = $"""
-skip runPowershell connection {nrCon} at {DateTime.Now.ToString("hh:mm:ss")}
+skip runPowershell connection {nrCon} at {DateTime.Now:hh:mm:ss}
 """;
         AnsiConsole.MarkupLine($"[blue]{message}[/]:left_arrow:");
         continue; 
@@ -49,7 +47,8 @@ skip runPowershell connection {nrCon} at {DateTime.Now.ToString("hh:mm:ss")}
         foreach (var errMessage in RunPowerShell(item, directory))
         {
 
-            AnsiConsole.MarkupLine($"Error running Powershell [red]{errMessage}[/]");
+            Console.WriteLine($"Error running Powershell");
+            Console.WriteLine(errMessage);
 
         }
     }
@@ -59,7 +58,7 @@ skip runPowershell connection {nrCon} at {DateTime.Now.ToString("hh:mm:ss")}
     }
 
     var messageEnd = $"""
-end runPowershell connection {nrCon} at {DateTime.Now.ToString("hh:mm:ss")}
+end runPowershell connection {nrCon} at {DateTime.Now:hh:mm:ss}
 """;
     AnsiConsole.MarkupLine($"[blue]{messageEnd}[/]:person_raising_hand:");
 
@@ -72,9 +71,11 @@ return 0;
 IEnumerable<string> RunPowerShell(Connection item, string directory)
 {
     var file = Path.Combine(directory, "create.ps1");
-    var startInfo = new ProcessStartInfo();
-    startInfo.FileName = @"powershell.exe";
-    startInfo.WorkingDirectory = directory;
+    ProcessStartInfo startInfo = new() 
+    {
+        FileName = @"powershell.exe",
+        WorkingDirectory = directory
+    };
     string arguments = @"-NoProfile -NonInteractive -ExecutionPolicy ByPass ";
     arguments += $"""
             -f "{file}"  
@@ -92,8 +93,10 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     startInfo.RedirectStandardError = true;
     startInfo.UseShellExecute = false;
     startInfo.CreateNoWindow = true;
-    var process = new Process();
-    process.StartInfo = startInfo;
+    Process process = new()
+    {
+        StartInfo = startInfo
+    };
     string output = "", errors = "";
     process.OutputDataReceived += (sender, e) => { if (e.Data != null) output += e.Data + Environment.NewLine; };
     process.ErrorDataReceived += (sender, e) => { if (e.Data != null) errors += e.Data + Environment.NewLine; };

@@ -30,7 +30,7 @@ public class TestDiscounts
     {
         get
         {
-            return new PubsDBContext ();
+            return new PubsDBContext (null);
 
         }
     }

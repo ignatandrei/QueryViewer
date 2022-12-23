@@ -1,4 +1,6 @@
 
+
+
 namespace TestSampleData;
 
 public class TestAuthors
@@ -26,7 +28,7 @@ public class TestAuthors
     {
         get
         {
-            return new PubsDBContext ();
+            return new PubsDBContext (null);
 
         }
     }

@@ -1,4 +1,3 @@
-using Generated;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,9 +8,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<NorthwindDBContext>(options =>
-    options.UseSqlServer("asdasd")
-    );
+//builder.Services.AddDbContext<ApplicationDBContext>(options =>
+//    options.UseSqlServer("Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;")
+//    );
 
 var app = builder.Build();
 

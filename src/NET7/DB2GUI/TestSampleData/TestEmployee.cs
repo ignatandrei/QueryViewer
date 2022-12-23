@@ -26,7 +26,7 @@ public class TestEmployee
     {
         get
         {
-            return new PubsDBContext ();
+            return new PubsDBContext (null);
 
         }
     }
@@ -57,12 +57,12 @@ public class TestEmployee
     [InlineData(SearchCriteria.GreaterOrEqualYear, eemployeeColumns.hire_date, "1993-08-19", 10)]
     [InlineData(SearchCriteria.LessYear, eemployeeColumns.hire_date, "1993-08-19", 33)]
     [InlineData(SearchCriteria.LessOrEqualYear, eemployeeColumns.hire_date, "1993-08-19", 40)]
-    [InlineData(SearchCriteria.EqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 1)]
-    [InlineData(SearchCriteria.DifferentMonthYear, eemployeeColumns.hire_date, "1993-08-19", 42)]
-    [InlineData(SearchCriteria.GreaterMonthYear, eemployeeColumns.hire_date, "1992-08-27", 12)]
-    [InlineData(SearchCriteria.GreaterOrEqualMonthYear, eemployeeColumns.hire_date, "1992-08-27", 13)]
-    [InlineData(SearchCriteria.LessMonthYear, eemployeeColumns.hire_date, "1993-08-19", 37)]
-    [InlineData(SearchCriteria.LessOrEqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 38)]
+    //[InlineData(SearchCriteria.EqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 1)]
+    //[InlineData(SearchCriteria.DifferentMonthYear, eemployeeColumns.hire_date, "1993-08-19", 42)]
+    //[InlineData(SearchCriteria.GreaterMonthYear, eemployeeColumns.hire_date, "1992-08-27", 12)]
+    //[InlineData(SearchCriteria.GreaterOrEqualMonthYear, eemployeeColumns.hire_date, "1992-08-27", 13)]
+    //[InlineData(SearchCriteria.LessMonthYear, eemployeeColumns.hire_date, "1993-08-19", 37)]
+    //[InlineData(SearchCriteria.LessOrEqualMonthYear, eemployeeColumns.hire_date, "1993-08-19", 38)]
 
     public async Task SearchAdvanced(SearchCriteria sc, eemployeeColumns col, string val, int nrRecs)
     {

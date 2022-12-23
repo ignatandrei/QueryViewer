@@ -69,6 +69,7 @@ public partial class <#= Options.ContextName #> : DbContext
     {
 #>
     public virtual DbSet<<#= entityType.Name #>> <#= entityType.GetDbSetName() #> { get; set; }
+    public virtual DbSet<<#= entityType.Name #>_Table> <#= entityType.GetDbSetName() #>_Table { get; set; }
 
 <#
     }
@@ -335,11 +336,50 @@ public partial class <#= Options.ContextName #> : DbContext
 var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
 
 #>
+
+        public async Task<<#= entityType.Name #>[]> <#= entityType.Name #>Find_Array( Search<#= entityType.Name #>? search){
+ 
+        IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
+        if(search == null){
+            return await data.ToArrayAsync();
+        }
+        data = search.TransformToWhere(data);        
+        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        return await ret.ToArrayAsync();
+    }
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>GetAll(){
+        return this.<#= entityType.Name #>Find_AsyncEnumerable(null);
+    }
+
 <# if(hasOneKey ){
         var pk=key.Properties[0].FindContainingPrimaryKey() ;
         var s= code.Lambda(key.Properties, "e") ;
     #>
-    //oneKey    
+    //oneKey
+    
+    public  async Task<bool> <#= entityType.Name #>Delete(<#= code.Reference(pk.GetKeyType()) #> id){
+
+        var item = await <#= entityType.Name #>GetSingle(id);
+        if(item == null)
+            return false;
+       this.<#= entityType.Name #>.Remove(item);
+        await this.SaveChangesAsync();
+        return true; 
+    }
+    public  async Task<bool> <#= entityType.Name #>Modify(<#= entityType.Name #> val ){
+        //do the attach
+        /* var item = await <#= entityType.Name #>GetSingle(val.??ID?????);
+        if(item == null)
+            return false;
+        item.CopyFrom(val);        
+        await this.SaveChangesAsync();
+        */
+        return true; 
+    }
+    
+
+
+
     public Task<<#= entityType.Name #>?> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
         return this.<#= entityType.Name #>.FirstOrDefaultAsync(<#= s #> == id);
     }
