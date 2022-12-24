@@ -69,7 +69,7 @@ public partial class <#= Options.ContextName #> : DbContext
     {
 #>
     public virtual DbSet<<#= entityType.Name #>> <#= entityType.GetDbSetName() #> { get; set; }
-    public virtual DbSet<<#= entityType.Name #>_Table> <#= entityType.GetDbSetName() #>_Table { get; set; }
+    //public virtual DbSet<<#= entityType.Name #>_Table> <#= entityType.GetDbSetName() #>_Table { get; set; }
 
 <#
     }

@@ -30,7 +30,10 @@ public class TestOrderDetail
     {
         get
         {
-            return new NorthwindDBContext(null);
+            var ext = extensions.GetOptions<NorthwindDBContext>();
+            return new NorthwindDBContext(ext);
+
+            
 
         }
     }

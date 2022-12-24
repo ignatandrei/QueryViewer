@@ -30,7 +30,9 @@ public class TestDiscounts
     {
         get
         {
-            return new PubsDBContext (null);
+            var ext = extensions.GetOptions<PubsDBContext>();
+            return new PubsDBContext(ext);
+
 
         }
     }

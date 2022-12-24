@@ -20,9 +20,6 @@
     <ProjectReference Include="..\ExampleModels\ExampleModels.csproj" />
     <ProjectReference Include="..\GeneratorFromDB\GeneratorFromDB.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Context\" />
-  </ItemGroup>
   <PropertyGroup>
 	  <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 	  <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)GeneratedX</CompilerGeneratedFilesOutputPath>
