@@ -369,7 +369,7 @@ if(hasArray == 1) //for the moment, we do not search for arrays
         }//end switch  
        }//end foreach
     
-    throw new NotImplementedException("not");
+    //throw new NotImplementedException("not");
     }
 
 <#
