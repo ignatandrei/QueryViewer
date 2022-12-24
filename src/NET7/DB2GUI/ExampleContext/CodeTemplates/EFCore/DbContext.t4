@@ -382,8 +382,13 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         
  var search = new Search<#= entityType.Name #>();
         var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
-        <# if(hasOneKey ==1 ) { #>
-            orderBy.FieldName = <#= key.Name() #>;
+        <# if(hasOneKey  ) { 
+        //TODO: find name of PK different
+            var lambda= code.Lambda(key.Properties, "e") ;
+            var dot=lambda.IndexOf(".");
+            var namePK="e"+ entityType.Name + "Columns"+ lambda.Substring(dot);
+        #>
+            orderBy.FieldName = <#= namePK #>;
         <# } else { #>
             orderBy.FieldName = colToSearch;
         <# } ;// has one key #>
@@ -578,7 +583,17 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
 
             var search = new Search<#= entityType.Name #>();
             var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
+                  <# if(hasOneKey  ) { 
+        //TODO: find name of PK different
+            var lambda= code.Lambda(key.Properties, "e") ;
+            var dot=lambda.IndexOf(".");
+            var namePK="e"+ entityType.Name + "Columns"+ lambda.Substring(dot);
+        #>
+            orderBy.FieldName = <#= namePK #>;
+        <# } else { #>
             orderBy.FieldName = colToSearch;
+        <# } ;// has one key #>
+  
             orderBy.Asc = false;
             search.OrderBys = new[] { orderBy };
             search.PageNumber = 1;
