@@ -344,7 +344,11 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
             return await data.ToArrayAsync();
         }
         data = search.TransformToWhere(data);        
-        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        IQueryable<<#= entityType.Name #>> ret= search.TransformToOrder(data);
+        if(search.PageNumber>1)
+            ret= ret.Skip((search.PageNumber-1)*search.PageSize;)
+            
+        ret=ret.Take(search.PageSize);
         return await ret.ToArrayAsync();
     }
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>GetAll(){
@@ -382,7 +386,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         orderBy.Asc = true;
         search.OrderBys = new[] { orderBy };
         search.PageNumber = 1;
-        search.PageSize = int.MaxValue;
+        search.PageSize = int.MaxValue-1;
         var s = new GeneratorFromDB.SearchField<e<#= entityType.Name #>Columns>();
         s.Criteria = sc;
         s.FieldName = colToSearch;
@@ -399,7 +403,11 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
             return data.AsAsyncEnumerable();
         }
         data = search.TransformToWhere(data);        
-        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        IQueryable<<#= entityType.Name #>> =search.TransformToOrder(data);
+        if(search.PageSize>1)
+            ret= ret.Skip((search.PageNumber-1)*search.PageSize);
+            
+        ret=ret.Take(search.PageSize);
         return ret.AsAsyncEnumerable();
     }
 */

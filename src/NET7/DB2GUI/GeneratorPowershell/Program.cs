@@ -10,7 +10,7 @@ var root = System.Text.Json.JsonSerializer.Deserialize<Root>(text);
 if (root == null) 
 {
     Console.WriteLine($"do not have anything in {file}");
-    return -3;
+    return -3; 
 }
 
 int nrCon = 0;

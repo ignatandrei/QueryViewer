@@ -179,7 +179,7 @@ if(hasArray == 1) //for the moment, we do not search for arrays
         }//end if s.value is null -search for null
         //if we are here, s.Value is not null
         { //use this to define value in smaller scope
-        <# if ("DateTime" == propTypeNotNull || "double" == propTypeNotNull || "float" == propTypeNotNull ||  "byte" == propTypeNotNull  || propTypeNotNull == "short" || propTypeNotNull == "long" || propTypeNotNull == "int" || propTypeNotNull == "decimal") 
+        <# if ("bool" == propTypeNotNull || "DateTime" == propTypeNotNull || "double" == propTypeNotNull || "float" == propTypeNotNull ||  "byte" == propTypeNotNull  || propTypeNotNull == "short" || propTypeNotNull == "long" || propTypeNotNull == "int" || propTypeNotNull == "decimal") 
         { hasValueDefined=true;
         #>
                 var valueArray = s.Value
@@ -368,7 +368,7 @@ if(hasArray == 1) //for the moment, we do not search for arrays
         <# } // foreach property #>
         }//end switch  
        }//end foreach
-    
+    return returnValue;
     //throw new NotImplementedException("not");
     }
 
