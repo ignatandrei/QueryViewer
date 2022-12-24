@@ -141,7 +141,7 @@ end runPowershell connection { nrCon} at { DateTime.Now.ToString("hh:MM:ss")}
 
         if (errors.Length > 0 || output.Contains("SqlException") || output.Contains("Build failed"))
         {
-            yield return "run powershell with " + arguments;
+            yield return "run powershell " + arguments;
             var tempFile = Path.GetTempFileName() + ".txt";
             File.WriteAllText(tempFile, output + errors);
             var message = tempFile;

@@ -59,7 +59,7 @@ public class TestRest
     {
         CreateDb();
         var all = await Save();
-        Assert.NotNull(all);
+        Assert.True(all);
     }
     private async Task<bool> Save()
     {

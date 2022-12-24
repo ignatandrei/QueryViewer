@@ -382,8 +382,12 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         
  var search = new Search<#= entityType.Name #>();
         var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
-        orderBy.FieldName = colToSearch;
-        orderBy.Asc = true;
+        <# if(hasOneKey ==1 ) { #>
+            orderBy.FieldName = <#= key.Name() #>;
+        <# } else { #>
+            orderBy.FieldName = colToSearch;
+        <# } ;// has one key #>
+        orderBy.Asc = false;
         search.OrderBys = new[] { orderBy };
         search.PageNumber = 1;
         search.PageSize = int.MaxValue-1;
@@ -461,8 +465,13 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         if(search == null){
             return data.AsAsyncEnumerable();
         }
-        data = search.TransformToWhere(data);        
-        var ret= search.TransformToOrder(data).Skip((search.PageNumber-1)*search.PageSize).Take(search.PageSize);
+        data = search.TransformToWhere(data); 
+        
+        IQueryable<<#= entityType.Name #>> ret= search.TransformToOrder(data);
+        if(search.PageNumber>1)
+            ret=ret.Skip((search.PageNumber-1)*search.PageSize);
+            
+        ret=ret.Take(search.PageSize);
         return ret.AsAsyncEnumerable();
     
     }
@@ -570,7 +579,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
             var search = new Search<#= entityType.Name #>();
             var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
             orderBy.FieldName = colToSearch;
-            orderBy.Asc = true;
+            orderBy.Asc = false;
             search.OrderBys = new[] { orderBy };
             search.PageNumber = 1;
             search.PageSize = int.MaxValue;

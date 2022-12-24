@@ -110,7 +110,7 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     
     if (errors.Length > 0 || output.Contains("SqlException") || output.Contains("Build failed"))
     {
-        yield return "To reproduce please run powershell with " + arguments;
+        yield return "To reproduce please run powershell " + arguments;
         var tempFile = Path.GetTempFileName() + ".txt";
         if(errors.Length>0)
             yield return errors;
