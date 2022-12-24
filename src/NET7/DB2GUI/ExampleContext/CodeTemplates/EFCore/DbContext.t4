@@ -346,7 +346,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         data = search.TransformToWhere(data);        
         IQueryable<<#= entityType.Name #>> ret= search.TransformToOrder(data);
         if(search.PageNumber>1)
-            ret= ret.Skip((search.PageNumber-1)*search.PageSize;)
+            ret= ret.Skip((search.PageNumber-1)*search.PageSize);
             
         ret=ret.Take(search.PageSize);
         return await ret.ToArrayAsync();
