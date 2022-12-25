@@ -14,6 +14,7 @@ if (root == null)
 }
 
 int nrCon = 0;
+if(root?.connections != null )
 foreach (var item in root.connections)
 {
     nrCon++;
@@ -74,7 +75,8 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     ProcessStartInfo startInfo = new() 
     {
         FileName = @"powershell.exe",
-        WorkingDirectory = directory
+        WorkingDirectory = directory,
+        
     };
     string arguments = @"-NoProfile -NonInteractive -ExecutionPolicy ByPass ";
     arguments += $"""
@@ -102,7 +104,7 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     process.ErrorDataReceived += (sender, e) => { if (e.Data != null) errors += e.Data + Environment.NewLine; };
 
     process.Start();
-
+    process.PriorityClass= ProcessPriorityClass.RealTime;
     process.BeginOutputReadLine();
     process.BeginErrorReadLine();
     process.WaitForExit();

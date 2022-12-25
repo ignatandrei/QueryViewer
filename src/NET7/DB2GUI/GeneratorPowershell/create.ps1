@@ -40,7 +40,7 @@ $project = $projectsFull.Fullname
 Write-Host "found project context $project "
 $pathToModels = "Generated/Models/"+$nameContext
 $pathToContext= "Generated/Context/"+$nameContext
- dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring  --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json 
+dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring  --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json 
 
 
 Write-Host "search for csproj webapi in $projectWeb"

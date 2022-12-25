@@ -1,10 +1,9 @@
-using Generated;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 class Program
 {
-    static List<IRegisterContext> registerContexts = new();
+    public static List<IRegisterContext> registerContexts = new();
     static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
