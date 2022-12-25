@@ -42,8 +42,8 @@
         usings.Add("Microsoft.EntityFrameworkCore");
     }
     //Console.WriteLine("!!!!");
-    //var key = EntityType.FindPrimaryKey();
-    //var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+    var key = EntityType.FindPrimaryKey();
+    var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
 
 
     if (!string.IsNullOrEmpty(NamespaceHint))
@@ -68,7 +68,39 @@ public partial class REST<#= EntityType.Name #>Controller : Controller
 
         
     }
-    
+    <# if(hasOneKey){ 
+        
+        Console.WriteLine(code == null);
+
+        var lambda= code.Lambda(key.Properties, "e") ;
+        Console.WriteLine(lambda == null);
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        Console.WriteLine(pk == null) ;
+        var keyType=pk.GetKeyType();        
+        Console.WriteLine(keyType == null);
+        
+    #>
+
+        [HttpGet("{id}")]
+    public async Task<ActionResult<<#= EntityType.Name #>_Table>> Get<#= EntityType.Name #>(<#= code.Reference(keyType) #> id)
+    {
+        if (_context.<#= EntityType.Name #> == null)
+        {
+            return NotFound();
+        }
+        var item = await _context.<#= EntityType.Name #>.FirstOrDefaultAsync(<#= lambda #>==id);
+
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        return (<#= EntityType.Name #>_Table)item!;
+    }
+
+
+    <# } #>
+}    
 <#
     var previousOutput = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();
