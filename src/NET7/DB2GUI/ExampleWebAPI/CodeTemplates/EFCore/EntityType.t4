@@ -78,7 +78,9 @@ public partial class REST<#= EntityType.Name #>Controller : Controller
         Console.WriteLine(pk == null) ;
         var keyType=pk.GetKeyType();        
         Console.WriteLine(keyType == null);
-        
+        var dot=lambda.IndexOf(".");
+        var namePK=lambda.Substring(dot+1);
+
     #>
 
         [HttpGet("{id}")]
@@ -98,6 +100,73 @@ public partial class REST<#= EntityType.Name #>Controller : Controller
         return (<#= EntityType.Name #>_Table)item!;
     }
 
+
+    [HttpPatch("{id}")]
+        public async Task<IActionResult> Put<#= EntityType.Name #>(<#= code.Reference(keyType) #> id, <#= EntityType.Name #> value)
+        {
+            if (id != value.<#= namePK #>)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(value).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!<#= EntityType.Name #>Exists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<<#= EntityType.Name #>>> Post<#= EntityType.Name #>(<#= EntityType.Name #>_Table value)
+        {
+          if (_context.<#= EntityType.Name #> == null)
+          {
+              return Problem("Entity set '<#= Options.ContextName #>.<#= EntityType.Name #>'  is null.");
+          }
+            var val = new <#= EntityType.Name #>();
+            val.CopyFrom(value);
+            _context.<#= EntityType.Name #>.Add(val);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("Get<#= EntityType.Name #>", new { id = val.<#=namePK#> }, m);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete<#= EntityType.Name #>(<#= code.Reference(keyType) #> id)
+        {
+            if (_context.<#= EntityType.Name #> == null)
+            {
+                return NotFound();
+            }
+            var item = await _context.<#= EntityType.Name #>.FirstOrDefaultAsync(<#= lambda #>==id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            _context.<#= EntityType.Name #> .Remove(item);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool <#= EntityType.Name #>Exists(<#= code.Reference(keyType) #> id)
+        {
+            return (_context.<#= EntityType.Name #>.Any(<#= lambda #>  == id));
+        }
 
     <# } #>
 }    

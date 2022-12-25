@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 
 class Program
 {
+    //to register all contexts
     public static List<IRegisterContext> registerContexts = new();
     static void Main(string[] args)
     {

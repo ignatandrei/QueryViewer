@@ -90,7 +90,7 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     arguments += $" -nameContext {item.NameContext}";
     arguments += $" -connection \"{item.ConnectionString}\"";
     startInfo.Arguments = arguments;
-    //Console.WriteLine(arguments);
+    Console.WriteLine("powershell.exe "+arguments);
     startInfo.RedirectStandardOutput = true;
     startInfo.RedirectStandardError = true;
     startInfo.UseShellExecute = false;
