@@ -17,6 +17,7 @@
 <#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
 <#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
 <#
+    Console.WriteLine("!!!!");
     if (EntityType.IsSimpleManyToManyJoinEntityType())
     {
         // Don't scaffold these
@@ -40,6 +41,10 @@
         usings.Add("System.ComponentModel.DataAnnotations.Schema");
         usings.Add("Microsoft.EntityFrameworkCore");
     }
+    //Console.WriteLine("!!!!");
+    //var key = EntityType.FindPrimaryKey();
+    //var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+
 
     if (!string.IsNullOrEmpty(NamespaceHint))
     {
@@ -56,14 +61,14 @@ public partial class REST<#= EntityType.Name #>Controller : Controller
         _context=context;
 	}
     [HttpGet]
-    public async Task<<#= EntityType.Name #>[]> Get(){
+    public async Task<<#= EntityType.Name #>_Table[]> Get(){
         var data= await _context.<#= EntityType.Name #>.ToArrayAsync();
-        return data;
-        //andrei
+        var ret = data.Select(it => (<#= EntityType.Name #>_Table)it!).ToArray();
+        return ret;
+
+        
     }
-
-
-}
+    
 <#
     var previousOutput = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();
