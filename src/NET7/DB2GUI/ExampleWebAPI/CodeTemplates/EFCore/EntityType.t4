@@ -142,7 +142,7 @@ public partial class REST<#= EntityType.Name #>Controller : Controller
             _context.<#= EntityType.Name #>.Add(val);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("Get<#= EntityType.Name #>", new { id = val.<#=namePK#> }, m);
+            return CreatedAtAction("Get<#= EntityType.Name #>", new { id = val.<#=namePK#> }, val);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete<#= EntityType.Name #>(<#= code.Reference(keyType) #> id)

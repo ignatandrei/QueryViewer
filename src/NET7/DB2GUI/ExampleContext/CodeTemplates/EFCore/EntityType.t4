@@ -36,6 +36,23 @@
         usings.Add("System.ComponentModel.DataAnnotations.Schema");
         usings.Add("Microsoft.EntityFrameworkCore");
     }
+    var key = EntityType.FindPrimaryKey();
+    var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+    string namePK="";
+    if(hasOneKey){ 
+        
+        Console.WriteLine(code == null);
+
+        var lambda= code.Lambda(key.Properties, "e") ;
+        Console.WriteLine(lambda == null);
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        Console.WriteLine(pk == null) ;
+        var keyType=pk.GetKeyType();        
+        Console.WriteLine(keyType == null);
+        var dot=lambda.IndexOf(".");
+        namePK=lambda.Substring(dot+1);
+
+    }
 
     if (!string.IsNullOrEmpty(NamespaceHint))
     {
@@ -74,6 +91,27 @@ public partial class Search<#= EntityType.Name #>:  GeneratorFromDB.Search<e<#= 
     //public Search<#= EntityType.Name #>(<#= Options.ContextName #> context){
     //    _context= context;
     //}
+public static Search<#= EntityType.Name #> FromSearch(GeneratorFromDB.SearchCriteria sc, e<#= EntityType.Name #>Columns colToSearch, string value)
+    {
+        var search = new Search<#= EntityType.Name #>();
+        var orderBy = new GeneratorFromDB.OrderBy<e<#= EntityType.Name #>Columns>();
+        <# if(hasOneKey) { #>
+        orderBy.FieldName = e<#= EntityType.Name #>Columns.<#= namePK #> ;;
+        <# } else { #>
+            orderBy.FieldName = colToSearch;
+        <# } ;// has one key #>
+
+        orderBy.Asc = false;
+        search.OrderBys = new[] { orderBy };
+        search.PageNumber = 1;
+        search.PageSize = int.MaxValue - 1;
+        var s = new GeneratorFromDB.SearchField<e<#= EntityType.Name #>Columns>();
+        s.Criteria = sc;
+        s.FieldName = colToSearch;
+        s.Value = value;
+        search.SearchFields = new[] { s };
+        return search;
+    }
    public override IOrderedQueryable<<#= EntityType.Name #>> TransformToOrder(IQueryable<<#= EntityType.Name #>> data){
         if(OrderBys == null || OrderBys.Length ==0){
             OrderBys =new GeneratorFromDB.OrderBy<e<#= EntityType.Name #>Columns>[1];

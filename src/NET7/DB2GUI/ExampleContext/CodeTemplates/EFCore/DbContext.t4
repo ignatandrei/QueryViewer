@@ -351,6 +351,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         ret=ret.Take(search.PageSize);
         return await ret.ToArrayAsync();
     }
+
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>GetAll(){
         return this.<#= entityType.Name #>Find_AsyncEnumerable(null);
     }
@@ -380,7 +381,8 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
 
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch(GeneratorFromDB.SearchCriteria sc, e<#= entityType.Name #>Columns colToSearch, string value){
         
- var search = new Search<#= entityType.Name #>();
+ var search = Search<#= entityType.Name #>.FromSearch(sc,colToSearch,value);
+ /*
         var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
         <# if(hasOneKey  ) { 
         //TODO: find name of PK different
@@ -401,6 +403,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         s.FieldName = colToSearch;
         s.Value = value;
         search.SearchFields = new[] { s };
+        */
         var data = this.<#= entityType.Name #>Find_AsyncEnumerable(search);
         return data;
     }   
@@ -580,7 +583,8 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
     }
 <# } // has onekey #>
     public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch(GeneratorFromDB.SearchCriteria sc, e<#= entityType.Name #>Columns colToSearch, string? value){
-
+        var search =Search<#= entityType.Name #>.FromSearch(sc,colToSearch,value);
+    /*
             var search = new Search<#= entityType.Name #>();
             var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
                   <# if(hasOneKey  ) { 
@@ -603,6 +607,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
             s.FieldName = colToSearch;
             s.Value = value;
             search.SearchFields = new[] { s };
+       */
             var data = this.<#= entityType.Name #>Find_AsyncEnumerable(search);
             return data;
         }

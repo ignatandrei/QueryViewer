@@ -48,8 +48,8 @@ skip runPowershell connection {nrCon} at {DateTime.Now:hh:mm:ss}
         foreach (var errMessage in RunPowerShell(item, directory))
         {
 
-            Console.WriteLine($"Error running Powershell");
-            Console.WriteLine(errMessage);
+            //Console.WriteLine($"Error running Powershell");
+            Console.WriteLine("!!!ERROR:"+errMessage);
 
         }
     }
@@ -112,7 +112,7 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     
     if (errors.Length > 0 || output.Contains("SqlException") || output.Contains("Build failed"))
     {
-        yield return "To reproduce please run powershell " + arguments;
+        //yield return "To reproduce please run powershell " + arguments;
         var tempFile = Path.GetTempFileName() + ".txt";
         if(errors.Length>0)
             yield return errors;
