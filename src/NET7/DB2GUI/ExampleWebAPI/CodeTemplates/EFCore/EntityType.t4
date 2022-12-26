@@ -184,16 +184,56 @@ using <#= ns #>;
     WriteLine("");
 
     GenerationEnvironment.Append(previousOutput);
-
-    //SaveOutput(EntityType.Name +"a.txt","text.txt");
+    var restController = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+    foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
+    {
 #>
+using <#= ns #>;
+<#
+    }
 
+        if (!string.IsNullOrEmpty(NamespaceHint))
+    {
+#>
+namespace <#= NamespaceHint #>;
+<# } #>
+[ApiController]
+[Route("[controller]")]    
+public partial class AdvancedSearch<#= EntityType.Name #>Controller : Controller
+{
+    private ISearchData<#= EntityType.Name #> _search;
+    public AdvancedSearch<#= EntityType.Name #>Controller(ISearchData<#= EntityType.Name #> search)
+	{
+        _search=search;
+	}
+
+}//end class
+
+<#
+
+    string FileName = EntityType.Name +"Advanced.cs";
+    SaveOutputController(FileName ,GenerationEnvironment.ToString());
+    GenerationEnvironment = restController;
+#>
 <#+
-private void SaveOutput(string outputFileName,string text) {
+private void SaveOutputController(string outputFileName,string text) {
   //string w= Host.ResolvePath("~/generatedFile.txt");
+  
   string w=Host.TemplateFile;
+  Console.WriteLine(w);
   string templateDirectory = Path.GetDirectoryName(w);
-  string outputFilePath = Path.Combine(templateDirectory, outputFileName);
+//modify this with path in create.ps1
+    string outputFilePath = Path.Combine(templateDirectory, "../../Controllers/Generated/" + Options.ContextName +"/" );
+  outputFilePath = Path.Combine(outputFilePath ,outputFileName);
+  var dir=System.IO.Path.GetDirectoryName(outputFilePath);
+    dir=System.IO.Path.GetFullPath(dir);
+  Console.WriteLine("!!"+dir);
+  if(!System.IO.Directory.Exists(dir))
+    System.IO.Directory.CreateDirectory(dir);
+
+  //
+  
   File.WriteAllText(outputFilePath, text); 
   //this.GenerationEnvironment.Remove(0, this.GenerationEnvironment.Length);
 }

@@ -118,9 +118,8 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
             yield return errors;
 
         File.WriteAllText(tempFile, output + errors);
-        Process.Start("notepad.exe", tempFile);
+        //Process.Start("notepad.exe", tempFile);
         var message = tempFile;
         yield return tempFile;
-
     }
 }
