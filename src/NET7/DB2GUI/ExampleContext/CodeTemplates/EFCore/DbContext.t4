@@ -530,10 +530,11 @@ public class InsertData<#= Options.ContextName #>: I_InsertData<#= Options.Conte
         await _context.SaveChangesAsync();
         return vals.Select(it => (<#= entityType.Name #>_Table)it!  ).ToArray();
     }
-
+    
 <#
-}//foreach 
+}//foreach entity type
 #>    
+}//end class InsertData<#= Options.ContextName #>
 <#
     foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
     {
@@ -664,4 +665,3 @@ using <#= ns #>;
 
     GenerationEnvironment.Append(mainEnvironment);
 #>
-}

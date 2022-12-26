@@ -208,11 +208,17 @@ public partial class AdvancedSearch<#= EntityType.Name #>Controller : Controller
         _search=search;
 	}
 
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>> GetAll()
+    {
+        return await _search.<#= EntityType.Name #>Find_AsyncEnumerable(null);
+    }
+
 }//end class
 
 <#
 
-    string FileName = EntityType.Name +"Advanced.cs";
+    string FileName = "AdvancedSearch"+ EntityType.Name +"Advanced.cs";
     SaveOutputController(FileName ,GenerationEnvironment.ToString());
     GenerationEnvironment = restController;
 #>
