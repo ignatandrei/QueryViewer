@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 internal interface IRegisterContext
 {
-    IServiceCollection AddDbContextFactory(IServiceCollection services, ConfigurationManager configuration);
+    IServiceCollection AddServices(IServiceCollection services, ConfigurationManager configuration);
 
 }

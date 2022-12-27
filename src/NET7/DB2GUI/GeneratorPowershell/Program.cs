@@ -13,7 +13,7 @@ if (root == null)
     return -3; 
 }
 
-int nrCon = 0;
+int nrCon = 0; 
 if(root?.connections != null )
 foreach (var item in root.connections)
 {
@@ -48,8 +48,8 @@ skip runPowershell connection {nrCon} at {DateTime.Now:hh:mm:ss}
         foreach (var errMessage in RunPowerShell(item, directory))
         {
 
-            //Console.WriteLine($"Error running Powershell");
-            Console.WriteLine("!!!ERROR:"+errMessage);
+                //Console.WriteLine($"Error running Powershell");
+                AnsiConsole.MarkupLine("[red]!!!ERROR:"+errMessage);
 
         }
     }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Drawing;
 
 class Program
 {
@@ -18,11 +19,11 @@ class Program
         //builder.Services.AddDbContext<ApplicationDBContext>(options =>
         //    options.UseSqlServer("Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;")
         //    );
-        foreach(var item in registerContexts)
+        foreach (var item in registerContexts)
         {
-            item.AddDbContextFactory(builder.Services, builder.Configuration);
+            item.AddServices(builder.Services, builder.Configuration);
         }
-        //builder.Services.AddDbContextFactory<ApplicationDBContext>(options =>
+        //builder.Services.AddServices<ApplicationDBContext>(options =>
         //      options.UseSqlServer("Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;")
         //  );
 

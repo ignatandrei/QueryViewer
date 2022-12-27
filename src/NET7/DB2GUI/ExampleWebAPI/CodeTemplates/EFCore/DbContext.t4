@@ -38,10 +38,26 @@ namespace <#= NamespaceHint #>;
 #>
 public partial class Register<#= Options.ContextName #> : IRegisterContext
 {
-    public     IServiceCollection AddDbContextFactory(IServiceCollection services, ConfigurationManager configuration){
-                services.AddDbContextFactory<<#= Options.ContextName #>>(options =>
-              options.UseSqlServer("Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;")
+    public     IServiceCollection AddServices(IServiceCollection services, ConfigurationManager configuration){
+        
+        var cnString = configuration.GetConnectionString("<#= Options.ContextName #>");
+        if (string.IsNullOrWhiteSpace(cnString))
+        {
+            throw new ArgumentException("please add  connection string <#= Options.ContextName #> into appsettings.json ");
+        }
+
+        services.AddDbContext<<#= Options.ContextName #>>(options =>
+              {
+              //options.UseSqlServer("Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;");
+              options.UseSqlServer(cnString);
+              }
           );
+          <#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+#>
+        services.AddTransient<ISearchData<#=entityType.Name#>, SearchData<#=entityType.Name#>>();
+        <# } // foreach entityType #>
           return services;
     }
     

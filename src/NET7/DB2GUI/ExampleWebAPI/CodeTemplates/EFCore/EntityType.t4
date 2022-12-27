@@ -199,7 +199,7 @@ using <#= ns #>;
 namespace <#= NamespaceHint #>;
 <# } #>
 [ApiController]
-[Route("[controller]")]    
+[Route("[controller]/[action]")]    
 public partial class AdvancedSearch<#= EntityType.Name #>Controller : Controller
 {
     private ISearchData<#= EntityType.Name #> _search;
@@ -209,9 +209,13 @@ public partial class AdvancedSearch<#= EntityType.Name #>Controller : Controller
 	}
 
     [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>> GetAll()
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> GetAll()
     {
-        return await _search.<#= EntityType.Name #>Find_AsyncEnumerable(null);
+        await foreach(var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(null))
+        {
+            yield return (<#= EntityType.Name #>_Table)item;
+        }
+        
     }
 
 }//end class
