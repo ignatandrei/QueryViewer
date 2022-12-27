@@ -248,24 +248,31 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         var propType=code.Reference(property.ClrType);
         if(propType.Contains("[]"))
             hasArray=1;
-        hasArray=1;//not search now
      #>
      <#if(hasArray==0) { #>
      [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> EqualValues_<#= property.Name #>( <#= code.Reference(property.ClrType) #>[]  values)
     {
-        var sc = GeneratorFromDB.SearchCriteria.InArray;
-        await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, values))
+        string? value=null;
+        if(values.Length>0)
+            value=string.Join( ",",values);
+        var sc=Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.InArray,e<#= EntityType.Name #>Columns.<#= property.Name #>,value);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
         {
+        
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
      [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> DifferentValues_<#= property.Name #>( <#= code.Reference(property.ClrType) #>[]  values)
     {
-        var sc = GeneratorFromDB.SearchCriteria.NotInArray;
-        await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, values))
+        string? value=null;
+        if(values.Length>0)
+            value=string.Join( ",",values);
+        var sc=Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.NotInArray,e<#= EntityType.Name #>Columns.<#= property.Name #>,value);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
         {
+        
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
