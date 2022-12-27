@@ -213,10 +213,58 @@ public partial class AdvancedSearch<#= EntityType.Name #>Controller : Controller
     {
         await foreach(var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(null))
         {
-            yield return (<#= EntityType.Name #>_Table)item;
+            yield return (<#= EntityType.Name #>_Table)item!;
         }
         
     }
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> GetWithSearch(Search<#= EntityType.Name #> s)
+    {
+        await foreach(var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(s))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+        
+    }
+<#if(hasOneKey){
+var pk=key.Properties[0].FindContainingPrimaryKey() ;
+#>
+
+//has one key
+    [HttpGet]
+    public async Task<<#= EntityType.Name #>_Table?> <#= EntityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
+        var data=await _search.<#= EntityType.Name #>GetSingle(id);
+       if(data == null)
+        return null;
+       return (<#= EntityType.Name #>_Table)data;
+    }
+
+<# }//end one key  #>
+        <#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+     #>
+    [HttpGet]
+    public  async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= EntityType.Name #>SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
+        await foreach(var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc,value))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc){
+        await foreach(var item in _search.<#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(sc))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+    <# } //property #>
+    
+
+
+    
+
 
 }//end class
 
