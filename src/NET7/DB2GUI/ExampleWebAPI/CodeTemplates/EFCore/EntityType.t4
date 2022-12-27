@@ -232,7 +232,7 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
 
 //has one key
     [HttpGet]
-    public async Task<<#= EntityType.Name #>_Table?> <#= EntityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
+    public async Task<<#= EntityType.Name #>_Table?> GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
         var data=await _search.<#= EntityType.Name #>GetSingle(id);
        if(data == null)
         return null;
@@ -246,7 +246,7 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
      #>
     [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= EntityType.Name #>SimpleSearchEqualValue_<#= property.Name #>( <#= code.Reference(property.ClrType) #>  value)
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> EqualValue_<#= property.Name #>( <#= code.Reference(property.ClrType) #>  value)
     {
         var sc = GeneratorFromDB.SearchCriteria.Equal;
         await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, value))
@@ -255,7 +255,7 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         }
     }
     [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= EntityType.Name #>SimpleSearchDifferentValue_<#= property.Name #>( <#= code.Reference(property.ClrType) #>  value)
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> DifferentValue_<#= property.Name #>( <#= code.Reference(property.ClrType) #>  value)
     {
         var sc = GeneratorFromDB.SearchCriteria.Different;
         await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, value))
@@ -264,14 +264,23 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         }
     }
     [HttpGet]
-    public  async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= EntityType.Name #>SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
+    public  async IAsyncEnumerable<<#= EntityType.Name #>_Table> SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
         await foreach(var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc,value))
         {
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
     [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc){
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> FindNull_<#= property.Name #>(){
+        var sc = GeneratorFromDB.SearchCriteria.Equal;
+        await foreach(var item in _search.<#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(sc))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> FindNotNull_<#= property.Name #>(){
+        var sc = GeneratorFromDB.SearchCriteria.Different;
         await foreach(var item in _search.<#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(sc))
         {
             yield return (<#= EntityType.Name #>_Table)item!;
