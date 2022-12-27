@@ -244,7 +244,32 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
     {
         var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        var hasArray=0;
+        var propType=code.Reference(property.ClrType);
+        if(propType.Contains("[]"))
+            hasArray=1;
+        hasArray=1;//not search now
      #>
+     <#if(hasArray==0) { #>
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> EqualValues_<#= property.Name #>( <#= code.Reference(property.ClrType) #>[]  values)
+    {
+        var sc = GeneratorFromDB.SearchCriteria.InArray;
+        await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, values))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> DifferentValues_<#= property.Name #>( <#= code.Reference(property.ClrType) #>[]  values)
+    {
+        var sc = GeneratorFromDB.SearchCriteria.NotInArray;
+        await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, values))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+     <#}//hasArray#>
     [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> EqualValue_<#= property.Name #>( <#= code.Reference(property.ClrType) #>  value)
     {
