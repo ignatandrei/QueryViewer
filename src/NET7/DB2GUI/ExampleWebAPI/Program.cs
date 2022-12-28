@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Drawing;
+using NetCore2BlocklyNew;
 
 class Program
 {
@@ -16,24 +17,22 @@ class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        //builder.Services.AddDbContext<ApplicationDBContext>(options =>
-        //    options.UseSqlServer("Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;")
-        //    );
+
+        //this line register contexts
         foreach (var item in registerContexts)
         {
             item.AddServices(builder.Services, builder.Configuration);
         }
-        //builder.Services.AddServices<ApplicationDBContext>(options =>
-        //      options.UseSqlServer("Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;")
-        //  );
 
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
+        //if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseBlocklyUI(app.Environment);
+
         }
 
         app.UseHttpsRedirection();
@@ -41,6 +40,7 @@ class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.UseBlocklyAutomation();
 
         app.Run();
 
