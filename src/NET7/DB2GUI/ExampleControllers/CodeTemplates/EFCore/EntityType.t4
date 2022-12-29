@@ -133,10 +133,7 @@ public partial class REST<#= EntityType.Name #>Controller : Controller
         [HttpPost]
         public async Task<ActionResult<<#= EntityType.Name #>>> Post<#= EntityType.Name #>(<#= EntityType.Name #>_Table value)
         {
-          if (_context.<#= EntityType.Name #> == null)
-          {
-              return Problem("Entity set '<#= Options.ContextName #>.<#= EntityType.Name #>'  is null.");
-          }
+          
             var val = new <#= EntityType.Name #>();
             val.CopyFrom(value);
             _context.<#= EntityType.Name #>.Add(val);
