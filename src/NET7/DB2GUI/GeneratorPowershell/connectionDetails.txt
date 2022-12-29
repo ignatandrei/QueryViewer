@@ -7,7 +7,7 @@
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
-		"ProjectWithDesigner": "..\\ExampleWebAPI\\ExampleWebAPI.csproj",
+		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
 		"ConnectionString":"Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
 	},
 	{
@@ -15,7 +15,7 @@
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
-		"ProjectWithDesigner": "..\\ExampleWebAPI\\ExampleWebAPI.csproj",
+		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
 		"NameContext": "PubsDBContext",
 		"ConnectionString":"Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
 	},
@@ -24,7 +24,7 @@
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
-		"ProjectWithDesigner": "..\\ExampleWebAPI\\ExampleWebAPI.csproj",
+		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
 		"NameContext": "NorthwindDBContext",
 		"ConnectionString":"Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
 	}

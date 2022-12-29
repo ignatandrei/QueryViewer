@@ -2,13 +2,14 @@
 using Microsoft.IdentityModel.Protocols;
 using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 
-internal interface IRegisterContext
+public interface IRegisterContext
 {
-    IServiceCollection AddServices(IServiceCollection services, ConfigurationManager configuration);
+    IServiceCollection AddServices(IServiceCollection services, Microsoft.Extensions.Configuration.ConfigurationManager configuration);
 
 }
