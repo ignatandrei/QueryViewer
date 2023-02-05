@@ -6,8 +6,13 @@ public record AllDB
     {
 
     }
+
     public static AllDB Singleton = new();
     private Dictionary<string, MetaDB> data = new();
+    public MetaDB GetDb(string id)
+    {
+        return data[id];
+    }
     public MetaDB[] DBs
     {
         get
@@ -45,6 +50,10 @@ public record MetaDB(string Name)
         {
             throw new ArgumentException($"use {nameof(AddTable)}");
         }
+    }
+    public MetaTable GetTable(string name)
+    {
+        return data[name];
     }
     public string[] TableNames
     {
