@@ -35,6 +35,7 @@
         usings.Add("System.ComponentModel.DataAnnotations");
         usings.Add("System.ComponentModel.DataAnnotations.Schema");
         usings.Add("Microsoft.EntityFrameworkCore");
+        usings.Add("GeneratorFromDB");
     }
 
     if (!string.IsNullOrEmpty(NamespaceHint))
@@ -58,6 +59,19 @@ public interface I_<#= EntityType.Name #>_Table
 
 public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
 {
+    public static MetaTable metaData = new("<#= EntityType.Name #>");
+    static <#= EntityType.Name #>_Table (){
+        MetaColumn mc=null;
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+#>
+        mc=new ("<#= property.Name #>","<#=code.Reference(property.ClrType)#>",<#=property.IsNullable?"true":"false" #>);
+        metaData.AddColumn(mc);
+<#
+    }
+#> //done with foreach property in static constructor
+    }
 <#
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
     {

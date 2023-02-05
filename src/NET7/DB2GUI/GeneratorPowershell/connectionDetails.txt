@@ -8,7 +8,8 @@
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
 		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
-		"ConnectionString":"Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
+		"ConnectionString1":"Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;",
+		"ConnectionString":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=tests;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;"
 	},
 	{
 		"Enabled":true,
@@ -17,7 +18,8 @@
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
 		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
 		"NameContext": "PubsDBContext",
-		"ConnectionString":"Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
+		"ConnectionString1":"Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;",
+		"ConnectionString":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=pubs;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;"
 	},
 	{
 		"Enabled":true,
@@ -26,7 +28,8 @@
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
 		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
 		"NameContext": "NorthwindDBContext",
-		"ConnectionString":"Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;"
+		"ConnectionString1":"Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;",
+		"ConnectionString":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=Northwind;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;"
 	}
 	]
 }
