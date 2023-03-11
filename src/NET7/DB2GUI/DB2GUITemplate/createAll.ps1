@@ -102,7 +102,7 @@ Write-Host "modify .csproj files"
 gci *.csproj -r | % { 
 	$content  = Get-Content $_.FullName 
 	$newContent = $content
-	$newContent = $newContent -replace 'Example','$ext_safeprojectname$'
+	$newContent = $newContent -replace 'Example','$ext_safeprojectname$.'
 	$newContent = $newContent -replace "..\\GeneratorFromDB\\GeneratorFromDB.csproj",'..\$ext_specifiedsolutionname$.GeneratorFromDB\$ext_specifiedsolutionname$.GeneratorFromDB.csproj'
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent

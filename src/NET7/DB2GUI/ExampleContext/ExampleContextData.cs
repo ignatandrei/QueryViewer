@@ -1,6 +1,6 @@
 ﻿namespace ExampleContext;
 
-public class ExampleContextData
+public class ContextData
 {
 
 }

@@ -24,10 +24,11 @@
                 <ProjectTemplateLink ProjectName="$safeprojectname$.Models" CopyParameters="true">
                     ExampleModels\MyTemplate.vstemplate
                 </ProjectTemplateLink>
-			<!--
-                <ProjectTemplateLink ProjectName="$safeprojectname$.Context" CopyParameters="true">
+				<ProjectTemplateLink ProjectName="$safeprojectname$.Context" CopyParameters="true">
                     ExampleContext\MyTemplate.vstemplate
                 </ProjectTemplateLink>
+			<!--
+                
 				<ProjectTemplateLink ProjectName="$safeprojectname$.WebAPI" CopyParameters="true">
                     ExampleWebAPI\MyTemplate.vstemplate
                 </ProjectTemplateLink>

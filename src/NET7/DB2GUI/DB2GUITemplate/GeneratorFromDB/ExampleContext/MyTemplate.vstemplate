@@ -17,8 +17,6 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="ExampleContext.csproj" File="ExampleContext.csproj" ReplaceParameters="true">
-      <ProjectItem ReplaceParameters="true" TargetFileName="ApplicationDbContext.cs">ApplicationDbContext.cs</ProjectItem>
-      <ProjectItem ReplaceParameters="true" TargetFileName="context.txt">context.txt</ProjectItem>
       
     </Project>
   </TemplateContent>
