@@ -1,3 +1,33 @@
+function AddFiles{
+param($folder)
+push-location 
+cd GeneratorFromDBTemp
+cd $folder
+$xml = [xml]( Get-Content "MyTemplate.vstemplate")
+
+#$node= $xml.VSTemplate.TemplateContent.Project
+#$node.ParentNode.RemoveChild($node)
+#$node= $xml.SelectSingleNode("//Project")
+
+
+$node= $xml.VSTemplate.TemplateContent.Project
+gci *.* -r -Exclude *.csproj,*.vstemplate, __TemplateIcon.ico | % { 
+	$rel = Resolve-Path -Relative $_
+	$rel = $rel.replace( ".\","")
+	$newelement = $xml.CreateElement("ProjectItem")
+	$newelement.SetAttribute("ReplaceParameters", "true")
+	$newelement.SetAttribute("TargetFileName", $rel)
+	$newelement.InnerText =$rel
+	$node.AppendChild($newelement)
+
+}
+
+$xml.OuterXml | Out-File "MyTemplate.vstemplate"
+pop-location 
+
+
+}
+
 cls
 $dt = $date = Get-Date # Get the current date and time
 $v = $date.ToString("yyyy.MM.dd.HHmmss")
@@ -45,7 +75,8 @@ copy-item -Path ..\ExampleModels\* 			-Destination GeneratorFromDBTemp\ExampleMo
 copy-item -Path ..\ExampleControllers\* 	-Destination GeneratorFromDBTemp\ExampleControllers\ 	-Force -Recurse
 copy-item -Path ..\ExampleContext\*	 		-Destination GeneratorFromDBTemp\ExampleContext\ 		-Force -Recurse
 copy-item -Path ..\ExampleWebAPI\* 			-Destination GeneratorFromDBTemp\ExampleWebAPI\ 		-Force -Recurse
-copy-item -Path ..\GeneratorPowershell\* 	-Destination GeneratorFromDBTemp\GeneratorPowershell\ 		-Force -Recurse
+copy-item -Path ..\GeneratorPowershell\* 	-Destination GeneratorFromDBTemp\GeneratorPowershell\ 	-Force -Recurse
+copy-item -Path ..\GeneratorFromDB\* 		-Destination GeneratorFromDBTemp\GeneratorFromDB\ 		-Force -Recurse
 
 
 Write-Host "modify .cs files"
@@ -81,36 +112,15 @@ gci *.csproj -r | % {
 
 pop-location 
 
-$folder = "ExampleModels"
-push-location 
-cd GeneratorFromDBTemp
-cd $folder
-$xml = [xml]( Get-Content "MyTemplate.vstemplate")
-
-#$node= $xml.VSTemplate.TemplateContent.Project
-#$node.ParentNode.RemoveChild($node)
-#$node= $xml.SelectSingleNode("//Project")
-
-
-$node= $xml.VSTemplate.TemplateContent.Project
-gci *.* -r -Exclude *.csproj,*.vstemplate, __TemplateIcon.ico | % { 
-	$rel = Resolve-Path -Relative $_
-	$rel = $rel.replace( ".\","")
-	$newelement = $xml.CreateElement("ProjectItem")
-	$newelement.SetAttribute("ReplaceParameters", "true")
-	$newelement.SetAttribute("TargetFileName", $rel)
-	$newelement.InnerText =$rel
-	$node.AppendChild($newelement)
-
-}
 
 
 
-
-
-$xml.OuterXml | Out-File "MyTemplate.vstemplate"
-
-pop-location 
+AddFiles "ExampleModels"
+AddFiles "ExampleControllers"
+AddFiles "ExampleContext" 	
+AddFiles "ExampleWebAPI"
+AddFiles "GeneratorPowershell"
+AddFiles "GeneratorFromDB"
 
 
 
