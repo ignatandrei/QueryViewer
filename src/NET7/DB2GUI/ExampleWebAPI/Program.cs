@@ -27,9 +27,15 @@ class Program
         {
             item.AddServices(builder.Services, builder.Configuration);
         }
-
+        builder.Services.AddCors(sa => sa.AddPolicy("default", b =>
+                b
+                .SetIsOriginAllowed(it => true)
+                .AllowCredentials()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+        ));
         var app = builder.Build();
-
+        app.UseCors("default");
         // Configure the HTTP request pipeline.
         //if (app.Environment.IsDevelopment())
         {

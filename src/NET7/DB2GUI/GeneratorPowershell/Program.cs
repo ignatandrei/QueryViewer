@@ -2,6 +2,11 @@
 using System.Diagnostics;
 var pathGenerateFromDB = Environment.CurrentDirectory;
 var directory = (pathGenerateFromDB);
+if (directory.EndsWith(@"bin\Debug\net7.0"))
+    directory = directory.Replace(@"bin\Debug\net7.0", "");
+if (directory.EndsWith(@"bin\Debug\net7.0\"))
+    directory = directory.Replace(@"bin\Debug\net7.0\", "");
+
 AnsiConsole.MarkupLine($":play_button: Running in folder {pathGenerateFromDB}");
 //Console.WriteLine(pathGenerateFromDB); 
 string file = "connectionDetails.txt";
@@ -48,14 +53,14 @@ skip runPowershell connection {nrCon} at {DateTime.Now:hh:mm:ss}
         foreach (var errMessage in RunPowerShell(item, directory))
         {
 
-                //Console.WriteLine($"Error running Powershell");
-                AnsiConsole.MarkupLine("[red]!!!ERROR:"+errMessage);
+                Console.WriteLine($"Error running Powershell");
+                //AnsiConsole.MarkupLine("[red]!!!ERROR:"+errMessage);
 
         }
     }
     catch(Exception ex)
     {
-        AnsiConsole.MarkupLine($"[red]{ex.Message}[/]:person_facepalming:");
+            Console.WriteLine($"[red]{ex.Message}[/]:person_facepalming:");
     }
 
     var messageEnd = $"""
@@ -72,6 +77,7 @@ return 0;
 IEnumerable<string> RunPowerShell(Connection item, string directory)
 {
     var file = Path.Combine(directory, "create.ps1");
+
     ProcessStartInfo startInfo = new() 
     {
         FileName = @"powershell.exe",

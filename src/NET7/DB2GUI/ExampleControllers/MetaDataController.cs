@@ -30,6 +30,4 @@ public class MetaDataController
         return AllDB.Singleton.GetDb(dbName).GetTable(tableName).Columns;
     }
 
-
-
 }

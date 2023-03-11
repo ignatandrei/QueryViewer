@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorPowershell", "Gene
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleWebAPI", "ExampleWebAPI\ExampleWebAPI.csproj", "{352F2400-3178-4E4A-90DD-34D724618CCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleControllers", "ExampleControllers\ExampleControllers.csproj", "{4D5958B6-CDED-4261-BD13-EB9824DE5E20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleControllers", "ExampleControllers\ExampleControllers.csproj", "{4D5958B6-CDED-4261-BD13-EB9824DE5E20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +48,7 @@ Global
 		{55DAC55A-6556-4D66-98AC-8E362E87B765}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55DAC55A-6556-4D66-98AC-8E362E87B765}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91F3E8E2-EFA2-4CDB-9BCA-02760FEA98F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91F3E8E2-EFA2-4CDB-9BCA-02760FEA98F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F3E8E2-EFA2-4CDB-9BCA-02760FEA98F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91F3E8E2-EFA2-4CDB-9BCA-02760FEA98F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{352F2400-3178-4E4A-90DD-34D724618CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

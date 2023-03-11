@@ -331,7 +331,8 @@ public partial class <#= Options.ContextName #> : DbContext
 public partial class <#= Options.ContextName #> : DbContext
 {
     public static MetaDB  metaData = new("<#= Options.ContextName #>");
-    static <#= Options.ContextName #>(){
+    [System.Runtime.CompilerServices.ModuleInitializer]
+    public static void <#= Options.ContextName #>_AddTables(){
 <#
     foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
     {
