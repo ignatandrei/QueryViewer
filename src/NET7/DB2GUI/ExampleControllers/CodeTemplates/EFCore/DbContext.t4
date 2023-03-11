@@ -68,7 +68,7 @@ public partial class Register<#= Options.ContextName #> : IRegisterContext
     [ModuleInitializer]
     public static void AddMe()
     {
-        ExampleControllers.UtilsControllers.registerContexts.Add(new Register<#= Options.ContextName #>());
+        Generated.UtilsControllers.registerContexts.Add(new Register<#= Options.ContextName #>());
     }
 
     

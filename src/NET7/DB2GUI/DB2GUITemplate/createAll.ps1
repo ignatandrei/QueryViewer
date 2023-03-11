@@ -98,6 +98,21 @@ gci *.cs -r | % {
 	}
 		
 }
+
+Write-Host "modify connection details"
+gci connectionDetails.txt -r | % { 
+	$content  = Get-Content $_.FullName 
+	$newContent = $content
+	$newContent = $newContent -replace 'Example','$ext_safeprojectname$.'
+	if ($content -ne $newContent) {
+		Set-Content -Path  $_.FullName -Value $newContent
+		# Write-Host 'replacing ' $_.FullName 
+		
+	}
+		
+}
+
+
 Write-Host "modify .csproj files"
 gci *.csproj -r | % { 
 	$content  = Get-Content $_.FullName 
