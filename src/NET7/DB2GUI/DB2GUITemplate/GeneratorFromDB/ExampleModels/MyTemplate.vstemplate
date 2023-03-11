@@ -17,9 +17,10 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="ExampleModels.csproj" File="ExampleModels.csproj" ReplaceParameters="true">
-      <ProjectItem ReplaceParameters="true" TargetFileName="Models.cs">Models.cs</ProjectItem>
+      <!-- 
+	  <ProjectItem ReplaceParameters="true" TargetFileName="Models.cs">Models.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="models.txt">models.txt</ProjectItem>
-      
+      -->
     </Project>
   </TemplateContent>
 </VSTemplate>
