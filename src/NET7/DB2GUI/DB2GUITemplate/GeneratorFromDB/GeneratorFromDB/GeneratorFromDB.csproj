@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+	<ItemGroup>
+		<CompilerVisibleProperty Include="GenerateStep" />		
+		 <Content Include="connectionDetails.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	 <AdditionalFiles Include="connectionDetails.txt"  />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="QueryGenerator" Version="2022.7.11.615" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<!--<ProjectReference Include="..\DB2GUI\DB2GUI_RSCG.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />-->
+	</ItemGroup>
+	<PropertyGroup>
+		<GenerateStep>ContextAndClasses</GenerateStep>		
+		
+	</PropertyGroup>
+
+
+	
+</Project>

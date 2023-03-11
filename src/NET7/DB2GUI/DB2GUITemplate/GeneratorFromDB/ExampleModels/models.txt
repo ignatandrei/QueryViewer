@@ -1,0 +1,28 @@
+﻿//version 2022.7.11.615
+#nullable enable
+using Microsoft.EntityFrameworkCore;
+namespace Generated;
+{{ for classLoop in classes }}
+
+public partial class {{classLoop.Name}} {
+    public void CopyFrom({{classLoop.Name}} other)  {
+        {{ for prop in classLoop.Props }}
+            this.{{prop.Name}} = other.{{prop.Name}};
+        {{ end }}
+    }
+}
+
+//for {{classLoop.Name}} : props: {{classLoop.Props}} 
+public enum e{{classLoop.Name}}Columns {
+    None = 0
+{{ for prop in classLoop.Props }}
+    ,{{prop.Name}}
+{{ end }}
+}
+
+
+
+{{ end }}
+
+
+#nullable restore
