@@ -51,8 +51,7 @@ gci *.csproj -r | % {
 		
 }
 
-pop-location
- 
+pop-location 
 
 Compress-Archive -DestinationPath .\a -Path GeneratorFromDBTemp\*
 Remove-Item .\GeneratorFromDB.zip
