@@ -17,7 +17,7 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="ExampleControllers.csproj" File="ExampleControllers.csproj" ReplaceParameters="true">
-      <ProjectItem ReplaceParameters="true" TargetFileName="UtilsControllers.cs">UtilsControllers.cs</ProjectItem>
+      
     </Project>
   </TemplateContent>
 </VSTemplate>
