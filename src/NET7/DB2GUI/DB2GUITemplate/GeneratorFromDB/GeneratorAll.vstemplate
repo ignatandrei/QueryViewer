@@ -15,7 +15,7 @@
         <ProjectCollection>
             <SolutionFolder Name="ReBuildOnceWhenDBChanges">
 				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorFromDB" CopyParameters="true">
-                    GeneratorFromDB\MyTemplate.vstemplate
+                    GeneratorPowershell\MyTemplate.vstemplate
                 </ProjectTemplateLink>
 			</SolutionFolder>
                 <ProjectTemplateLink ProjectName="$safeprojectname$.Context" CopyParameters="true">

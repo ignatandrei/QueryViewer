@@ -41,10 +41,11 @@ dotnet clean
 pop-location
 
 Write-Host "copying files"
-copy-item -Path ..\ExampleModels\* 		-Destination GeneratorFromDBTemp\ExampleModels\ 		-Force -Recurse
+copy-item -Path ..\ExampleModels\* 			-Destination GeneratorFromDBTemp\ExampleModels\ 		-Force -Recurse
 copy-item -Path ..\ExampleControllers\* 	-Destination GeneratorFromDBTemp\ExampleControllers\ 	-Force -Recurse
-copy-item -Path ..\ExampleContext\*	 	-Destination GeneratorFromDBTemp\ExampleContext\ 		-Force -Recurse
-copy-item -Path ..\ExampleWebAPI\* 		-Destination GeneratorFromDBTemp\ExampleWebAPI\ 		-Force -Recurse
+copy-item -Path ..\ExampleContext\*	 		-Destination GeneratorFromDBTemp\ExampleContext\ 		-Force -Recurse
+copy-item -Path ..\ExampleWebAPI\* 			-Destination GeneratorFromDBTemp\ExampleWebAPI\ 		-Force -Recurse
+copy-item -Path ..\GeneratorPowershell\* 	-Destination GeneratorFromDBTemp\GeneratorPowershell\ 		-Force -Recurse
 
 
 Write-Host "modify .cs files"
@@ -79,6 +80,9 @@ gci *.csproj -r | % {
 }
 
 pop-location 
+
+
+
 
 Compress-Archive -DestinationPath .\a -Path GeneratorFromDBTemp\*
 Remove-Item .\GeneratorFromDB.zip
