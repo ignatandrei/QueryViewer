@@ -16,13 +16,13 @@ gci *.* -r -Exclude *.csproj,*.vstemplate, __TemplateIcon.ico | % {
 	$rel = $rel.replace( ".\","")
 	$newelement = $xml.CreateElement("ProjectItem")
 	$newelement.SetAttribute("ReplaceParameters", "true")
-	$newelement.SetAttribute("TargetFileName", $rel)
+	# $newelement.SetAttribute("TargetFileName", $rel)
 	$newelement.InnerText =$rel
 	$node.AppendChild($newelement)
 
 }
-
-$xml.OuterXml | Out-File "MyTemplate.vstemplate"
+$output = $xml.OuterXml -replace 'xmlns=""', ''
+$output | Out-File "MyTemplate.vstemplate"
 pop-location 
 
 
@@ -55,7 +55,7 @@ Write-Host 'reading template'
 $xml | Format-List *
 $node = $xml.VSTemplate.TemplateData
 Write-Host 'this is' $node	
-$node.Name  =  "GeneratorFromDB" + " " + $v
+$node.Name  =  "DB2Code"
 $node.Description = "GeneratorFromDB" + " " + $v + " See  See https://github.com/ignatandrei/queryViewer/"
 $xml.OuterXml | Out-File $FileLocation
 
@@ -101,7 +101,9 @@ gci *.cs -r | % {
 Write-Host "modify .csproj files"
 gci *.csproj -r | % { 
 	$content  = Get-Content $_.FullName 
-	$newContent = $content -replace 'Example','$ext_safeprojectname$'
+	$newContent = $content
+	$newContent = $newContent -replace 'Example','$ext_safeprojectname$'
+	$newContent = $newContent -replace "..\\GeneratorFromDB\\GeneratorFromDB.csproj",'..\$ext_specifiedsolutionname$.GeneratorFromDB\$ext_specifiedsolutionname$.GeneratorFromDB.csproj'
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent
 		# Write-Host 'replacing ' $_.FullName 

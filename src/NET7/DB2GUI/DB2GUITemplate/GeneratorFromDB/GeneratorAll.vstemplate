@@ -13,21 +13,25 @@
 			
 		</CustomParameters>
         <ProjectCollection>
-            <SolutionFolder Name="ReBuildOnceWhenDBChanges">
-				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorFromDB" CopyParameters="true">
+            <SolutionFolder Name="RunOnceDBChanges">				
+				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorPowershell" CopyParameters="true">
                     GeneratorPowershell\MyTemplate.vstemplate
                 </ProjectTemplateLink>
 			</SolutionFolder>
-                <ProjectTemplateLink ProjectName="$safeprojectname$.Context" CopyParameters="true">
-                    ExampleContext\MyTemplate.vstemplate
+				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorFromDB" CopyParameters="true">
+                    GeneratorFromDB\MyTemplate.vstemplate
                 </ProjectTemplateLink>
                 <ProjectTemplateLink ProjectName="$safeprojectname$.Models" CopyParameters="true">
                     ExampleModels\MyTemplate.vstemplate
                 </ProjectTemplateLink>
+			<!--
+                <ProjectTemplateLink ProjectName="$safeprojectname$.Context" CopyParameters="true">
+                    ExampleContext\MyTemplate.vstemplate
+                </ProjectTemplateLink>
 				<ProjectTemplateLink ProjectName="$safeprojectname$.WebAPI" CopyParameters="true">
                     ExampleWebAPI\MyTemplate.vstemplate
                 </ProjectTemplateLink>
-                      
+            -->          
         </ProjectCollection>
     </TemplateContent>
 </VSTemplate>

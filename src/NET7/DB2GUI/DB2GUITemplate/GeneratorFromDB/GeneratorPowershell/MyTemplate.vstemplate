@@ -17,12 +17,7 @@
   </TemplateData>
   <TemplateContent>
     <Project TargetFileName="GeneratorPowershell.csproj" File="GeneratorPowershell.csproj" ReplaceParameters="true">
-      <ProjectItem ReplaceParameters="false" TargetFileName="create.ps1">create.ps1</ProjectItem>
-      <ProjectItem ReplaceParameters="true" TargetFileName="DemoText.cs">DemoText.cs</ProjectItem>
-	  <ProjectItem ReplaceParameters="true" TargetFileName="connectionDetails.txt">connectionDetails.txt</ProjectItem>
-	  <Folder Name=".config" TargetFolderName=".config">
-			<ProjectItem ReplaceParameters="true" TargetFileName="dotnet-tools.json">dotnet-tools.json</ProjectItem>
-	  </Folder>
+	
     </Project>
   </TemplateContent>
 </VSTemplate>
