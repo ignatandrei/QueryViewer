@@ -1,19 +1,39 @@
 cls
+$dt = $date = Get-Date # Get the current date and time
+$v = $date.ToString("yyyy.MM.dd.HHmmss")
+
 Write-Host 'starting'
 Remove-Item -Path .\a.zip -Force -Recurse -ErrorAction SilentlyContinue 
 Remove-Item -Path .\GeneratorFromDBTemp -Force -Recurse -ErrorAction SilentlyContinue 
 $FileLocation = "source.extension.vsixmanifest"
 [xml]$xmlDoc =  Get-Content "source.extension.vsixmanifest"
-Write-Host 'reading'
+Write-Host 'reading vsixmanifest'
 $xmlDoc | Format-List *
 $node=$xmlDoc.PackageManifest.Metadata.Identity
 
-$node=$node.SetAttribute("Version", "2023.3.11.1502")
+$node=$node.SetAttribute("Version", $v)
 
 $xmlDoc.OuterXml | Out-File $FileLocation
 # $xmlDoc.Save(source.extension.vsixmanifest1)
 New-item –ItemType "directory" GeneratorFromDBTemp
 Copy-Item -Path GeneratorFromDB\* -Destination GeneratorFromDBTemp\ -Force -Recurse
+push-location 
+cd GeneratorFromDBTemp
+$FileLocation = "GeneratorAll.vstemplate"
+$xml = [xml]( Get-Content $FileLocation)
+Write-Host 'reading template'
+$xml | Format-List *
+$node = $xml.VSTemplate.TemplateData
+Write-Host 'this is' $node	
+$node.Name  =  "GeneratorFromDB" + " " + $v
+$node.Description = "GeneratorFromDB" + " " + $v + " See  See https://github.com/ignatandrei/queryViewer/"
+$xml.OuterXml | Out-File $FileLocation
+
+
+
+
+pop-location
+
 
 push-location 
 cd ..
