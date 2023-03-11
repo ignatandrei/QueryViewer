@@ -95,6 +95,7 @@ $xml = [xml]( Get-Content "MyTemplate.vstemplate")
 $node= $xml.VSTemplate.TemplateContent.Project
 gci *.* -r -Exclude *.csproj,*.vstemplate, __TemplateIcon.ico | % { 
 	$rel = Resolve-Path -Relative $_
+	$rel = $rel.replace( ".\","")
 	$newelement = $xml.CreateElement("ProjectItem")
 	$newelement.SetAttribute("ReplaceParameters", "true")
 	$newelement.SetAttribute("TargetFileName", $rel)
