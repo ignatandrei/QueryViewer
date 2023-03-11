@@ -21,20 +21,27 @@ dotnet clean
 pop-location
 
 Write-Host "copying files"
-copy-item -Path ..\ExampleModels\ 		-Destination GeneratorFromDBTemp\ExampleModels\ 		-Force -Recurse
-copy-item -Path ..\ExampleControllers\ 	-Destination GeneratorFromDBTemp\ExampleControllers\ 	-Force -Recurse
-copy-item -Path ..\ExampleContext\	 	-Destination GeneratorFromDBTemp\ExampleContext\ 		-Force -Recurse
-copy-item -Path ..\ExampleWebAPI\ 		-Destination GeneratorFromDBTemp\ExampleWebAPI\ 		-Force -Recurse
+copy-item -Path ..\ExampleModels\* 		-Destination GeneratorFromDBTemp\ExampleModels\ 		-Force -Recurse
+copy-item -Path ..\ExampleControllers\* 	-Destination GeneratorFromDBTemp\ExampleControllers\ 	-Force -Recurse
+copy-item -Path ..\ExampleContext\*	 	-Destination GeneratorFromDBTemp\ExampleContext\ 		-Force -Recurse
+copy-item -Path ..\ExampleWebAPI\* 		-Destination GeneratorFromDBTemp\ExampleWebAPI\ 		-Force -Recurse
+
 
 Write-Host "modify .cs files"
 push-location 
 cd GeneratorFromDBTemp
+
+Write-Host "delete bin and obj"
+Get-ChildItem  -Directory -Recurse -Filter "bin" | Remove-Item -Recurse
+Get-ChildItem  -Directory -Recurse -Filter "obj" | Remove-Item -Recurse
+
+
 gci *.cs -r | % { 
 	$content  = Get-Content $_.FullName 
 	$newContent = $content -replace 'Example','$safeprojectname$'
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent
-		Write-Host 'replacing ' $_.FullName 
+		# Write-Host 'replacing ' $_.FullName 
 		
 	}
 		
@@ -45,7 +52,7 @@ gci *.csproj -r | % {
 	$newContent = $content -replace 'Example','$ext_safeprojectname$'
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent
-		Write-Host 'replacing ' $_.FullName 
+		# Write-Host 'replacing ' $_.FullName 
 		
 	}
 		
