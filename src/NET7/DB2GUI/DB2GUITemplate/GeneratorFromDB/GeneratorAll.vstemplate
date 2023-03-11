@@ -27,14 +27,15 @@
 				<ProjectTemplateLink ProjectName="$safeprojectname$.Context" CopyParameters="true">
                     ExampleContext\MyTemplate.vstemplate
                 </ProjectTemplateLink>
-				<ProjectTemplateLink ProjectName="$safeprojectname$.ExampleControllers" CopyParameters="true">
+				<ProjectTemplateLink ProjectName="$safeprojectname$.Controllers" CopyParameters="true">
                     ExampleControllers\MyTemplate.vstemplate
                 </ProjectTemplateLink>
-			<!--
-                
 				<ProjectTemplateLink ProjectName="$safeprojectname$.WebAPI" CopyParameters="true">
                     ExampleWebAPI\MyTemplate.vstemplate
                 </ProjectTemplateLink>
+			<!--
+                
+				
             -->          
         </ProjectCollection>
     </TemplateContent>

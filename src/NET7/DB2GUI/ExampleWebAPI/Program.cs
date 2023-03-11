@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System.Drawing;
 using NetCore2BlocklyNew;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using ExampleControllers;
+using Generated;
 
 class Program
 {
