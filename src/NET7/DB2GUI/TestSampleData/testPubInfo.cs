@@ -1,4 +1,6 @@
-﻿namespace TestSampleData;
+﻿using Generated;
+
+namespace TestSampleData;
 
 public class testPubInfo
 {

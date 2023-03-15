@@ -21,7 +21,7 @@ public static class extensions
         var nameDB =  typeof(TContext).Name;
         nameDB = nameDB.ToLower().Replace("dbcontext", "");
         //var connectionstring = $"Data Source=.;Initial Catalog={nameDB};UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;";
-        var connectionstring = @$"DataSource=C:\Users\Surface1\Documents\GitHub\QueryViewer\src\NET7\DB2GUI\{nameDB}.db";
+        var connectionstring = @$"DataSource=C:\all\QueryViewer\src\NET7\DB2GUI\{nameDB}.db";
     var optionsBuilder = new DbContextOptionsBuilder<TContext>();
         //optionsBuilder.UseSqlServer(connectionstring);
         optionsBuilder.UseSqlite(connectionstring);
