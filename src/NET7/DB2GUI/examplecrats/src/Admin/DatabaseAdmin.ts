@@ -18,7 +18,19 @@ export default class DatabaseAdmin {
           );
           return data;
     }
+    public getDatabaseTables(id:string):Observable<string[]|never>{
+        // var data= fromFetch('http://localhost:5018/MetaData/DBNames')
+        if(id.length === 0) return of([] as string[]); 
+        var data=ajax.getJSON(`http://localhost:5018/MetaData/TableNames/${id}`)
+        .pipe(
+            map(response => {
 
+                return response as string[];
+            })
+            //takeUntil(cancel)
+          );
+          return data;
+    }
     
 
 }

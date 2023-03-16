@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Root from './Root';
 import ContentAdminGui from './Admin/ContentAdminGUI';
 import DatabaseAdminGui from './Admin/DatabaseAdminGUI';
+import { DatabaseGui } from './Admin/DatabaseGUI';
 
 
 const { Header, Content, Sider } = Layout;
@@ -60,11 +61,11 @@ function App() {
             element: <DatabaseAdminGui />,
             //errorElement: <ErrorPage />,
         },        
-        // {
-        //     path: "/Admin/Databases/:idDb",
-        //     element: <DatabaseAdminGui />,
-        //     //errorElement: <ErrorPage />,
-        // },
+        {
+            path: "/Admin/Databases/:idDB",
+            element: <DatabaseGui />,
+            //errorElement: <ErrorPage />,
+        },
 
       ]);
     
