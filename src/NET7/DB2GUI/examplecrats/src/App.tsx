@@ -10,6 +10,7 @@ import Root from './Root';
 import ContentAdminGui from './Admin/ContentAdminGUI';
 import DatabaseAdminGui from './Admin/DatabaseAdminGUI';
 import { DatabaseGui } from './Admin/DatabaseGUI';
+import { DatabaseTableGui } from './Admin/DatabaseTableGUI';
 
 
 const { Header, Content, Sider } = Layout;
@@ -64,6 +65,11 @@ function App() {
         {
             path: "/Admin/Databases/:idDB",
             element: <DatabaseGui />,
+            //errorElement: <ErrorPage />,
+        },
+        {
+            path: "/Admin/Databases/:idDB/tables/:idTable",
+            element: <DatabaseTableGui />,
             //errorElement: <ErrorPage />,
         },
 

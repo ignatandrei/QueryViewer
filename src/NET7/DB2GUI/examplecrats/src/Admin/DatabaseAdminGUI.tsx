@@ -1,15 +1,14 @@
 import { Button, List } from "antd"
-import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "react-query"
+import {  useMemo } from "react";
 import { Link } from "react-router-dom"
 import useRxObs from "../useRXEffect";
 import DatabaseAdmin from "./DatabaseAdmin";
 
 export default function DatabaseAdminGui() {
 
-  const db=useMemo(()=>new DatabaseAdmin(),[]);
-  const obtainData= useMemo(()=>db.getDatabases(),[db]);
-  const [isLoading, error, data]= useRxObs<string[]>(obtainData);
+  // const db=useMemo(()=>new DatabaseAdmin(),[]);
+  // const obtainData= useMemo(()=>db.getDatabases(),[db]);
+  const [isLoading, error, data]= useRxObs(new DatabaseAdmin().getDatabases());
   
   if (isLoading) return <>'Loading...'</>
  

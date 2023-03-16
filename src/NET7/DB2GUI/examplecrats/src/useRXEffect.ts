@@ -1,15 +1,13 @@
-import { delay, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { useEffect, useMemo, useState } from 'react';
-import { error } from 'console';
-import DatabaseAdmin from './Admin/DatabaseAdmin';
 
 export default function useRxObs<T>(factory: Observable<T>) {
   const[isLoading, setIsLoading] = useState(true);
     const[error, setError] = useState<any|null>(null);
     const[data, setData] = useState<T|null>(null);
-    var m=useMemo(()=>factory,[factory]);
+    //var m=useMemo(()=>factory,[factory]);
     useEffect(()=>{      
-      var data= m        
+      var data= factory        
         .subscribe({
         next: (val:T)=>{
           setError('');
@@ -25,7 +23,7 @@ export default function useRxObs<T>(factory: Observable<T>) {
     }
       );    
       return ()=> data.unsubscribe();
-    },[setData, setIsLoading, setError, m]);
+    },[]);
     return [isLoading, error, data];
 }
 

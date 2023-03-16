@@ -1,7 +1,8 @@
-import { concatMap, map, of, switchMap, tap } from "rxjs";
+import { map, of} from "rxjs";
 import { ajax } from 'rxjs/ajax';
-import { fromFetch } from "rxjs/fetch";
+//import { fromFetch } from "rxjs/fetch";
 import { Observable } from "rxjs/internal/Observable";
+import columnTable from "./column";
 export default class DatabaseAdmin {
     // static const subject = new Subject();
     // const cancel = new Subject();
@@ -18,6 +19,7 @@ export default class DatabaseAdmin {
           );
           return data;
     }
+
     public getDatabaseTables(id:string):Observable<string[]|never>{
         // var data= fromFetch('http://localhost:5018/MetaData/DBNames')
         if(id.length === 0) return of([] as string[]); 
@@ -26,6 +28,33 @@ export default class DatabaseAdmin {
             map(response => {
 
                 return response as string[];
+            })
+            //takeUntil(cancel)
+          );
+          return data;
+    }
+    public getTableRowsNumber(idDB:string,idTable:string):Observable<number|never>{
+        if(idDB.length === 0) return of(-1 ); 
+        if(idTable.length === 0) return of(-1) ;         
+        var data=ajax.getJSON(`http://localhost:5018/AdvancedSearch${idTable}/GetCountAll/`)
+        .pipe(
+            map(response => {
+
+                return response as number;
+            })
+            //takeUntil(cancel)
+          );
+          return data;
+    }
+    
+    public getDatabaseTableColumns(idDB:string,idTable:string){
+        if(idDB.length === 0) return of([] as columnTable[]); 
+        if(idTable.length === 0) return of([] as columnTable[]);         
+        var data=ajax.getJSON(`http://localhost:5018/MetaData/Columns/${idDB}/${idTable}`)
+        .pipe(
+            map(response => {
+
+                return response as columnTable[];
             })
             //takeUntil(cancel)
           );

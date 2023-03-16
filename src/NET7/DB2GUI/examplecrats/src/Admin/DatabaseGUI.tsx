@@ -1,5 +1,4 @@
 import { List, Button } from "antd";
-import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import useRxObs from "../useRXEffect";
 import DatabaseAdmin from "./DatabaseAdmin";
@@ -33,7 +32,7 @@ The database is {idDB}
 
          
          <Button type="primary">
-         {data.indexOf(item)+1}. <Link to={`/Admin/Databases/${item}`} > {item} </Link>
+         {data.indexOf(item)+1}. <Link to={`/Admin/Databases/${idDB}/tables/${item}/`} > {item} </Link>
           </Button>
         </List.Item>
       )}>

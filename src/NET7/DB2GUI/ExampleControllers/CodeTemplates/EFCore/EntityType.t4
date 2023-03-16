@@ -205,6 +205,20 @@ public partial class AdvancedSearch<#= EntityType.Name #>Controller : Controller
 	{
         _search=search;
 	}
+    [HttpGet]
+    public async Task<long> GetCountAll()
+    {
+       return await _search.GetCountAll();
+        
+    }
+    /*
+    [HttpGet]
+    public async long GetCount(Search<#= EntityType.Name #> search)
+    {
+        
+        
+    }
+    */
 
     [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> GetAll()

@@ -559,6 +559,8 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
 
    public interface ISearchData<#= entityType.Name #> {
         IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search);
+    
+    public Task<long> GetCountAll();
     <# if(hasOneKey ){
         var pk=key.Properties[0].FindContainingPrimaryKey() ;
         var s= code.Lambda(key.Properties, "e") ;
@@ -583,8 +585,10 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         public SearchData<#= entityType.Name #> (<#= Options.ContextName #> context) {
             this.context=context;
         }
-   
-        
+           
+        public async Task<long> GetCountAll(){
+            return await context.<#= entityType.Name #>Count(null);
+        }
         public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
             return context.<#= entityType.Name #>Find_AsyncEnumerable(search);
         }
