@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import { Button } from 'antd';
 import 'antd/dist/reset.css';
 import './App.css';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
@@ -8,7 +7,8 @@ import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Root from './Root';
-import ContentAdmin from './Admin/ContentAdmin';
+import ContentAdminGui from './Admin/ContentAdminGUI';
+import DatabaseAdminGui from './Admin/DatabaseAdminGUI';
 
 
 const { Header, Content, Sider } = Layout;
@@ -52,9 +52,19 @@ function App() {
         },        
         {
             path: "/Admin",
-            element: <ContentAdmin />,
+            element: <ContentAdminGui />,
             //errorElement: <ErrorPage />,
         },
+        {
+            path: "/Admin/Databases",
+            element: <DatabaseAdminGui />,
+            //errorElement: <ErrorPage />,
+        },        
+        // {
+        //     path: "/Admin/Databases/:idDb",
+        //     element: <DatabaseAdminGui />,
+        //     //errorElement: <ErrorPage />,
+        // },
 
       ]);
     
