@@ -1,4 +1,4 @@
-<#@ output extension=".ts" #>
+<#@ output extension=".tsx" #>
 <#@ template hostSpecific="true" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
@@ -27,22 +27,14 @@
 
     var usings = new List<string>
     {
-        "System",
-        "System.Collections.Generic"
+        "{ Button } from \"antd\"",
     };
 
-    if (Options.UseDataAnnotations)
-    {
-        usings.Add("System.ComponentModel.DataAnnotations");
-        usings.Add("System.ComponentModel.DataAnnotations.Schema");
-        usings.Add("Microsoft.EntityFrameworkCore");
-        usings.Add("GeneratorFromDB");
-    }
 
 #>
 
 //ADDED by code generator
-export default class <#= EntityType.Name #>_Table 
+export class <#= EntityType.Name #>_Table 
 {
 <#
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
@@ -76,6 +68,18 @@ export default class <#= EntityType.Name #>_Table
 #>
 }
 
+export default function <#= EntityType.Name #>_Table_Data() 
+{
+
+    const showAll=()=>{alert("showAll")};
+
+    return (
+    <>
+        Table <#= EntityType.Name #>
+
+        <Button type="primary" onClick={showAll}>List <#= EntityType.Name #></Button>
+    </>
+}
 <#
     var previousOutput = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();
@@ -83,7 +87,7 @@ export default class <#= EntityType.Name #>_Table
     foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
     {
 #>
-// using <#= ns #>;
+ import <#= ns #>;
 <#
     }
 
