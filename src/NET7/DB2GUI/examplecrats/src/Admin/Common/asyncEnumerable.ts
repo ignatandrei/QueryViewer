@@ -62,7 +62,17 @@ export default class JsonStreamDecoder {
               item = this.partialItem + item;
               this.partialItem = '';
             }
-            decodedItemCallback(JSON.parse(item));
+            var a:any| null = null;
+            try{
+                a = JSON.parse(item);
+                
+            }
+            catch(e){
+            }
+            if(a !== null){
+                decodedItemCallback(a);
+                a=null;
+            }
           }
         }
       }

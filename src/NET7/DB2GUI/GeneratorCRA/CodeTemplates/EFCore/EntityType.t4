@@ -28,7 +28,7 @@
     var usings = new List<string>
     {
         "{ Button , Table } from \"antd\"",
-        "{ map,Observable,scan } from \"rxjs\"",
+        "{ concatMap, delay, map,Observable,of,scan } from \"rxjs\"",
         "{ajax } from \"rxjs/ajax\"",
         "{ useState } from \"react\"",
         "JsonStreamDecoder from \"../../../Common/asyncEnumerable\""
@@ -76,7 +76,14 @@ export class <#=nameClass#>_Interaction {
                                 var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>('http://localhost:5018/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')                
                 .pipe(
                     map(it=>new <#=nameClass#>(it)),                    
+                    concatMap((x,index)=>{
+                      if((index+1) % 50 === 0)
+                      return of(x).pipe(delay(10*1000));
+                    else
+                      return of(x);
+                    }),
                     scan((acc,value)=>[...acc, value], [] as <#=nameClass#>[]),
+                    
                   );
                   return data;
 
