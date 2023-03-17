@@ -53,10 +53,10 @@ namespace <#= NamespaceHint #>;
 <# } #>
 [ApiController]
 [Route("[controller]")]    
-public partial class REST<#= EntityType.Name #>Controller : Controller
+public partial class REST_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
 {
     private <#= Options.ContextName #> _context;
-    public REST<#= EntityType.Name #>Controller(<#= Options.ContextName #> context)
+    public REST_<#=Options.ContextName#>_<#= EntityType.Name #>Controller(<#= Options.ContextName #> context)
 	{
         _context=context;
 	}
@@ -198,10 +198,10 @@ namespace <#= NamespaceHint #>;
 <# } #>
 [ApiController]
 [Route("[controller]/[action]")]    
-public partial class AdvancedSearch<#= EntityType.Name #>Controller : Controller
+public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
 {
     private ISearchData<#= EntityType.Name #> _search;
-    public AdvancedSearch<#= EntityType.Name #>Controller(ISearchData<#= EntityType.Name #> search)
+    public AdvancedSearch_<#=Options.ContextName#>_<<#= EntityType.Name #>Controller(ISearchData<#= EntityType.Name #> search)
 	{
         _search=search;
 	}
