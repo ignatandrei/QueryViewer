@@ -13,7 +13,7 @@
 		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	},
 	{
-		"Enabled":true,
+		"Enabled":false,
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
@@ -24,7 +24,7 @@
 		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	},
 	{
-		"Enabled":true,
+		"Enabled":false,
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
