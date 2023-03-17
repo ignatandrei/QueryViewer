@@ -10,32 +10,16 @@ export function DatabaseTableGui(){
 
     let { idDB,idTable } = useParams();
     
-    const [isLoading, error, data]= useRxObs<columnTable[]>(new DatabaseAdmin().getDatabaseTableColumns(idDB||'', idTable||''));
-    const [isLoadingNumber, errorNumber, dataNumber]= useRxObs<number>(new DatabaseAdmin().getTableRowsNumber(idDB||'', idTable||''));
+//    const [isLoading, error, data]= useRxObs<columnTable[]>(new DatabaseAdmin().getDatabaseTableColumns(idDB||'', idTable||''));
     
-    if (isLoading) return <>'Loading...'</>
+    // if (isLoading) return <>'Loading...'</>
    
-     if (error && error.length>0) return <>'An error has occurred: ' + error</>
+    //  if (error && error.length>0) return <>'An error has occurred: ' + error</>
   
-     if(!data || data.length===0) return <>'No data'</>
+    //  if(!data || data.length===0) return <>'No data'</>
   
   const MyComponent = React.lazy(() => import(`./Generated/Models/${idDB}/${idTable}`));
 return<>
-The table is {idTable} from database {idDB}
-{isLoadingNumber? "": errorNumber ? "Error":`Number rows : ${dataNumber} `}
-<List
-      header={<div>Columns </div>}
-      footer={<div>Total Cols : {data.length} </div>}
-      bordered
-      itemLayout="horizontal"
-      rowKey={(item: columnTable) => item.name}
-      dataSource={data}
-      renderItem={(item: columnTable) => (
-        <List.Item>
-         {data.indexOf(item)+1}.  {item.name} {item.type} {item.isNullable?'NULL':'NOT NULL'}          
-        </List.Item>
-      )}>
-      </List> 
 
  <Suspense fallback={<div>Loading...</div>}>
   <MyComponent />  
