@@ -27,7 +27,7 @@
 
     var usings = new List<string>
     {
-        "{ Button , Table } from \"antd\"",
+        "{ Button ,Spin, Table } from \"antd\"",
         "{ concatMap, delay, map,Observable,of,scan } from \"rxjs\"",
         "{ajax } from \"rxjs/ajax\"",
         "{ useState } from \"react\"",
@@ -93,6 +93,8 @@ export default function TableData_<#= EntityType.Name #>()
 {
     const nameTable = '<#= EntityType.Name #>';
     const nameDB = '<#= Options.ContextName #>';
+    const [loading,setLoading]= useState<boolean>(false);
+
     const interaction=new <#=nameClass#>_Interaction();
     const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
 const columns = [
@@ -145,10 +147,13 @@ const columns = [
 
     const showAll=()=>{
         setDataTable(null);
-        interaction.getAll().subscribe(
-            (data)=>{
+        setLoading(true);
+        interaction.getAll().subscribe({
+          next: (data)=>{
                 setDataTable(data);
-            }
+            },
+            complete:()=>{ setLoading(false);}
+          }
         )
     };
 
@@ -162,6 +167,7 @@ const columns = [
             {dataTable !=null &&             
                 <>
                 Number rows loaded {dataTable?.length}
+                {loading && <Spin />}
   <Table dataSource={dataTable} columns={columns} />;
   </>
             }

@@ -485,7 +485,14 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
     public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
         IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
         if(search == null){
+            <# if(hasOneKey){ 
+                var pk=key.Properties[0].FindContainingPrimaryKey() ;
+                var s= code.Lambda(key.Properties, "e") ;
+            #>
+            return data.OrderByDescending(<#=s#>).AsAsyncEnumerable();
+            <# } else { #>
             return data.AsAsyncEnumerable();
+            <# } // has onekey #>
         }
         data = search.TransformToWhere(data); 
         
