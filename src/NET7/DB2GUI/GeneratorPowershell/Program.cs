@@ -42,7 +42,8 @@ skip runPowershell connection {nrCon} at {DateTime.Now:hh:mm:ss}
     var ProjectWithDesigner = item.ProjectWithDesigner ?? "";
     var contextName = item.NameContext ?? "";
     var connection = item.ConnectionString ?? "";
-    if (connection.Length * contextName.Length * Provider.Length * ProjectForClasses.Length * ProjectForContext.Length * ProjectWithDesigner.Length == 0)
+        var projectCRA = item.ProjectCRA ?? "";
+    if (projectCRA.Length* connection.Length * contextName.Length * Provider.Length * ProjectForClasses.Length * ProjectForContext.Length * ProjectWithDesigner.Length == 0)
     {
         Console.WriteLine($"missingData for connection {nrCon}");
         continue;
@@ -95,6 +96,8 @@ IEnumerable<string> RunPowerShell(Connection item, string directory)
     arguments += $" -projectWeb {item.ProjectWithDesigner}";
     arguments += $" -nameContext {item.NameContext}";
     arguments += $" -connection \"{item.ConnectionString}\"";
+    arguments += $" -ProjectCRA \"{item.ProjectCRA}\"";
+
     startInfo.Arguments = arguments;
     Console.WriteLine("powershell.exe "+arguments);
     startInfo.RedirectStandardOutput = true;

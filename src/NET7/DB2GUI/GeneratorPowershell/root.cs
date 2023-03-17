@@ -8,6 +8,8 @@ internal class Connection
     public string? ProjectWithDesigner { get; set; }
     public string? NameContext { get; set; }
     public string? ConnectionString { get; set; }
+
+    public string? ProjectCRA { get; set; }
 }
 
 internal class Root
