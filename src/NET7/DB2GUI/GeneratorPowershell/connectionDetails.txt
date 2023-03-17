@@ -10,7 +10,7 @@
 		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
 		"ConnectionString1":"Data Source=.;Initial Catalog=TestData;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;",
 		"ConnectionString":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=tests;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;",
-		"ProjectCRA":"..\GeneratorCRA\GeneratorCRA.csproj"
+		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	},
 	{
 		"Enabled":true,
@@ -21,7 +21,7 @@
 		"NameContext": "PubsDBContext",
 		"ConnectionString1":"Data Source=.;Initial Catalog=pubs;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;",
 		"ConnectionString":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=pubs;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;",
-		"ProjectCRA":"..\GeneratorCRA\GeneratorCRA.csproj"
+		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	},
 	{
 		"Enabled":true,
@@ -32,7 +32,7 @@
 		"NameContext": "NorthwindDBContext",
 		"ConnectionString1":"Data Source=.;Initial Catalog=Northwind;UId=sa;pwd=<YourStrong@Passw0rd>;TrustServerCertificate=true;",
 		"ConnectionString":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=Northwind;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;",
-		"ProjectCRA":"..\GeneratorCRA\GeneratorCRA.csproj"
+		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	}
 	]
 }
