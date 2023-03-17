@@ -16,9 +16,9 @@ export function DatabaseGui(){
      if(!data || data.length===0) return <>'No data'</>
   
 
-
 return<>
 The database is {idDB}  
+
 
 <List
       header={<div>Tables </div>}
@@ -34,6 +34,8 @@ The database is {idDB}
          <Button type="primary">
          {data.indexOf(item)+1}. <Link to={`/Admin/Databases/${idDB}/tables/${item}/`} > {item} </Link>
           </Button>
+
+          
         </List.Item>
       )}>
       </List> 

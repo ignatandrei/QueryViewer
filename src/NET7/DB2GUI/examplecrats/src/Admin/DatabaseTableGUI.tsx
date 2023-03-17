@@ -1,8 +1,10 @@
 import { List, Button } from "antd";
+import React, { Suspense } from "react";
 import { Link, useParams } from "react-router-dom";
 import useRxObs from "../useRXEffect";
 import columnTable from "./column";
 import DatabaseAdmin from "./DatabaseAdmin";
+import Department_table_data from "./Generated/Models/ApplicationDBContext/Department";
 
 export function DatabaseTableGui(){
 
@@ -17,8 +19,7 @@ export function DatabaseTableGui(){
   
      if(!data || data.length===0) return <>'No data'</>
   
-
-
+  const MyComponent = React.lazy(() => import(`./Generated/Models/${idDB}/${idTable}`));
 return<>
 The table is {idTable} from database {idDB}
 {isLoadingNumber? "": errorNumber ? "Error":`Number rows : ${dataNumber} `}
@@ -35,7 +36,11 @@ The table is {idTable} from database {idDB}
         </List.Item>
       )}>
       </List> 
-      
+
+ <Suspense fallback={<div>Loading...</div>}>
+  <MyComponent />  
+</Suspense>
+     
     </>
     
 }

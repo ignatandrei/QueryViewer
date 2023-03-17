@@ -201,7 +201,7 @@ namespace <#= NamespaceHint #>;
 public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
 {
     private ISearchData<#= EntityType.Name #> _search;
-    public AdvancedSearch_<#=Options.ContextName#>_<<#= EntityType.Name #>Controller(ISearchData<#= EntityType.Name #> search)
+    public AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>Controller(ISearchData<#= EntityType.Name #> search)
 	{
         _search=search;
 	}

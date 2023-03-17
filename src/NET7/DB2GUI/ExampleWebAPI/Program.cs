@@ -4,6 +4,8 @@ using System.Drawing;
 using NetCore2BlocklyNew;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Generated;
+using System.Text.Json;
+using ExampleWebAPI;
 
 class Program
 {
@@ -16,6 +18,10 @@ class Program
         var assControllers = typeof(UtilsControllers).Assembly;
 
         builder.Services.AddControllers()
+            .AddJsonOptions(c =>
+            {
+                c.JsonSerializerOptions.PropertyNamingPolicy = new LowerCaseNamingPolicy();
+            })
               .PartManager.ApplicationParts.Add(new AssemblyPart(assControllers)); ;
         ;
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

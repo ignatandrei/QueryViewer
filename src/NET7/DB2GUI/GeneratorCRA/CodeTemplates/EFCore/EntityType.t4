@@ -27,14 +27,17 @@
 
     var usings = new List<string>
     {
-        "{ Button } from \"antd\"",
+        "{ Button , Table } from \"antd\"",
+        "{ map,Observable } from \"rxjs\"",
+        "{ajax } from \"rxjs/ajax\"",
+        "{ useState } from \"react\""
     };
 
 
 #>
 
-//ADDED by code generator
-export class <#= EntityType.Name #>_Table 
+
+export class <#=Options.ContextName#>_<#= EntityType.Name #>_Table 
 {
 <#
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
@@ -62,23 +65,97 @@ export class <#= EntityType.Name #>_Table
         }
         
         #>
-        public <#= property.Name #> : <#=jsType #>  = <#=defVal#>;
+        public <#= property.Name.ToLower() #> : <#=jsType #>  = <#=defVal#>;
         <#
     } // foreach property 
 #>
 }
-
-export default function <#= EntityType.Name #>_Table_Data() 
+export class <#=Options.ContextName#>_<#= EntityType.Name #>_Table_Interaction {
+            public getAll():Observable<<#=Options.ContextName#>_<#= EntityType.Name #>_Table[]>{
+                // var data= fromFetch('http://localhost:5018/MetaData/DBNames')
+                var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')
+                .pipe(
+                    map(response => {
+        
+                        return response as <#=Options.ContextName#>_<#= EntityType.Name #>_Table[];
+                    })
+                    //takeUntil(cancel)
+                  );
+                  return data;
+            }
+         }
+export default function TableData_<#= EntityType.Name #>() 
 {
+    const nameTable = '<#= EntityType.Name #>';
+    const nameDB = '<#= Options.ContextName #>';
+    const interaction=new <#=Options.ContextName#>_<#= EntityType.Name #>_Table_Interaction();
+    const [dataTable,setDataTable]= useState<<#=Options.ContextName#>_<#= EntityType.Name #>_Table[]|null>(null);
+const columns = [
+    {
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
+        width: '5%',
+        render:(item: any, record: any, index: any)=>(<>{index+1}</>)
+      }
 
-    const showAll=()=>{alert("showAll")};
+  <#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        
+#>
+   ,{
+    title: '<#= property.Name.ToLower() #>',
+    dataIndex: '<#= property.Name.ToLower() #>',
+    key: '<#= property.Name.ToLower() #>',
+    sorter: (a:<#=Options.ContextName#>_<#= EntityType.Name #>_Table, b:<#=Options.ContextName#>_<#= EntityType.Name #>_Table) => 
+    {
+    //TODO: make for number
+        if(a.<#= property.Name.ToLower() #> == null && b.<#= property.Name.ToLower() #> == null)
+            return 0;
+        
+        if(a.<#= property.Name.ToLower() #> == null)
+            return -1;
+        if(b.<#= property.Name.ToLower() #> == null)
+            return 1;
+        
+        return a.<#= property.Name.ToLower() #>.toString().localeCompare(b.<#= property.Name.ToLower() #>.toString());
+
+    }
+  } 
+
+<#
+    }//end foreach
+#>
+  
+];
+
+    const showAll=()=>{
+        setDataTable(null);
+        interaction.getAll().subscribe(
+            (data)=>{
+                setDataTable(data);
+            }
+        )
+    };
 
     return (
     <>
-        Table <#= EntityType.Name #>
+        Table {nameTable} from DB {nameDB}
 
         <Button type="primary" onClick={showAll}>List <#= EntityType.Name #></Button>
+        <div>
+            {dataTable == null && "no data loaded"}
+            {dataTable !=null &&             
+                <>
+                Number rows loaded {dataTable?.length}
+  <Table dataSource={dataTable} columns={columns} />;
+  </>
+            }
+        </div>
+
     </>
+    )
 }
 <#
     var previousOutput = GenerationEnvironment;

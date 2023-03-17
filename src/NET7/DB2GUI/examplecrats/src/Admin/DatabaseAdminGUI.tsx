@@ -12,8 +12,10 @@ export default function DatabaseAdminGui() {
   
   if (isLoading) return <>'Loading...'</>
  
-   if (error && error.length>0) return <>'An error has occurred: ' + error</>
-
+   if (error ) {
+    console.error(error);
+    return <>An error has occurred:  </>
+   }
    if(!data || data.length===0) return <>'No data'</>
    
     return (<>
