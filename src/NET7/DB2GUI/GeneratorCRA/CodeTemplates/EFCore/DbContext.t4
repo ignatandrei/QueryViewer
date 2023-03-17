@@ -1,0 +1,69 @@
+<#@ output extension=".md" #>
+<#@ template hostSpecific="true" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.Extensions.DependencyInjection.Abstractions" #>
+
+<#@ parameter name="Model" type="Microsoft.EntityFrameworkCore.Metadata.IModel" #>
+<#@ parameter name="Options" type="Microsoft.EntityFrameworkCore.Scaffolding.ModelCodeGenerationOptions" #>
+
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
+
+# <#= Options.ContextName #>
+<#
+  
+    var services = (IServiceProvider)Host;
+    var code = services.GetRequiredService<ICSharpHelper>();
+
+#>
+
+```mermaid
+erDiagram
+<#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+#>
+    <#= entityType.Name #> {
+    <#
+    foreach (var property in entityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+      var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+      var propType= code.Reference(property.ClrType);
+      propType= propType.Replace("?","");
+      propType= propType.Replace("[]","-Array");
+
+    #>  
+      <#= propType #> <#= property.Name #> 
+    <#
+    }//foreach property
+    #>
+
+    }
+<#
+        foreach (var foreignKey in entityType.GetForeignKeys())
+        {
+            
+#>
+    <#= entityType.Name #> <#= foreignKey.IsUnique ? "|" : "}" #>o--<#= foreignKey.IsRequired ? "|" : "o" #>| <#= foreignKey.PrincipalEntityType.Name #> : <#= foreignKey.GetConstraintName() #>
+<#
+        }
+
+        foreach (var skipNavigation in entityType.GetSkipNavigations().Where(n => n.IsLeftNavigation()))
+        {
+#>
+    <#= entityType.Name #> }o--o{ <#= skipNavigation.TargetEntityType.Name #> : <#= skipNavigation.JoinEntityType.Name #>
+<#
+        }
+    }
+#>
+```

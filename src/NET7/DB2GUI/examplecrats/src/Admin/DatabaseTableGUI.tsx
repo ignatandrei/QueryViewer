@@ -21,10 +21,10 @@ export function DatabaseTableGui(){
 
 return<>
 The table is {idTable} from database {idDB}
-{isLoadingNumber? "": `Number rows : ${dataNumber} `}
+{isLoadingNumber? "": errorNumber ? "Error":`Number rows : ${dataNumber} `}
 <List
       header={<div>Columns </div>}
-      footer={<div>Number : {data.length} </div>}
+      footer={<div>Total Cols : {data.length} </div>}
       bordered
       itemLayout="horizontal"
       rowKey={(item: columnTable) => item.name}
