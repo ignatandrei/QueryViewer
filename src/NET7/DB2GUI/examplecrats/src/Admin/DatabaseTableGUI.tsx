@@ -1,11 +1,6 @@
-import { List, Button } from "antd";
 import React, { Suspense } from "react";
-import { Link, useParams } from "react-router-dom";
-import useRxObs from "../useRXEffect";
-import columnTable from "./column";
-import DatabaseAdmin from "./DatabaseAdmin";
-import Department_table_data from "./Generated/Models/ApplicationDBContext/Department";
-
+import {  useParams } from "react-router-dom";
+ 
 export function DatabaseTableGui(){
 
     let { idDB,idTable } = useParams();

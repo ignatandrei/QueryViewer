@@ -29,7 +29,6 @@
     {
         "{ Button,Input ,Spin, Table } from \"antd\"",
         "{ concatMap, delay, map,Observable,of,scan } from \"rxjs\"",
-        "{ajax } from \"rxjs/ajax\"",
         "{ useState } from \"react\"",
         "JsonStreamDecoder from \"../../../Common/asyncEnumerable\"",
         "{ ColumnsType } from \"antd/es/table\""
