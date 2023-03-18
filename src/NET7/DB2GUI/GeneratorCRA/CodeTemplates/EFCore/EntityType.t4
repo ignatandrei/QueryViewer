@@ -78,7 +78,7 @@ export class <#=nameClass#>_Interaction {
                     map(it=>new <#=nameClass#>(it)),                    
                     concatMap((x,index)=>{
                       if((index+1) % 50 === 0)
-                      return of(x).pipe(delay(10*1000));
+                      return of(x).pipe(delay(5*1000));
                     else
                       return of(x);
                     }),
@@ -97,13 +97,13 @@ export default function TableData_<#= EntityType.Name #>()
 
     const interaction=new <#=nameClass#>_Interaction();
     const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
-const columns = [
+const columns : ColumnsType<<#=nameClass#> =[
     {
         title: 'ID',
         dataIndex: 'id',
         key: 'id',
         width: '5%',
-        render:(item: any, record: any, index: any)=>(<>{index+1}</>)
+        render:(item: any, record: <#=nameClass#>, index: any)=>(<>{index+1}</>)
       }
 
   <#
@@ -160,7 +160,7 @@ const columns = [
     return (
     <>
         Table {nameTable} from DB {nameDB}
-
+        <p></p>
         <Button type="primary" onClick={showAll}>List <#= EntityType.Name #></Button>
         <div>
             {dataTable == null && "no data loaded"}
@@ -168,7 +168,7 @@ const columns = [
                 <>
                 Number rows loaded {dataTable?.length}
                 {loading && <Spin />}
-  <Table dataSource={dataTable} columns={columns} />;
+  <Table pagination= {false} dataSource={dataTable} columns={columns} />;
   </>
             }
         </div>
@@ -195,20 +195,43 @@ const columns = [
 
 private System.Tuple<string,string> GetJsTypeAndDefaultValue(string clrType,bool isNullable ){
         clrType = clrType.Replace("?","");
+        var IsArray = (clrType.IndexOf("[]")>0);
+        clrType = clrType.Replace("[]","");      
         string jsType="";
         string defVal = "";
+
         switch(clrType){
+            case "DateTime":
+                jsType="Date";
+                defVal="new Date()";
+                break;
+            case "bool":
+                jsType="boolean";
+                defVal="false";
+                break;
             case "int":
             case "long":
+            case "short":
+            case "decimal":
+            case "double":
+            case "byte":
                 jsType="number";
                 defVal="0";
                 break;
+            case "string":
+                jsType="string";
+                defVal="''";
+                break;            
             default:
-                jsType=clrType;
+                jsType="please_edit_GetJsTypeAndDefaultValue_"+ clrType;
                 defVal="''";
                 break;
         }
-
+        if(IsArray )
+        {
+            jsType +="[]";
+            defVal ="[]";
+        }
         if(isNullable ) {
             jsType +="|null";
             defVal ="null";
