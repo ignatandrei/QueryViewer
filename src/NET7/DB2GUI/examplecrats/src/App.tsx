@@ -5,7 +5,7 @@ import './App.css';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { BrowserRouter, createBrowserRouter, Link, RouterProvider} from 'react-router-dom';
+import { BrowserRouter, createBrowserRouter, Link, Outlet, RouterProvider} from 'react-router-dom';
 import Root from './Root';
 import ContentAdminGui from './Admin/ContentAdminGUI';
 import DatabaseAdminGui from './Admin/DatabaseAdminGUI';
@@ -42,54 +42,6 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
 );
 function App() {
 
-    const router = createBrowserRouter([
-        {
-          path: "/",
-          element: <Root />,
-          handle:{
-            crumb: () => <Link to="/">Home</Link>,
-            }
-          //errorElement: <ErrorPage />,
-        },
-        {
-            path: "/Home",
-            element: <Root />,
-            handle:{
-                crumb: () => <Link to="/">Home</Link>,
-                }
-              
-            //errorElement: <ErrorPage />,
-        },        
-        {
-            path: "/Admin",
-            element: <ContentAdminGui />,
-            //errorElement: <ErrorPage />,
-            handle:{
-                crumb: () => <Link to="/Admin">Admin</Link>,
-                }
-              
-        },
-        {
-            path: "/Admin/Databases",
-            element: <DatabaseAdminGui />,
-            handle:{
-                crumb: () => <Link to="/Admin/Databases">Databases</Link>,
-                }
-              
-        },        
-        {
-            path: "/Admin/Databases/:idDB",
-            element: <DatabaseGui />,
-            
-            //errorElement: <ErrorPage />,
-        },
-        {
-            path: "/Admin/Databases/:idDB/tables/:idTable",
-            element: <DatabaseTableGui />,
-            //errorElement: <ErrorPage />,
-        },
-
-      ]);
     
     const navigateTo = ( info: any ) => {
         window.location.href= `/${info.key}`;
@@ -123,9 +75,9 @@ function App() {
                             background: colorBgContainer,
                         }}
                     >
-                    <RouterProvider router={router}  />
-                    {/* <Bread></Bread>                         */}
-                    
+<Bread></Bread>
+<Outlet/>                    
+                        
                         
                     </Content>
                 </Layout>
