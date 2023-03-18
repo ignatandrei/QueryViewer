@@ -5,12 +5,13 @@ import './App.css';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter, createBrowserRouter, Link, RouterProvider} from 'react-router-dom';
 import Root from './Root';
 import ContentAdminGui from './Admin/ContentAdminGUI';
 import DatabaseAdminGui from './Admin/DatabaseAdminGUI';
 import { DatabaseGui } from './Admin/DatabaseGUI';
 import { DatabaseTableGui } from './Admin/DatabaseTableGUI';
+import Bread from './Bread';
 
 
 const { Header, Content, Sider } = Layout;
@@ -45,26 +46,41 @@ function App() {
         {
           path: "/",
           element: <Root />,
+          handle:{
+            crumb: () => <Link to="/">Home</Link>,
+            }
           //errorElement: <ErrorPage />,
         },
         {
             path: "/Home",
             element: <Root />,
+            handle:{
+                crumb: () => <Link to="/">Home</Link>,
+                }
+              
             //errorElement: <ErrorPage />,
         },        
         {
             path: "/Admin",
             element: <ContentAdminGui />,
             //errorElement: <ErrorPage />,
+            handle:{
+                crumb: () => <Link to="/Admin">Admin</Link>,
+                }
+              
         },
         {
             path: "/Admin/Databases",
             element: <DatabaseAdminGui />,
-            //errorElement: <ErrorPage />,
+            handle:{
+                crumb: () => <Link to="/Admin/Databases">Databases</Link>,
+                }
+              
         },        
         {
             path: "/Admin/Databases/:idDB",
             element: <DatabaseGui />,
+            
             //errorElement: <ErrorPage />,
         },
         {
@@ -82,6 +98,7 @@ function App() {
         token: { colorBgContainer },
     } = theme.useToken();
   return (
+    <>
         <Layout>
             <Header className="header">
                 <div className="logo" />
@@ -98,11 +115,6 @@ function App() {
                     />
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
-                    <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item>List</Breadcrumb.Item>
-                        <Breadcrumb.Item>App</Breadcrumb.Item>
-                    </Breadcrumb>
                     <Content
                         style={{
                             padding: 24,
@@ -110,13 +122,17 @@ function App() {
                             minHeight: 280,
                             background: colorBgContainer,
                         }}
-                    >                        
-                        <RouterProvider router={router} />
+                    >
+                    <RouterProvider router={router}  />
+                    {/* <Bread></Bread>                         */}
+                    
+                        
                     </Content>
                 </Layout>
             </Layout>
         </Layout>
-    );
+        </>
+        );
 }
 
 export default App;

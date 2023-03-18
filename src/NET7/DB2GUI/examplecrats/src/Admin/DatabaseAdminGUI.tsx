@@ -1,6 +1,6 @@
-import { Button, List } from "antd"
+import { Breadcrumb, Button, List } from "antd"
 import {  useMemo } from "react";
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import useRxObs from "../useRXEffect";
 import DatabaseAdmin from "./DatabaseAdmin";
 
@@ -10,6 +10,7 @@ export default function DatabaseAdminGui() {
   // const obtainData= useMemo(()=>db.getDatabases(),[db]);
   const [isLoading, error, data]= useRxObs(new DatabaseAdmin().getDatabases());
   
+  
   if (isLoading) return <>'Loading...'</>
  
    if (error ) {
@@ -18,10 +19,13 @@ export default function DatabaseAdminGui() {
    }
    if(!data || data.length===0) return <>'No data'</>
    
+
+
     return (<>
     You can administer the databases 
     {/* {data.map((db)=>{return <>{db}</>})  */}
-       
+  
+                
    <List
       header={<div>Databases</div>}
       footer={<div>Number : {data.length} </div>}
