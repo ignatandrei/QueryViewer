@@ -21,25 +21,23 @@ const itemsHeader: MenuProps['items'] = ['Home', 'Admin'].map((key) => ({
     label: `${key}`,
 }));
 
-const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-    (icon, index) => {
-        const key = String(index + 1);
+const items2: MenuProps['items'] = [
 
-        return {
-            key: `sub${key}`,
-            icon: React.createElement(icon),
-            label: `subnav ${key}`,
+        {
+            key: `sub1`,
+            //icon: React.createElement(icon),
+            label: 'Home',
 
-            children: new Array(4).fill(null).map((_, j) => {
-                const subKey = index * 4 + j + 1;
-                return {
-                    key: subKey,
-                    label: `option${subKey}`,
-                };
-            }),
-        };
-    },
-);
+            children: [
+                {
+                    key: `Admin`,
+                    label: 'Admin',
+                }
+            ]
+        
+    }
+];
+        
 function App() {
 
     
