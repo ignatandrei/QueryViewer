@@ -2,7 +2,7 @@
 	"version":"2022.7.11.615",
 	"connections":[
 	{
-		"Enabled":true,
+		"Enabled":false,
 		"NameContext": "ApplicationDBContext",
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
@@ -24,7 +24,7 @@
 		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	},
 	{
-		"Enabled":false,
+		"Enabled":true,
 		"Provider": "Microsoft.EntityFrameworkCore.SqlServer",
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",

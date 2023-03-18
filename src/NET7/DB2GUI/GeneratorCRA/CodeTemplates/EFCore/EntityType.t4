@@ -27,7 +27,7 @@
 
     var usings = new List<string>
     {
-        "{ Button ,Spin, Table } from \"antd\"",
+        "{ Button,Input ,Spin, Table } from \"antd\"",
         "{ concatMap, delay, map,Observable,of,scan } from \"rxjs\"",
         "{ajax } from \"rxjs/ajax\"",
         "{ useState } from \"react\"",
@@ -95,9 +95,12 @@ export default function TableData_<#= EntityType.Name #>()
     const nameTable = '<#= EntityType.Name #>';
     const nameDB = '<#= Options.ContextName #>';
     const [loading,setLoading]= useState<boolean>(false);
-
+    const [inputValue, setInputValue] = useState("");
+    
     const interaction=new <#=nameClass#>_Interaction();
     const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
+const [dataTableFiltered, setDataTableFiltered] = useState<<#=nameClass#>[] | null>(null);
+    
 const columns : ColumnsType<<#=nameClass#>> =[
     {
         title: 'ID',
@@ -146,11 +149,44 @@ const columns : ColumnsType<<#=nameClass#>> =[
   
 ];
 
+
+    const filterData = (val: string, data: <#=nameClass#>[]) => {
+        if (val == null || val === '') {
+            setDataTableFiltered(dataTable);
+            return;
+        }
+        if (data == null) {
+            setDataTableFiltered(null);
+            return;
+        }
+        val = val.toLowerCase();
+        var f = data.filter(it => {
+<#    
+foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+    var namePropJS=property.Name.ToLower();
+
+#>
+    if (it.<#=namePropJS#> != null)
+       if (it.<#=namePropJS#>.toString().toLowerCase().includes(val))
+        return true;
+
+<#
+    }
+#>
+        return false;
+        });
+        setDataTableFiltered(f);
+    }
+
+
+
     const showAll=()=>{
         setDataTable(null);
         setLoading(true);
         interaction.getAll().subscribe({
           next: (data)=>{
+                setDataTableFiltered(data);
                 setDataTable(data);
             },
             complete:()=>{ setLoading(false);}
@@ -167,9 +203,18 @@ const columns : ColumnsType<<#=nameClass#>> =[
             {dataTable == null && "no data loaded"}
             {dataTable !=null &&             
                 <>
-                Number rows loaded {dataTable?.length}
+                Number rows loaded {dataTable?.length} / filtered {dataTableFiltered?.length} / Search -{inputValue}-
+
                 {loading && <Spin />}
-  <Table pagination= {false} dataSource={dataTable} columns={columns} />;
+                {!loading &&
+                            <Input placeholder="SearchHere" onChange={(e) => {
+                                setInputValue(e.target.value);
+                                filterData(e.target.value, dataTable!);
+                            }
+                            } />
+                        }
+                        
+  <Table pagination= {false} dataSource={dataTableFiltered!} columns={columns} />;
   </>
             }
         </div>
