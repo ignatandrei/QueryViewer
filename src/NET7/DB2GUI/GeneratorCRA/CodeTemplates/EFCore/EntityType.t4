@@ -31,7 +31,8 @@
         "{ concatMap, delay, map,Observable,of,scan } from \"rxjs\"",
         "{ajax } from \"rxjs/ajax\"",
         "{ useState } from \"react\"",
-        "JsonStreamDecoder from \"../../../Common/asyncEnumerable\""
+        "JsonStreamDecoder from \"../../../Common/asyncEnumerable\"",
+        "{ ColumnsType } from \"antd/es/table\""
     };
 
 
@@ -97,7 +98,7 @@ export default function TableData_<#= EntityType.Name #>()
 
     const interaction=new <#=nameClass#>_Interaction();
     const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
-const columns : ColumnsType<<#=nameClass#> =[
+const columns : ColumnsType<<#=nameClass#>> =[
     {
         title: 'ID',
         dataIndex: 'id',
