@@ -24,7 +24,7 @@ const itemsHeader: MenuProps['items'] = ['Home', 'Admin'].map((key) => ({
 const items2: MenuProps['items'] = [
 
         {
-            key: `sub1`,
+            key: `Home`,
             //icon: React.createElement(icon),
             label: 'Home',
 
@@ -62,6 +62,8 @@ function App() {
                         defaultOpenKeys={['sub1']}
                         style={{ height: '100%', borderRight: 0 }}
                         items={items2}
+                        onClick={navigateTo}
+
                     />
                 </Sider>
                 <Layout style={{ padding: '0 24px 24px' }}>
