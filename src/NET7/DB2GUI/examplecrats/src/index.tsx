@@ -56,19 +56,26 @@ const router = createBrowserRouter([
       },
 
       {
-        id: "db",
+        
         path: "/Admin/Databases/:idDB",
         element: <DatabaseGui />,
         handle: {
-          crumb: () => <Link to="/Admin/Databases/xxx">DB:</Link>,
+          crumb: (d:any) => <Link to={"/Admin/Databases/"+d.params.idDB}>DB: {d.params.idDB}</Link>,
         },
       },
       {
-        id: "table",
+        
+        path: "/Admin/Databases/:idDB/tables",
+        element: <DatabaseGui />,
+        handle: {
+          crumb: (d:any) => <Link to={"/Admin/Databases/"+d.params.idDB}>DB: {d.params.idDB}</Link>,
+        },
+      },
+      {
         path: "/Admin/Databases/:idDB/tables/:idTable",
         element: <DatabaseTableGui />,
         handle: {
-          crumb: () => <Link to="/Admin/Databases/:idDB/tables/:idTable">Table:</Link>,
+          crumb: (d:any) => <Link to={`/Admin/Databases/${d.params.idDB}/tables/${d.params.idTable}`}>Table:{d.params.idTable}</Link>,
         }
         //errorElement: <ErrorPage />,
       },
