@@ -89,6 +89,8 @@ Write-Host "delete remaining folders"
 Get-ChildItem  -Directory -Recurse -Filter "bin" | Remove-Item -Recurse
 Get-ChildItem  -Directory -Recurse -Filter "obj" | Remove-Item -Recurse
 Get-ChildItem  -Directory -Recurse -Filter "node_modules" | Remove-Item -Recurse
+Get-ChildItem  -Directory -Recurse -Filter ".vscode" | Remove-Item -Recurse
+Get-ChildItem  -Directory -Recurse -Filter ".config" | Remove-Item -Recurse
 
 Write-Host "modify .cs files"
 gci *.cs -r | % { 
@@ -108,6 +110,19 @@ gci connectionDetails.txt -r | % {
 	$newContent = $content
 	$newContent = $newContent -replace 'Example','$ext_safeprojectname$.'
 	$newContent = $newContent -replace 'GeneratorCRA','$ext_safeprojectname$.GeneratorCRA'
+	if ($content -ne $newContent) {
+		Set-Content -Path  $_.FullName -Value $newContent
+		# Write-Host 'replacing ' $_.FullName 
+		
+	}
+		
+}
+
+Write-Host "modify create.ps1"
+gci create.ps1 -r | % { 
+	$content  = Get-Content $_.FullName 
+	$newContent = $content
+	$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.examplecrats'	
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent
 		# Write-Host 'replacing ' $_.FullName 
