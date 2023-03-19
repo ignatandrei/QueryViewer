@@ -16,6 +16,9 @@
             <SolutionFolder Name="RunOnceDBChanges">				
 				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorPowershell" CopyParameters="true">
                     GeneratorPowershell\MyTemplate.vstemplate
+                </ProjectTemplateLink>							
+				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorCRA" CopyParameters="true">
+                    GeneratorCRA\MyTemplate.vstemplate
                 </ProjectTemplateLink>
 			</SolutionFolder>
 				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorFromDB" CopyParameters="true">
@@ -33,6 +36,11 @@
 				<ProjectTemplateLink ProjectName="$safeprojectname$.WebAPI" CopyParameters="true">
                     ExampleWebAPI\MyTemplate.vstemplate
                 </ProjectTemplateLink>
+				<ProjectTemplateLink ProjectName="$safeprojectname$.examplecrats" CopyParameters="true">
+                    examplecrats\MyTemplate.vstemplate
+                </ProjectTemplateLink>
+				
+				
 			<!--
                 
 				
