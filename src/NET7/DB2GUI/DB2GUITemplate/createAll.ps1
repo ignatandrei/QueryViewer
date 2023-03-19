@@ -107,6 +107,7 @@ gci connectionDetails.txt -r | % {
 	$content  = Get-Content $_.FullName 
 	$newContent = $content
 	$newContent = $newContent -replace 'Example','$ext_safeprojectname$.'
+	$newContent = $newContent -replace 'GeneratorCRA','$ext_safeprojectname$.GeneratorCRA'
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent
 		# Write-Host 'replacing ' $_.FullName 
