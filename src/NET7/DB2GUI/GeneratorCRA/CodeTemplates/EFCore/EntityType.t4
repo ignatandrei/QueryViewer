@@ -76,25 +76,26 @@ export class <#=nameClass#>_Interaction {
                                 var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>('http://localhost:5018/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')                
                 .pipe(
                     map(it=>new <#=nameClass#>(it)),                    
-                    concatMap((x,index)=>{
+                    concatMap((x:<#=nameClass#>,index:number)=>{
                       if((index+1) % 50 === 0)
-                      return of(x).pipe(delay(5*1000));
+                      return of<#=nameClass#>(x).pipe(delay(5*1000));
                     else
-                      return of(x);
+                      return of<<#=nameClass#>>(x);
                     }),
-                    scan((acc,value)=>[...acc, value], [] as <#=nameClass#>[]),
+                    scan((acc:<#=nameClass#>[],value:<#=nameClass#>)=>[...acc, value] as <#=nameClass#>[], [] as <#=nameClass#>[]),
                     
                   );
-                  return data;
+                  return data as Observable<<#=nameClass#>[]>;
 
             }
          }
+let inputValueSearch_<#= EntityType.Name #> = '';
 export default function TableData_<#= EntityType.Name #>() 
 {
     const nameTable = '<#= EntityType.Name #>';
     const nameDB = '<#= Options.ContextName #>';
     const [loading,setLoading]= useState<boolean>(false);
-    const [inputValue, setInputValue] = useState("");
+    //const [inputValue, setInputValue] = useState("");
     
     const interaction=new <#=nameClass#>_Interaction();
     const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
@@ -151,7 +152,7 @@ const columns : ColumnsType<<#=nameClass#>> =[
 
     const filterData = (val: string, data: <#=nameClass#>[]) => {
         if (val == null || val === '') {
-            setDataTableFiltered(dataTable);
+            setDataTableFiltered(data);
             return;
         }
         if (data == null) {
@@ -180,13 +181,14 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
 
 
 
-    const showAll=()=>{
+    const showAllClickHandler=()=>{
         setDataTable(null);
         setLoading(true);
         interaction.getAll().subscribe({
-          next: (data)=>{
-                setDataTableFiltered(data);
+          next: (data:<#=nameClass#>[])=>{
+                
                 setDataTable(data);
+                filterData(inputValueSearch_<#= EntityType.Name #>, data);
             },
             complete:()=>{ setLoading(false);}
           }
@@ -197,18 +199,18 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
     <>
         Table {nameTable} from DB {nameDB}
         <p></p>
-        <Button type="primary" onClick={showAll}>List <#= EntityType.Name #></Button>
+        <Button type="primary" onClick={showAllClickHandler}>List <#= EntityType.Name #></Button>
         <div>
             {dataTable == null && "no data loaded"}
             {dataTable !=null &&             
                 <>
-                Number rows loaded {dataTable?.length} / filtered {dataTableFiltered?.length} / Search -{inputValue}-
+                Number rows loaded {dataTable?.length} / filtered {dataTableFiltered?.length} / Search -{inputValueSearch_<#= EntityType.Name #>}-
 
                 {loading && <Spin />}
-                {!loading &&
+                {true /*!loading*/ &&
                             <Input placeholder="SearchHere" onChange={(e) => {
-                                setInputValue(e.target.value);
-                                filterData(e.target.value, dataTable!);
+                                inputValueSearch_<#= EntityType.Name #>=(e.target.value);
+                                filterData(inputValueSearch_<#= EntityType.Name #>, dataTable!);
                             }
                             } />
                         }
