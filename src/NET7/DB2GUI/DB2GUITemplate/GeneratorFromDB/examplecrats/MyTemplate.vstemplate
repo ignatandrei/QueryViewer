@@ -16,7 +16,7 @@
     <Icon>__TemplateIcon.ico</Icon>
   </TemplateData>
   <TemplateContent>
-    <Project TargetFileName="examplecrats.csproj" File="examplecrats.csproj" ReplaceParameters="true">
+    <Project TargetFileName="examplecrats.esproj" File="examplecrats.esproj" ReplaceParameters="true">
       <!-- 
 	  <ProjectItem ReplaceParameters="true" TargetFileName="Models.cs">Models.cs</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="models.txt">models.txt</ProjectItem>
