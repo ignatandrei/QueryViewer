@@ -303,6 +303,7 @@ if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
+
     <# if(isNullable){#>
     [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_FindNull(){
@@ -349,8 +350,30 @@ if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
+    <# if(hasLess == 1 || hasString == 1){ #>
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_Between( <#= propTypeNotNull #>  valStart, <#= propTypeNotNull #> valEnd)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.Between, e<#= EntityType.Name #>Columns.<#= property.Name #>, valStart +","+ valEnd);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
 
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }    
 
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_NotBetween( <#= propTypeNotNull #>  valStart, <#= propTypeNotNull #> valEnd)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.NotBetween, e<#= EntityType.Name #>Columns.<#= property.Name #>, valStart +","+ valEnd);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }    
+
+    <# } //less or string #>
     <# } //property #>
     
 
