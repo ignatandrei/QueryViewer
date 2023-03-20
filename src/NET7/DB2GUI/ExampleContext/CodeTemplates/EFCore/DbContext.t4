@@ -437,7 +437,7 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         return ret.AsAsyncEnumerable();
     }
 */
-    public Task<long> <#= entityType.Name #>Count( Search<#= entityType.Name #> search){
+    public Task<long> <#= entityType.Name #>Count( Search<#= entityType.Name #>? search){
      
         IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
         if(search != null){
@@ -568,6 +568,8 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
         IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search);
     
     public Task<long> GetCountAll();
+    public Task<long> GetCountAll(Search<#= entityType.Name #>? search);
+
     <# if(hasOneKey ){
         var pk=key.Properties[0].FindContainingPrimaryKey() ;
         var s= code.Lambda(key.Properties, "e") ;
@@ -595,6 +597,9 @@ var hasOneKey = (key != null && key.Properties != null && key.Properties.Count =
            
         public async Task<long> GetCountAll(){
             return await context.<#= entityType.Name #>Count(null);
+        }
+        public async Task<long> GetCountAll(Search<#= entityType.Name #>? search){
+            return await context.<#= entityType.Name #>Count(search);
         }
         public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
             return context.<#= entityType.Name #>Find_AsyncEnumerable(search);
