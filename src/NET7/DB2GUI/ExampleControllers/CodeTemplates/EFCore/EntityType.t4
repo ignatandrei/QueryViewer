@@ -266,6 +266,16 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         var hasDateTime=0;
         var propTypeNotNull= propType.Replace("?","");
 
+        if ("float" == propTypeNotNull ||  "byte" == propTypeNotNull || "string" == propTypeNotNull || "short" == propTypeNotNull || "int" == propTypeNotNull || "long" == propTypeNotNull  || "double" == propTypeNotNull || "DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull || "decimal" == propTypeNotNull)
+    hasLess=1;
+
+if ("string" == propType) 
+    hasString=1;
+
+if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
+    hasDateTime=1;
+
+
      #>
 
     [HttpGet]
@@ -311,7 +321,8 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         }
     }
     <# } // if(isNullable)#>
-     <#if(hasArray==0) { #>
+     <#if(hasArray==1) {continue;} #>
+
      [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_EqualValues( <#= code.Reference(property.ClrType) #>[]  values)
     {
@@ -338,7 +349,7 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
-     <#}//not hasArray#>
+
 
     <# } //property #>
     
