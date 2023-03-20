@@ -350,6 +350,42 @@ if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
+    <# if(hasString == 1){ #>
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_Contains(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.Contains, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_EndsWith(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.EndsWith, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+
+      [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_StartsWith(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.StartsWith, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+
+
+    <# } // has string #>
     <# if(hasLess == 1 || hasString == 1){ #>
       [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_LessOrEqual(<#= propTypeNotNull #>  val)
