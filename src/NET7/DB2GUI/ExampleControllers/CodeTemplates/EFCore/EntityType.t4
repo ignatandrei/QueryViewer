@@ -17,7 +17,7 @@
 <#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
 <#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
 <#
-    Console.WriteLine("!!!!");
+    //Console.WriteLine("!!!!");
     if (EntityType.IsSimpleManyToManyJoinEntityType())
     {
         // Don't scaffold these
@@ -263,7 +263,7 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
      #>
      <#if(hasArray==0) { #>
      [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> EqualValues_<#= property.Name #>( <#= code.Reference(property.ClrType) #>[]  values)
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_EqualValues( <#= code.Reference(property.ClrType) #>[]  values)
     {
         string? value=null;
         if(values.Length>0)
@@ -276,7 +276,7 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         }
     }
      [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> DifferentValues_<#= property.Name #>( <#= code.Reference(property.ClrType) #>[]  values)
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_DifferentValues( <#= code.Reference(property.ClrType) #>[]  values)
     {
         string? value=null;
         if(values.Length>0)
@@ -288,9 +288,9 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
-     <#}//hasArray#>
+     <#}//not hasArray#>
     [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> EqualValue_<#= property.Name #>( <#= code.Reference(property.ClrType) #>  value)
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_EqualValue( <#= code.Reference(property.ClrType) #>  value)
     {
         var sc = GeneratorFromDB.SearchCriteria.Equal;
         await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, value))
@@ -299,7 +299,7 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         }
     }
     [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> DifferentValue_<#= property.Name #>( <#= code.Reference(property.ClrType) #>  value)
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_DifferentValue( <#= code.Reference(property.ClrType) #>  value)
     {
         var sc = GeneratorFromDB.SearchCriteria.Different;
         await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, value))
@@ -308,14 +308,14 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         }
     }
     [HttpGet]
-    public  async IAsyncEnumerable<<#= EntityType.Name #>_Table> SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
+    public  async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_SimpleSearch(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
         await foreach(var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc,value))
         {
             yield return (<#= EntityType.Name #>_Table)item!;
         }
     }
     [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> FindNull_<#= property.Name #>(){
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_FindNull(){
         var sc = GeneratorFromDB.SearchCriteria.Equal;
         await foreach(var item in _search.<#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(sc))
         {
@@ -323,7 +323,7 @@ var pk=key.Properties[0].FindContainingPrimaryKey() ;
         }
     }
     [HttpGet]
-    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> FindNotNull_<#= property.Name #>(){
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_FindNotNull(){
         var sc = GeneratorFromDB.SearchCriteria.Different;
         await foreach(var item in _search.<#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(sc))
         {
