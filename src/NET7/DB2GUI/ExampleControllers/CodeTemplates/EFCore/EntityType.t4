@@ -351,6 +351,26 @@ if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
         }
     }
     <# if(hasLess == 1 || hasString == 1){ #>
+      [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_LessOrEqual(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.LessOrEqual, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val.ToString());
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_Less(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.Less, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val.ToString());
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
      
       [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_GreaterOrEqual(<#= propTypeNotNull #>  val)
