@@ -15,6 +15,6 @@ Also, it generates  different projects ( models, context, controllers, REACT CRA
 2. Modify the connection details from GeneratorPowershell
 3. Run the project and it will generate the code for you
    1. If it shows an error , please copy the powershell command and run it from the terminal ( easy way: put into file a.bat)
-4. The code will be generated - run the WebAPI project
+4. The code will be generated - run the WebAPI project ( modify connection string if you want )
    1. If you want to use the REACT CRA, run the npm install and npm start
 5. Modify the templates if you want to change something 
