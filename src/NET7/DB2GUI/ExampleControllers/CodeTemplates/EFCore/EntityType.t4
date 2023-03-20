@@ -238,6 +238,14 @@ public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name
         }
         
     }
+    [HttpGet]
+    public async Task<long> GetWithSearchCount(Search<#= EntityType.Name #>? s)
+    {
+        if (s == null)
+            return await GetCountAll();
+
+        return await _search.GetCountAll(s);
+    }
 <#if(hasOneKey){
 var pk=key.Properties[0].FindContainingPrimaryKey() ;
 #>
