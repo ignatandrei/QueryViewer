@@ -29,9 +29,10 @@
     {
         "{ Button,Input ,Spin, Table } from \"antd\"",
         "{ concatMap, delay, map,Observable,of,scan } from \"rxjs\"",
-        "{ useState } from \"react\"",
+        "{ useState,useEffect } from \"react\"",
         "JsonStreamDecoder from \"../../../Common/asyncEnumerable\"",
-        "{ ColumnsType } from \"antd/es/table\""
+        "{ ColumnsType } from \"antd/es/table\"",
+        "{ ajax } from \"rxjs/ajax\""
     };
 
 
@@ -66,6 +67,20 @@ export class <#=nameClass#>
 #>
 }
 export class <#=nameClass#>_Interaction {
+    public getAllCount():Observable<number>{
+
+        var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_ApplicationDBContext_Department/GetAllCount')
+        .pipe(
+            map(response => {
+
+                return response as number;
+            })
+            //takeUntil(cancel)
+          );
+          return data;
+    }    
+
+
             public getAll():Observable<<#=nameClass#>[]>{
                 //var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')
                 //.pipe(
@@ -76,13 +91,13 @@ export class <#=nameClass#>_Interaction {
                                 var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>('http://localhost:5018/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')                
                 .pipe(
                     map(it=>new <#=nameClass#>(it)),                    
-                   /* concatMap((x:<#=nameClass#>,index:number)=>{
+                    concatMap((x:<#=nameClass#>,index:number)=>{
                       if((index+1) % 50 === 0)
                       return of<<#=nameClass#>>(x).pipe(delay(5*1000));
                     else
                       return of<<#=nameClass#>>(x);
                     }),
-                    */
+                    
                     scan((acc:<#=nameClass#>[],value:<#=nameClass#>)=>[...acc, value] as <#=nameClass#>[], [] as <#=nameClass#>[]),
                     
                   );
@@ -180,6 +195,14 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
         setDataTableFiltered(f);
     }
 
+    const [nrRecords, setNrRecords] = useState<number|null>(null);
+    useEffect(() => {
+        interaction.getAllCount().subscribe({
+            next: (data: number) => {
+                setNrRecords(data);
+            }
+        });
+    },[interaction]);
 
 
     const showAllClickHandler=()=>{
@@ -199,6 +222,8 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
     return (
     <>
         Table {nameTable} from DB {nameDB}
+        {nrRecords != null && <> - {nrRecords} records</>}
+       
         <p></p>
         <Button type="primary" onClick={showAllClickHandler}>List <#= EntityType.Name #></Button>
         <div>

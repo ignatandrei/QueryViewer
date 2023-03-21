@@ -23,7 +23,7 @@ export default function useRxObs<T>(factory: Observable<T>) {
     }
       );    
       return ()=> data.unsubscribe();
-    },[]);
+    },[factory]);
     return [isLoading, error, data];
 }
 

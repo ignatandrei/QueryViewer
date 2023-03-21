@@ -36,7 +36,7 @@ export default class DatabaseAdmin {
     public getTableRowsNumber(idDB:string,idTable:string):Observable<number|never>{
         if(idDB.length === 0) return of(-1 ); 
         if(idTable.length === 0) return of(-1) ;         
-        var data=ajax.getJSON(`http://localhost:5018/AdvancedSearch_${idDB}_${idTable}/GetCountAll/`)
+        var data=ajax.getJSON(`http://localhost:5018/AdvancedSearch_${idDB}_${idTable}/GetAllCount/`)
         .pipe(
             map(response => {
 

@@ -206,9 +206,9 @@ public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name
         _search=search;
 	}
     [HttpGet]
-    public async Task<long> GetCountAll()
+    public async Task<long> GetAllCount()
     {
-       return await _search.GetCountAll();
+       return await _search.GetAllCount();
         
     }
     
@@ -234,9 +234,9 @@ public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name
     public async Task<long> GetWithSearchCount(Search<#= EntityType.Name #>? s)
     {
         if (s == null)
-            return await GetCountAll();
+            return await GetAllCount();
 
-        return await _search.GetCountAll(s);
+        return await _search.GetAllCount(s);
     }
 <#if(hasOneKey){
 var pk=key.Properties[0].FindContainingPrimaryKey() ;
