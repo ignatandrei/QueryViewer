@@ -32,7 +32,8 @@
         "{ useState,useEffect } from \"react\"",
         "JsonStreamDecoder from \"../../../Common/asyncEnumerable\"",
         "{ ColumnsType } from \"antd/es/table\"",
-        "{ ajax } from \"rxjs/ajax\""
+        "{ ajax } from \"rxjs/ajax\"",
+        "useRxObs from \"../../../../useRXEffect\""
     };
 
 
@@ -92,7 +93,7 @@ export class <#=nameClass#>_Interaction {
                 .pipe(
                     map(it=>new <#=nameClass#>(it)),                    
                     concatMap((x:<#=nameClass#>,index:number)=>{
-                      if((index+1) % 50 === 0)
+                      if((index+1) % 100 === 0)
                       return of<<#=nameClass#>>(x).pipe(delay(5*1000));
                     else
                       return of<<#=nameClass#>>(x);
@@ -194,16 +195,12 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
         });
         setDataTableFiltered(f);
     }
-
-    const [nrRecords, setNrRecords] = useState<number|null>(null);
-    useEffect(() => {
-        interaction.getAllCount().subscribe({
-            next: (data: number) => {
-                setNrRecords(data);
-            }
-        });
-    },[interaction]);
-
+    useEffect(()=>{
+        document.title = nameTable+" - "+nameDB;
+    })
+    const [isLoadingNrRec, errorNrRect, nrRecords]= useRxObs(interaction.getAllCount());
+    
+    
 
     const showAllClickHandler=()=>{
         setDataTable(null);
@@ -221,18 +218,17 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
 
     return (
     <>
-        Table {nameTable} from DB {nameDB}
+        Table {nameTable} 
+        {isLoadingNrRec && <Spin />} 
+        {errorNrRect && <> - error loading data </>}
         {nrRecords != null && <> - {nrRecords} records</>}
-       
         <p></p>
-        <Button type="primary" onClick={showAllClickHandler}>List <#= EntityType.Name #></Button>
+        <Button type="primary" loading={loading} onClick={showAllClickHandler}>List <#= EntityType.Name #></Button>
         <div>
             {dataTable == null && "no data loaded"}
             {dataTable !=null &&             
                 <>
-                Number rows loaded {dataTable?.length} / filtered {dataTableFiltered?.length} / Search -{inputValueSearch_<#= EntityType.Name #>}-
-
-                {loading && <Spin />}
+                Number rows loaded {dataTable?.length} {loading && <Spin />} / filtered {dataTableFiltered?.length} / Search -{inputValueSearch_<#= EntityType.Name #>}-
                 {true /*!loading*/ &&
                             <Input placeholder="SearchHere" onChange={(e) => {
                                 inputValueSearch_<#= EntityType.Name #>=(e.target.value);

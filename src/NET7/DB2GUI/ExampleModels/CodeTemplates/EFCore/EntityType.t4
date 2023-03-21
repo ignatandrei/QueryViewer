@@ -63,10 +63,19 @@ public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
     static <#= EntityType.Name #>_Table (){
         MetaColumn mc=null;
 <#
+    var key = EntityType.FindPrimaryKey();
+    var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+    var namePK="";
+    if(hasOneKey){
+            var lambda= code.Lambda(key.Properties, "e") ;
+            var dot=lambda.IndexOf(".");
+            namePK=lambda.Substring(dot+1);
+    }
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
     {
 #>
-        mc=new ("<#= property.Name #>","<#=code.Reference(property.ClrType)#>",<#=property.IsNullable?"true":"false" #>);
+        mc=new ("<#= property.Name #>","<#=code.Reference(property.ClrType)#>",<#=property.IsNullable?"true":"false" #>);                
+        mc.IsPk = <#= (namePK == property.Name ?"true":"false") #> ;
         metaData.AddColumn(mc);
 <#
     }
