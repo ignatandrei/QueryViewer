@@ -1,5 +1,6 @@
 import { Collapse, Spin } from 'antd';
 import useRxObs from '../useRXEffect';
+import columnTable from './column';
 import DatabaseAdmin from './DatabaseAdmin';
 
 const { Panel } = Collapse;
@@ -20,6 +21,12 @@ export default function DatabaseTableSelector(dtProps: DataTableProps){
       {loading && <Spin />}
       {error && <> - error loading data </>}
       {fields && <> - {fields.length} fields</>}
+      {fields && fields.map((it: columnTable, index:number) => 
+        <>
+    
+        <p key={index}>{it.name}:{it.type}, {it.isnullable?"Null,":""}  {it.ispk?"PK":""}</p>
+        </>
+        )}
     </Panel>
     <Panel header="Advanced Search" key="2">
       <p>Not yet ready</p>

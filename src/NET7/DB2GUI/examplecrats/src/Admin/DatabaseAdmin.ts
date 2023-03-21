@@ -47,7 +47,7 @@ export default class DatabaseAdmin {
           return data;
     }
     
-    public getDatabaseTableColumns(idDB:string,idTable:string){
+    public getDatabaseTableColumns(idDB:string,idTable:string):Observable<columnTable[]>{
         if(idDB.length === 0) return of([] as columnTable[]); 
         if(idTable.length === 0) return of([] as columnTable[]);         
         var data=ajax.getJSON(`http://localhost:5018/MetaData/Columns/${idDB}/${idTable}`)
