@@ -23,7 +23,8 @@ export default function useRxObs<T>(factory: Observable<T>) {
     }
       );    
       return ()=> data.unsubscribe();
-    },[factory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
     return [isLoading, error, data];
 }
 

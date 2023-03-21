@@ -33,7 +33,8 @@
         "JsonStreamDecoder from \"../../../Common/asyncEnumerable\"",
         "{ ColumnsType } from \"antd/es/table\"",
         "{ ajax } from \"rxjs/ajax\"",
-        "useRxObs from \"../../../../useRXEffect\""
+        "useRxObs from \"../../../../useRXEffect\"",
+        "DatabaseTableSelector from \"../../../DatabaseTableSelector\"";
     };
 
 
@@ -223,7 +224,8 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
         {errorNrRect && <> - error loading data </>}
         {nrRecords != null && <> - {nrRecords} records</>}
         <p></p>
-        <Button type="primary" loading={loading} onClick={showAllClickHandler}>List <#= EntityType.Name #></Button>
+        <Button type="primary" loading={loading} onClick={showAllClickHandler}>Load All <#= EntityType.Name #></Button>
+        <DatabaseTableSelector DBName={nameDB} TableName={nameTable}  />
         <div>
             {dataTable == null && "no data loaded"}
             {dataTable !=null &&             
