@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, Link, Outlet, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Link, RouterProvider } from 'react-router-dom';
 import ContentAdminGui from './Admin/ContentAdminGUI';
 import DatabaseAdminGui from './Admin/DatabaseAdminGUI';
 import { DatabaseGui } from './Admin/DatabaseGUI';

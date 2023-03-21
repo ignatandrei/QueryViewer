@@ -6,7 +6,7 @@ if (directory.EndsWith(@"bin\Debug\net7.0"))
     directory = directory.Replace(@"bin\Debug\net7.0", "");
 if (directory.EndsWith(@"bin\Debug\net7.0\"))
     directory = directory.Replace(@"bin\Debug\net7.0\", "");
-
+AnsiConsole.MarkupLine("[blue]!!!Make sure you have edited connectiondetails.txt file !");
 AnsiConsole.MarkupLine($":play_button: Running in folder {pathGenerateFromDB}");
 //Console.WriteLine(pathGenerateFromDB); 
 string file = "connectionDetails.txt";

@@ -2,15 +2,11 @@ import React from 'react';
 import './App.css';
 import 'antd/dist/reset.css';
 import './App.css';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
+//import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { BrowserRouter, createBrowserRouter, Link, Outlet, RouterProvider} from 'react-router-dom';
-import Root from './Root';
-import ContentAdminGui from './Admin/ContentAdminGUI';
-import DatabaseAdminGui from './Admin/DatabaseAdminGUI';
-import { DatabaseGui } from './Admin/DatabaseGUI';
-import { DatabaseTableGui } from './Admin/DatabaseTableGUI';
+import {  Layout, Menu, theme } from 'antd';
+import { Outlet} from 'react-router-dom';
+// import Root from './Root';
 import Bread from './Bread';
 
 

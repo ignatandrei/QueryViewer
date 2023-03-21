@@ -1,6 +1,5 @@
 import { Breadcrumb } from "antd";
-import { useEffect } from "react";
-import { Link, useLocation, useMatches } from "react-router-dom";
+import { Link, useMatches } from "react-router-dom";
 
 export default function Bread() {
 
