@@ -221,6 +221,37 @@ public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name
         }
         
     }
+    [HttpGet]   
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> GetSearchSimple(string ColumnName, string Operator, string Value){
+           var search = new Search<#= EntityType.Name #>();
+           search.PageSize = int.MaxValue - 1;
+        search.SearchFields = new SearchField<e<#= EntityType.Name #>Columns>[1];
+        search.SearchFields[0]= new SearchField<e<#= EntityType.Name #>Columns>();
+        if(Enum.TryParse< e<#= EntityType.Name #>Columns >(ColumnName,true ,out var valField)){
+            search.SearchFields[0].FieldName = valField;
+        }
+        else
+        {
+            search.SearchFields[0].FieldName = (e<#= EntityType.Name #>Columns )int.Parse(ColumnName);;
+        }
+        search.SearchFields[0].Value= Value;
+        var criteria= SearchCriteria.None;
+        if(Enum.TryParse<SearchCriteria>(Operator,true,out var value))
+        {
+            criteria = value;
+        }
+        else
+        {
+            criteria = (SearchCriteria)int.Parse(Operator);
+        }
+        
+        search.SearchFields[0].Criteria= criteria;
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(search))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+
+    }
     [HttpGet]
     public async IAsyncEnumerable<<#= EntityType.Name #>_Table> GetWithSearch(Search<#= EntityType.Name #> s)
     {

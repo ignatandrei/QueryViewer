@@ -73,9 +73,17 @@ public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
     }
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
     {
+        var isNullable = property.IsNullable && !property.ClrType.IsValueType;
+        var clrType=code.Reference(property.ClrType);
+        var tv= GetJsTypeAndDefaultValue(clrType,isNullable);
+        var jsType= tv.Item1;
+        var defVal=tv.Item2;
+        
+        
 #>
         mc=new ("<#= property.Name #>","<#=code.Reference(property.ClrType)#>",<#=property.IsNullable?"true":"false" #>);                
         mc.IsPk = <#= (namePK == property.Name ?"true":"false") #> ;
+        mc.TypeJS = "<#= jsType #>";
         metaData.AddColumn(mc);
 <#
     }
@@ -282,4 +290,55 @@ using <#= ns #>;
     WriteLine("");
 
     GenerationEnvironment.Append(previousOutput);
+#>
+
+
+<#+
+
+private System.Tuple<string,string> GetJsTypeAndDefaultValue(string clrType,bool isNullable ){
+        clrType = clrType.Replace("?","");
+        var IsArray = (clrType.IndexOf("[]")>0);
+        clrType = clrType.Replace("[]","");      
+        string jsType="";
+        string defVal = "";
+
+        switch(clrType){
+            case "DateTime":
+                jsType="Date";
+                defVal="new Date()";
+                break;
+            case "bool":
+                jsType="boolean";
+                defVal="false";
+                break;
+            case "float":
+            case "int":
+            case "long":
+            case "short":
+            case "decimal":
+            case "double":
+            case "byte":
+                jsType="number";
+                defVal="0";
+                break;
+            case "string":
+                jsType="string";
+                defVal="''";
+                break;            
+            default:
+                jsType="please_edit_GetJsTypeAndDefaultValue_"+ clrType;
+                defVal="''";
+                break;
+        }
+        if(IsArray )
+        {
+            jsType +="[]";
+            defVal ="[]";
+        }
+        if(isNullable ) {
+            jsType +="|null";
+            defVal ="null";
+        }
+        return System.Tuple.Create(jsType ,defVal);
+}
 #>

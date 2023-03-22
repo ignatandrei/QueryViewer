@@ -34,7 +34,7 @@
         "{ ColumnsType } from \"antd/es/table\"",
         "{ ajax } from \"rxjs/ajax\"",
         "useRxObs from \"../../../../useRXEffect\"",
-        "DatabaseTableSelector from \"../../../DatabaseTableSelector\"";
+        "DatabaseTableSelector, { SearchData } from \"../../../DatabaseTableSelector\""
     };
 
 
@@ -71,7 +71,7 @@ export class <#=nameClass#>
 export class <#=nameClass#>_Interaction {
     public getAllCount():Observable<number>{
 
-        var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_ApplicationDBContext_Department/GetAllCount')
+        var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_<#=nameClass#>/GetAllCount')
         .pipe(
             map(response => {
 
@@ -81,7 +81,26 @@ export class <#=nameClass#>_Interaction {
           );
           return data;
     }    
+     public getSearchSimple(searchData:SearchData ):Observable<<#=nameClass#>[]>{
+        
+        var url= 'http://localhost:5018/AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name #>/';
+        url+=`GetSearchSimple?ColumnName=${searchData.ColumnName}&Operator=${searchData.Operator}&Value=${searchData.Value}`;        
+        var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>(url)                
+        .pipe(
+            map(it=>new <#=nameClass#>(it)),                    
+            concatMap((x:<#=nameClass#>,index:number)=>{
+              if((index+1) % 100 === 0)
+              return of<<#=nameClass#>>(x).pipe(delay(5*1000));
+            else
+              return of<<#=nameClass#>>(x);
+            }),
+            
+            scan((acc:<#=nameClass#>[],value:<#=nameClass#>)=>[...acc, value] as <#=nameClass#>[], [] as <#=nameClass#>[]),
+            
+          );
+          return data as Observable<<#=nameClass#>[]>;
 
+    }
 
             public getAll():Observable<<#=nameClass#>[]>{
                 //var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')
@@ -216,6 +235,24 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
           }
         )
     };
+    const searchSimple=(searchData: SearchData)=>{
+        if(!searchData.IsValid()){
+            window.alert("Invalid search data");
+            return;
+        }
+        setDataTable(null);
+        setLoading(true);
+        interaction.getSearchSimple(searchData).subscribe({
+          next: (data:<#=nameClass#>[])=>{
+                
+                setDataTable(data);
+                filterData(inputValueSearch_<#= EntityType.Name #>, data);
+            },
+            complete:()=>{ setLoading(false);}
+          }
+        )
+
+    };
 
     return (
     <>
@@ -225,8 +262,7 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
         {nrRecords != null && <> - {nrRecords} records</>}
         <p></p>
         <Button type="primary" loading={loading} onClick={showAllClickHandler}>Load All <#= EntityType.Name #></Button>
-        <DatabaseTableSelector DBName={nameDB} TableName={nameTable}  />
-        <div>
+        <DatabaseTableSelector DBName={nameDB} TableName={nameTable} loadingData={loading} searchSimple={searchSimple}  />                    <div>
             {dataTable == null && "no data loaded"}
             {dataTable !=null &&             
                 <>

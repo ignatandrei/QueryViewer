@@ -98,4 +98,5 @@ public record MetaTable(string Name)
 public record MetaColumn(string Name, string Type, bool IsNullable)
 {
     public bool IsPk { get; set; }
+    public string TypeJS { get; set; }
 };
