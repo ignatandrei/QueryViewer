@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, Link, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Link, Navigate, RouterProvider } from 'react-router-dom';
 import ContentAdminGui from './Admin/ContentAdminGUI';
 import DatabaseAdminGui from './Admin/DatabaseAdminGUI';
 import { DatabaseGui } from './Admin/DatabaseGUI';
@@ -79,8 +79,28 @@ const router = createBrowserRouter([
         }
         //errorElement: <ErrorPage />,
       },
+      
       {
         path: "/Admin/Databases/:idDB/tables/:idTable/search/:what",
+        element: <DatabaseTableGui />,
+        handle: {
+          crumb: (d:any) => <Link to={`/Admin/Databases/${d.params.idDB}/tables/${d.params.idTable}`}>Table:{d.params.idTable}</Link>,
+        }
+        //errorElement: <ErrorPage />,
+      }
+      ,
+      {
+        path: "/Admin/Databases/:idDB/tables/:idTable/search",
+        
+        element: <DatabaseTableGui />,
+        handle: {
+          crumb: (d:any) => <Link to={`/Admin/Databases/${d.params.idDB}/tables/${d.params.idTable}`}>Table:{d.params.idTable}</Link>,
+        }
+        //errorElement: <ErrorPage />,
+      }
+      ,
+      {
+        path: "/Admin/Databases/:idDB/tables/:idTable/search/:columnName/:operator/:value",        
         element: <DatabaseTableGui />,
         handle: {
           crumb: (d:any) => <Link to={`/Admin/Databases/${d.params.idDB}/tables/${d.params.idTable}`}>Table:{d.params.idTable}</Link>,

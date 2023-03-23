@@ -135,7 +135,7 @@ export default function TableData_<#= EntityType.Name #>()
     const nameTable = '<#= EntityType.Name #>';
     const nameDB = '<#= Options.ContextName #>';
     const [loading,setLoading]= useState<boolean>(false);
-    const [showall, searchData]=useSearchURL();
+    const [showAll, searchSimpleData]=useSearchURL();
     
     const interaction=new <#=nameClass#>_Interaction();
     const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
@@ -257,9 +257,15 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
 
     };
     useEffect(()=>{
-        if(showall){
+        if (typeof showAll==="boolean" &&  showAll){
             showAllClickHandler();
         }
+        else{
+            //console.log('basd',searchSimpleData,searchSimpleData != null && typeof searchSimpleData !== "boolean" && searchSimpleData.IsValid());
+            if (searchSimpleData != null && typeof searchSimpleData !== "boolean" && searchSimpleData.IsValid())
+                searchSimple(searchSimpleData);
+        }
+            
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
