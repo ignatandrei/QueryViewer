@@ -34,7 +34,10 @@
         "{ ColumnsType } from \"antd/es/table\"",
         "{ ajax } from \"rxjs/ajax\"",
         "useRxObs from \"../../../../useRXEffect\"",
-        "DatabaseTableSelector, { SearchData } from \"../../../DatabaseTableSelector\""
+        "DatabaseTableSelector, { SearchData } from \"../../../DatabaseTableSelector\"",
+        "{ Link } from \"react-router-dom\"",
+        "useSearchURL from \"../../../searchMatches\"",
+
     };
 
 
@@ -71,7 +74,7 @@ export class <#=nameClass#>
 export class <#=nameClass#>_Interaction {
     public getAllCount():Observable<number>{
 
-        var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_<#=nameClass#>/GetAllCount')
+        var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name#>/GetAllCount')
         .pipe(
             map(response => {
 
@@ -132,7 +135,7 @@ export default function TableData_<#= EntityType.Name #>()
     const nameTable = '<#= EntityType.Name #>';
     const nameDB = '<#= Options.ContextName #>';
     const [loading,setLoading]= useState<boolean>(false);
-    //const [inputValue, setInputValue] = useState("");
+    const [showall, searchData]=useSearchURL();
     
     const interaction=new <#=nameClass#>_Interaction();
     const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
@@ -253,6 +256,12 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
         )
 
     };
+    useEffect(()=>{
+        if(showall){
+            showAllClickHandler();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
     return (
     <>
@@ -262,6 +271,8 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
         {nrRecords != null && <> - {nrRecords} records</>}
         <p></p>
         <Button type="primary" loading={loading} onClick={showAllClickHandler}>Load All <#= EntityType.Name #></Button>
+        <Link to="/Admin/Databases/<#= Options.ContextName #>/tables/<#= EntityType.Name #>/search/showall" target={"_blank"}>Direct Link</Link>
+
         <DatabaseTableSelector DBName={nameDB} TableName={nameTable} loadingData={loading} searchSimple={searchSimple}  />                    <div>
             {dataTable == null && "no data loaded"}
             {dataTable !=null &&             
