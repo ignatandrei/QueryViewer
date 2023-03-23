@@ -79,6 +79,15 @@ const router = createBrowserRouter([
         }
         //errorElement: <ErrorPage />,
       },
+      {
+        path: "/Admin/Databases/:idDB/tables/:idTable/search/:what",
+        element: <DatabaseTableGui />,
+        handle: {
+          crumb: (d:any) => <Link to={`/Admin/Databases/${d.params.idDB}/tables/${d.params.idTable}`}>Table:{d.params.idTable}</Link>,
+        }
+        //errorElement: <ErrorPage />,
+      },
+
 
     ]
   }
