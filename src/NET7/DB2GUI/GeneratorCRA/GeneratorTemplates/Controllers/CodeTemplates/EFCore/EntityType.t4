@@ -52,7 +52,7 @@
 namespace <#= NamespaceHint #>;
 <# } #>
 [ApiController]
-[Route("[controller]")]    
+[Route("api/[controller]")]    
 public partial class REST_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
 {
     private <#= Options.ContextName #> _context;
@@ -197,7 +197,7 @@ using <#= ns #>;
 namespace <#= NamespaceHint #>;
 <# } #>
 [ApiController]
-[Route("[controller]/[action]")]    
+[Route("api/[controller]/[action]")]    
 public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
 {
     private ISearchData<#= EntityType.Name #> _search;

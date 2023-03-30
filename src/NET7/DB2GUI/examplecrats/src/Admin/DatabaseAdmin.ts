@@ -6,10 +6,13 @@ import columnTable from "./column";
 export default class DatabaseAdmin {
     // static const subject = new Subject();
     // const cancel = new Subject();
-
+    baseUrl:string = '';
+    constructor() { 
+      this.baseUrl=process.env.REACT_APP_URL+'api/'; 
+    }
     public getDatabases():Observable<string[]|never>{
-        // var data= fromFetch('http://localhost:5018/MetaData/DBNames')
-        var data=ajax.getJSON('http://localhost:5018/MetaData/DBNames')
+        // var data= fromFetch(this.baseUrl+'MetaData/DBNames')
+        var data=ajax.getJSON(this.baseUrl+'MetaData/DBNames')
         .pipe(
             map(response => {
 
@@ -21,9 +24,9 @@ export default class DatabaseAdmin {
     }
 
     public getDatabaseTables(id:string):Observable<string[]|never>{
-        // var data= fromFetch('http://localhost:5018/MetaData/DBNames')
+        // var data= fromFetch(this.baseUrl+'MetaData/DBNames')
         if(id.length === 0) return of([] as string[]); 
-        var data=ajax.getJSON(`http://localhost:5018/MetaData/TableNames/${id}`)
+        var data=ajax.getJSON(this.baseUrl+`MetaData/TableNames/${id}`)
         .pipe(
             map(response => {
 
@@ -36,7 +39,7 @@ export default class DatabaseAdmin {
     public getTableRowsNumber(idDB:string,idTable:string):Observable<number|never>{
         if(idDB.length === 0) return of(-1 ); 
         if(idTable.length === 0) return of(-1) ;         
-        var data=ajax.getJSON(`http://localhost:5018/AdvancedSearch_${idDB}_${idTable}/GetAllCount/`)
+        var data=ajax.getJSON(this.baseUrl+`AdvancedSearch_${idDB}_${idTable}/GetAllCount/`)
         .pipe(
             map(response => {
 
@@ -50,7 +53,7 @@ export default class DatabaseAdmin {
     public getDatabaseTableColumns(idDB:string,idTable:string):Observable<columnTable[]>{
         if(idDB.length === 0) return of([] as columnTable[]); 
         if(idTable.length === 0) return of([] as columnTable[]);         
-        var data=ajax.getJSON(`http://localhost:5018/MetaData/Columns/${idDB}/${idTable}`)
+        var data=ajax.getJSON(this.baseUrl+`MetaData/Columns/${idDB}/${idTable}`)
         .pipe(
             map(response => {
 
