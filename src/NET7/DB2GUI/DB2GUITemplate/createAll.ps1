@@ -124,6 +124,11 @@ gci create.ps1 -r | % {
 	$content  = Get-Content $_.FullName 
 	$newContent = $content
 	$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.examplecrats'	
+	$newContent = $newContent -replace 'ExampleModels','$ext_safeprojectname$.ExampleModels'	
+	$newContent = $newContent -replace 'ExampleContext','$ext_safeprojectname$.ExampleContext'	
+	$newContent = $newContent -replace 'ExampleControllers','$ext_safeprojectname$.ExampleControllers'	
+	#$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.examplecrats'	
+
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent
 		# Write-Host 'replacing ' $_.FullName 
