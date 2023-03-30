@@ -75,9 +75,15 @@ baseUrl:string = '';
 #>
 }
 export class <#=nameClass#>_Interaction {
+    baseUrl:string = '';
+    constructor() {
+      this.baseUrl=process.env.REACT_APP_URL+'api/'; 
+    }
+
+    
     public getAllCount():Observable<number>{
 
-        var data=ajax.getJSON(this.baseUrl+'/AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name#>/GetAllCount')
+        var data=ajax.getJSON(this.baseUrl+'AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name#>/GetAllCount')
         .pipe(
             map(response => {
 
@@ -89,7 +95,7 @@ export class <#=nameClass#>_Interaction {
     }    
      public getSearchSimple(searchData:SearchData ):Observable<<#=nameClass#>[]>{
         
-        var url= this.baseUrl+'/AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name #>/';
+        var url= this.baseUrl+'AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name #>/';
         url+=`GetSearchSimple?ColumnName=${searchData.ColumnName}&Operator=${searchData.Operator}&Value=${searchData.Value}`;        
         var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>(url)                
         .pipe(
@@ -109,13 +115,13 @@ export class <#=nameClass#>_Interaction {
     }
 
             public getAll():Observable<<#=nameClass#>[]>{
-                //var data=ajax.getJSON(this.baseUrl+'/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')
+                //var data=ajax.getJSON(this.baseUrl+'AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')
                 //.pipe(
                 //    map(response => {        
                 //        return response as <#=nameClass#>[];
                 //    })
                 //  );
-                                var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>(this.baseUrl+'/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')                
+                                var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>(this.baseUrl+'AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')                
                 .pipe(
                     map(it=>new <#=nameClass#>(it)),                    
                     concatMap((x:<#=nameClass#>,index:number)=>{
