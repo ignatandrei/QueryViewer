@@ -60,61 +60,70 @@ function Generate{
     Write-Host "copy from " $pathTemplatesToCopy
     Copy-Item -Path $pathTemplatesToCopy -Destination $pathFolder -Recurse
 
-    $pathToModels = $paramPathToGenerated + "Generated/Models/"+$nameContext
-    $pathToContext= $paramPathToGenerated + "Generated/DB/"+$nameContext
+    $pathToModels = $paramPathToGenerated + "Models/"+$nameContext
+    $pathToContext= $paramPathToGenerated + "DB/"+$nameContext
 
 
 
     # https://docs.microsoft.com/ro-ro/ef/core/managing-schemas/scaffolding?tabs=dotnet-core-cli
     dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json #--no-build
 
+    if (Test-Path -Path $pathTemplates) {
+        Write-Host "delete " $pathTemplates         
+        Remove-Item -LiteralPath $pathTemplates -Force -Recurse
+    }
 
 }
 
-# Generate "examplecrats"  "../examplecrats/src/Admin/Generated/" $project
 
-Generate "ExampleModels"  "../ExampleModels/Generated/" $project
+Generate "Models"  "../ExampleModels/Generated/" $project
 
- 
+Generate "Context"  "../ExampleContext/Generated/" $project
+
+Generate "Controllers"  "../ExampleControllers/Generated/" $project 
+
+Generate "crats"  "../examplecrats/src/Admin/Generated/" $project
+
 return
 
-Write-Host "search for csproj model in $projectModels"
-
-$projectsFull = gci -Path $projectModels -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
-
-
-$project = $projectsFull.Fullname
-Write-Host "found project $project "
-$pathToModels = "Generated/Models/"+$nameContext
-$pathToContext= "Generated/Context/"+$nameContext
-Write-Host "pathToModels" $pathToModels
-
-
-
-# https://docs.microsoft.com/ro-ro/ef/core/managing-schemas/scaffolding?tabs=dotnet-core-cli
- dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json #--no-build
-
-Write-Host "search for csproj context in $projectContext"
-
-$projectsFull = gci -Path $projectContext -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
-
-
-$project = $projectsFull.Fullname
-Write-Host "found project context $project "
-$pathToModels = "Generated/Models/"+$nameContext
-$pathToContext= "Generated/Context/"+$nameContext
- dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring  --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json 
-
-
-
-Write-Host "search for csproj webapi in $projectWeb"
-
-$projectsFull = gci -Path $projectWeb -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
-
-
-$project = $projectsFull.Fullname
-Write-Host "found project $project "
-$pathToModels = "Generated/"+$nameContext
-$pathToContext= "Generated/Context/"+$nameContext
-
-dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring  --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json #--no-build
+#Write-Host "search for csproj model in $projectModels"
+#
+#$projectsFull = gci -Path $projectModels -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
+#
+#
+#$project = $projectsFull.Fullname
+#Write-Host "found project $project "
+#$pathToModels = "Generated/Models/"+$nameContext
+#$pathToContext= "Generated/Context/"+$nameContext
+#Write-Host "pathToModels" $pathToModels
+#
+#
+#
+## https://docs.microsoft.com/ro-ro/ef/core/managing-schemas/scaffolding?tabs=dotnet-core-cli
+# dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json #--no-build
+#
+#Write-Host "search for csproj context in $projectContext"
+#
+#$projectsFull = gci -Path $projectContext -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
+#
+#
+#$project = $projectsFull.Fullname
+#Write-Host "found project context $project "
+#$pathToModels = "Generated/Models/"+$nameContext
+#$pathToContext= "Generated/Context/"+$nameContext
+# dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring  --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json 
+#
+#
+#
+#Write-Host "search for csproj webapi in $projectWeb"
+#
+#$projectsFull = gci -Path $projectWeb -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
+#
+#
+#$project = $projectsFull.Fullname
+#Write-Host "found project $project "
+#$pathToModels = "Generated/"+$nameContext
+#$pathToContext= "Generated/Context/"+$nameContext
+#
+#dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring  --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json #--no-build
+#
