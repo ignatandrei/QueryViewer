@@ -1,4 +1,3 @@
-<#@ output extension=".tsx" #>
 <#@ template hostSpecific="true" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
@@ -20,137 +19,58 @@
         // Don't scaffold these
         return "";
     }
-    string nameClass = Options.ContextName + "_"+ EntityType.Name +"_Table";
+
     var services = (IServiceProvider)Host;
     var annotationCodeGenerator = services.GetRequiredService<IAnnotationCodeGenerator>();
     var code = services.GetRequiredService<ICSharpHelper>();
 
     var usings = new List<string>
     {
-        "{ Button,Input ,Spin, Table } from \"antd\"",
-        "{ concatMap, delay, map,Observable,of,scan } from \"rxjs\"",
-        "{ useState,useEffect } from \"react\"",
-        "JsonStreamDecoder from \"../../../Common/asyncEnumerable\"",
-        "{ ColumnsType } from \"antd/es/table\"",
-        "{ ajax } from \"rxjs/ajax\"",
-        "useRxObs from \"../../../../useRXEffect\"",
-        "DatabaseTableSelector, { SearchData } from \"../../../DatabaseTableSelector\"",
-        "{ Link } from \"react-router-dom\"",
-        "useSearchURL from \"../../../searchMatches\"",
-
+        "System",
+        "System.Collections.Generic"
     };
 
+    if (Options.UseDataAnnotations)
+    {
+        usings.Add("System.ComponentModel.DataAnnotations");
+        usings.Add("System.ComponentModel.DataAnnotations.Schema");
+        usings.Add("Microsoft.EntityFrameworkCore");
+        usings.Add("GeneratorFromDB");
+    }
 
+    if (!string.IsNullOrEmpty(NamespaceHint))
+    {
 #>
+namespace <#= NamespaceHint #>;
 
-
-export class <#=nameClass#> 
+//ADDED by code generator
+public interface I_<#= EntityType.Name #>_Table 
 {
-
-    constructor(cc: Partial<<#=nameClass#>> | null = null) {
-    if (cc != null) {
-      // Object.keys(tilt).forEach((key) => {
-      //   (this as any)[key] = (tilt as any)[key];
-      // });
-      Object.assign(this,cc);
-    }
-    }
-
 <#
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
     {
-        var isNullable = property.IsNullable && !property.ClrType.IsValueType;
-        var clrType=code.Reference(property.ClrType);
-        var tv= GetJsTypeAndDefaultValue(clrType,isNullable);
-        var jsType= tv.Item1;
-        var defVal=tv.Item2;
-        
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
         #>
-        public <#= property.Name.ToLower() #> : <#=jsType #>  = <#=defVal#>;
+        <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }
         <#
     } // foreach property 
 #>
 }
-export class <#=nameClass#>_Interaction {
-    public getAllCount():Observable<number>{
 
-        var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name#>/GetAllCount')
-        .pipe(
-            map(response => {
-
-                return response as number;
-            })
-            //takeUntil(cancel)
-          );
-          return data;
-    }    
-     public getSearchSimple(searchData:SearchData ):Observable<<#=nameClass#>[]>{
-        
-        var url= 'http://localhost:5018/AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name #>/';
-        url+=`GetSearchSimple?ColumnName=${searchData.ColumnName}&Operator=${searchData.Operator}&Value=${searchData.Value}`;        
-        var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>(url)                
-        .pipe(
-            map(it=>new <#=nameClass#>(it)),                    
-            concatMap((x:<#=nameClass#>,index:number)=>{
-              if((index+1) % 100 === 0)
-              return of<<#=nameClass#>>(x).pipe(delay(5*1000));
-            else
-              return of<<#=nameClass#>>(x);
-            }),
-            
-            scan((acc:<#=nameClass#>[],value:<#=nameClass#>)=>[...acc, value] as <#=nameClass#>[], [] as <#=nameClass#>[]),
-            
-          );
-          return data as Observable<<#=nameClass#>[]>;
-
-    }
-
-            public getAll():Observable<<#=nameClass#>[]>{
-                //var data=ajax.getJSON('http://localhost:5018/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')
-                //.pipe(
-                //    map(response => {        
-                //        return response as <#=nameClass#>[];
-                //    })
-                //  );
-                                var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>('http://localhost:5018/AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')                
-                .pipe(
-                    map(it=>new <#=nameClass#>(it)),                    
-                    concatMap((x:<#=nameClass#>,index:number)=>{
-                      if((index+1) % 100 === 0)
-                      return of<<#=nameClass#>>(x).pipe(delay(5*1000));
-                    else
-                      return of<<#=nameClass#>>(x);
-                    }),
-                    
-                    scan((acc:<#=nameClass#>[],value:<#=nameClass#>)=>[...acc, value] as <#=nameClass#>[], [] as <#=nameClass#>[]),
-                    
-                  );
-                  return data as Observable<<#=nameClass#>[]>;
-
-            }
-         }
-let inputValueSearch_<#= EntityType.Name #> = '';
-export default function TableData_<#= EntityType.Name #>() 
+public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
 {
-    const nameTable = '<#= EntityType.Name #>';
-    const nameDB = '<#= Options.ContextName #>';
-    const [loading,setLoading]= useState<boolean>(false);
-    const [showAll, searchSimpleData]=useSearchURL();
-    
-    const interaction=new <#=nameClass#>_Interaction();
-    const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
-const [dataTableFiltered, setDataTableFiltered] = useState<<#=nameClass#>[] | null>(null);
-    
-const columns : ColumnsType<<#=nameClass#>> =[
-    {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
-        width: '5%',
-        render:(item: any, record: <#=nameClass#>, index: any)=>(<>{index+1}</>)
-      }
-
-  <#
+    public static MetaTable metaData = new("<#= EntityType.Name #>");
+    static <#= EntityType.Name #>_Table (){
+        MetaColumn mc=null;
+<#
+    var key = EntityType.FindPrimaryKey();
+    var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+    var namePK="";
+    if(hasOneKey){
+            var lambda= code.Lambda(key.Properties, "e") ;
+            var dot=lambda.IndexOf(".");
+            namePK=lambda.Substring(dot+1);
+    }
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
     {
         var isNullable = property.IsNullable && !property.ClrType.IsValueType;
@@ -158,147 +78,203 @@ const columns : ColumnsType<<#=nameClass#>> =[
         var tv= GetJsTypeAndDefaultValue(clrType,isNullable);
         var jsType= tv.Item1;
         var defVal=tv.Item2;
-        var namePropJS=property.Name.ToLower();
+        
         
 #>
-   ,{
-    title: '<#= property.Name #>',
-    dataIndex: '<#= namePropJS #>',
-    key: '<#= namePropJS #>',
-    sorter: (a:<#=nameClass#>, b:<#=nameClass#>) => 
-    {
-        if(a.<#= namePropJS #> == null && b.<#= namePropJS #> == null)
-            return 0;
-        
-        if(a.<#= namePropJS #> == null)
-            return -1;
-        if(b.<#= namePropJS #> == null)
-            return 1;
-        <# if(jsType == "number" || jsType == "number|null"){ #>
-            return a.<#= namePropJS #> - b.<#= namePropJS #>;
-        <# } else { #>
-        
-        return a.<#= namePropJS #>.toString().localeCompare(b.<#= namePropJS #>.toString());
-        <#  }// jstype number #>
-    }
-  } 
-
-<#
-    }//end foreach
-#>
-  
-];
-
-
-    const filterData = (val: string, data: <#=nameClass#>[]) => {
-        if (val == null || val === '') {
-            setDataTableFiltered(data);
-            return;
-        }
-        if (data == null) {
-            setDataTableFiltered(null);
-            return;
-        }
-        val = val.toLowerCase();
-        var f = data.filter(it => {
-<#    
-foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
-    {
-    var namePropJS=property.Name.ToLower();
-
-#>
-    if (it.<#=namePropJS#> != null)
-       if (it.<#=namePropJS#>.toString().toLowerCase().includes(val))
-        return true;
-
+        mc=new ("<#= property.Name #>","<#=code.Reference(property.ClrType)#>",<#=property.IsNullable?"true":"false" #>);                
+        mc.IsPk = <#= (namePK == property.Name ?"true":"false") #> ;
+        mc.TypeJS = "<#= jsType #>";
+        metaData.AddColumn(mc);
 <#
     }
-#>
-        return false;
-        });
-        setDataTableFiltered(f);
+#> //done with foreach property in static constructor
     }
-    useEffect(()=>{
-        document.title = nameTable+" - "+nameDB;
-    })
-    const [isLoadingNrRec, errorNrRect, nrRecords]= useRxObs(interaction.getAllCount());
-    
-    
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        #>
+        public <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }
+        <#
+    } // foreach property 
+#>
+     public void CopyFrom(I_<#= EntityType.Name #>_Table other)  {
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        #>
+        this.<#= property.Name #> = other.<#= property.Name #>;
+        <#
+    } // foreach property 
+#>
+    }
 
-    const showAllClickHandler=()=>{
-        setDataTable(null);
-        setLoading(true);
-        interaction.getAll().subscribe({
-          next: (data:<#=nameClass#>[])=>{
-                
-                setDataTable(data);
-                filterData(inputValueSearch_<#= EntityType.Name #>, data);
-            },
-            complete:()=>{ setLoading(false);}
-          }
-        )
-    };
-    const searchSimple=(searchData: SearchData)=>{
-        if(!searchData.IsValid()){
-            window.alert("Invalid search data");
-            return;
+    public static explicit operator <#= EntityType.Name #>_Table?(<#= EntityType.Name #> obj) { 
+        if(obj == null)
+            return null;
+            //System.Diagnostics.Debugger.Break();
+         var ret= new <#= EntityType.Name #>_Table();
+         ret.CopyFrom(obj as I_<#= EntityType.Name #>_Table );
+         return ret;
+     }
+     public static explicit operator <#= EntityType.Name #>?(<#= EntityType.Name #>_Table obj) { 
+        if(obj == null)
+            return null;
+            //System.Diagnostics.Debugger.Break();
+         var ret= new <#= EntityType.Name #>();
+         ret.CopyFrom(obj as I_<#= EntityType.Name #>_Table) ;
+         return ret;
+     }
+
+
+
+}
+public partial class <#= EntityType.Name #> : I_<#= EntityType.Name #>_Table
+{
+     public void CopyFrom(I_<#= EntityType.Name #>_Table other)  {
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        #>
+        this.<#= property.Name #> = other.<#= property.Name #>;
+        <#
+    } // foreach property 
+#>
+    }
+
+}
+
+//for <#= EntityType.Name #> 
+public enum e<#= EntityType.Name #>Columns {
+    None = 0
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        #>
+        ,<#= property.Name #> 
+        <#
+    } // foreach property 
+#>
+}
+
+//finish ADDED by code generator
+
+<#
+    }
+
+    if (!string.IsNullOrEmpty(EntityType.GetComment()))
+    {
+#>
+/// <summary>
+/// <#= code.XmlComment(EntityType.GetComment()) #>
+/// </summary>
+<#
+    }
+
+    if (Options.UseDataAnnotations)
+    {
+        foreach (var dataAnnotation in EntityType.GetDataAnnotations(annotationCodeGenerator))
+        {
+#>
+<#= code.Fragment(dataAnnotation) #>
+<#
         }
-        setDataTable(null);
-        setLoading(true);
-        interaction.getSearchSimple(searchData).subscribe({
-          next: (data:<#=nameClass#>[])=>{
-                
-                setDataTable(data);
-                filterData(inputValueSearch_<#= EntityType.Name #>, data);
-            },
-            complete:()=>{ setLoading(false);}
-          }
-        )
+    }
+#>
 
-    };
-    useEffect(()=>{
-        if (typeof showAll==="boolean" &&  showAll){
-            showAllClickHandler();
+public partial class <#= EntityType.Name #>
+{
+<#
+    var firstProperty = true;
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        if (!firstProperty)
+        {
+            WriteLine("");
         }
-        else{
-            //console.log('basd',searchSimpleData,searchSimpleData != null && typeof searchSimpleData !== "boolean" && searchSimpleData.IsValid());
-            if (searchSimpleData != null && typeof searchSimpleData !== "boolean" && searchSimpleData.IsValid())
-                searchSimple(searchSimpleData);
+
+        if (!string.IsNullOrEmpty(property.GetComment()))
+        {
+#>
+    /// <summary>
+    /// <#= code.XmlComment(property.GetComment(), indent: 1) #>
+    /// </summary>
+<#
         }
-            
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
 
-    return (
-    <>
-        Table {nameTable} 
-        {isLoadingNrRec && <Spin />} 
-        {errorNrRect && <> - error loading data </>}
-        {nrRecords != null && <> - {nrRecords} records</>}
-        <p></p>
-        <Button type="primary" loading={loading} onClick={showAllClickHandler}>Load All <#= EntityType.Name #></Button>
-        <Link to="/Admin/Databases/<#= Options.ContextName #>/tables/<#= EntityType.Name #>/search/showall" target={"_blank"}>Direct Link</Link>
-
-        <DatabaseTableSelector DBName={nameDB} TableName={nameTable} loadingData={loading} searchSimple={searchSimple}  />                    <div>
-            {dataTable == null && "no data loaded"}
-            {dataTable !=null &&             
-                <>
-                Number rows loaded {dataTable?.length} {loading && <Spin />} / filtered {dataTableFiltered?.length} / Search -{inputValueSearch_<#= EntityType.Name #>}-
-                {true /*!loading*/ &&
-                            <Input placeholder="SearchHere" onChange={(e) => {
-                                inputValueSearch_<#= EntityType.Name #>=(e.target.value);
-                                filterData(inputValueSearch_<#= EntityType.Name #>, dataTable!);
-                            }
-                            } />
-                        }
-                        
-  <Table pagination= {false} dataSource={dataTableFiltered!} columns={columns} />;
-  </>
+        if (Options.UseDataAnnotations)
+        {
+            var dataAnnotations = property.GetDataAnnotations(annotationCodeGenerator)
+                .Where(a => !(a.Type == typeof(RequiredAttribute) && Options.UseNullableReferenceTypes && !property.ClrType.IsValueType));
+            foreach (var dataAnnotation in dataAnnotations)
+            {
+#>
+    <#= code.Fragment(dataAnnotation) #>
+<#
             }
-        </div>
+        }
 
-    </>
-    )
+        usings.AddRange(code.GetRequiredUsings(property.ClrType));
+
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        var needsInitializer = Options.UseNullableReferenceTypes && !property.IsNullable && !property.ClrType.IsValueType;
+#>
+    public <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }<#= needsInitializer ? " = null!;" : "" #>
+<#
+        firstProperty = false;
+    }
+
+    foreach (var navigation in EntityType.GetNavigations())
+    {
+        WriteLine("");
+
+        if (Options.UseDataAnnotations)
+        {
+            foreach (var dataAnnotation in navigation.GetDataAnnotations(annotationCodeGenerator))
+            {
+#>
+    <#= code.Fragment(dataAnnotation) #>
+<#
+            }
+        }
+
+        var targetType = navigation.TargetEntityType.Name;
+        if (navigation.IsCollection)
+        {
+#>
+    public virtual ICollection<<#= targetType #>> <#= navigation.Name #> { get; } = new List<<#= targetType #>>();
+<#
+        }
+        else
+        {
+            var needsNullable = Options.UseNullableReferenceTypes && !(navigation.ForeignKey.IsRequired && navigation.IsOnDependent);
+            var needsInitializer = Options.UseNullableReferenceTypes && navigation.ForeignKey.IsRequired && navigation.IsOnDependent;
+#>
+    public virtual <#= targetType #><#= needsNullable ? "?" : "" #> <#= navigation.Name #> { get; set; }<#= needsInitializer ? " = null!;" : "" #>
+<#
+        }
+    }
+
+    foreach (var skipNavigation in EntityType.GetSkipNavigations())
+    {
+        WriteLine("");
+
+        if (Options.UseDataAnnotations)
+        {
+            foreach (var dataAnnotation in skipNavigation.GetDataAnnotations(annotationCodeGenerator))
+            {
+#>
+    <#= code.Fragment(dataAnnotation) #>
+<#
+            }
+        }
+#>
+    public virtual ICollection<<#= skipNavigation.TargetEntityType.Name #>> <#= skipNavigation.Name #> { get; } = new List<<#= skipNavigation.TargetEntityType.Name #>>();
+<#
+    }
+#>
 }
 <#
     var previousOutput = GenerationEnvironment;
@@ -307,7 +283,7 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
     foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
     {
 #>
- import <#= ns #>;
+using <#= ns #>;
 <#
     }
 
@@ -315,6 +291,8 @@ foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrde
 
     GenerationEnvironment.Append(previousOutput);
 #>
+
+
 <#+
 
 private System.Tuple<string,string> GetJsTypeAndDefaultValue(string clrType,bool isNullable ){
