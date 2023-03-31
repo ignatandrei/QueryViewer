@@ -62,7 +62,7 @@ public partial class Register<#= Options.ContextName #> : IRegisterContext
 #>
         services.AddTransient<ISearchData<#=entityType.Name#>, SearchData<#=entityType.Name#>>();
         <# } // foreach entityType #>
-          return services;
+          return typeof(<#= Options.ContextName #>);
     }
     
     [ModuleInitializer]

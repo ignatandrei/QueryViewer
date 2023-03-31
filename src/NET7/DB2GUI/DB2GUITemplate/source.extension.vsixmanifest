@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011"><Metadata><Identity Id="ignatandrei.DB2Code" Version="2023.03.31.083212" Language="en-US" Publisher="ignatandrei" /><DisplayName>DB2Code</DisplayName><Description xml:space="preserve">Database 2 Code
+<?xml version="1.0" encoding="utf-8"?><PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011"><Metadata><Identity Id="ignatandrei.DB2Code" Version="2023.03.31.225647" Language="en-US" Publisher="ignatandrei" /><DisplayName>DB2Code</DisplayName><Description xml:space="preserve">Database 2 Code
 Steps to generate
 Start a new project with DB2Code template
 Modify the connection details from GeneratorPowershell
