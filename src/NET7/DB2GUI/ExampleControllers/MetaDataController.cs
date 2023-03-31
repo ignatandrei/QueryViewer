@@ -9,6 +9,23 @@ public class MetaDataController
     {
         return AllDB.Singleton.DBNames;
     }
+
+    [HttpPost("{dbName}")]
+    public async Task<bool> EnsureCreated([FromServices] Func<string, DbContext?> fact, string dbName)
+    {
+        var exists = AllDB.Singleton.ExistsDB(dbName);
+        if (!exists)
+        {
+            throw new ArgumentException("DB does not exists " + dbName);
+        }
+
+        var req = fact(dbName);
+        if(req == null)
+            throw new ArgumentException("service does not exists " + dbName);
+
+        return await req.Database.EnsureCreatedAsync();
+    }
+
     [HttpGet("{dbName}")]
     public string[] TableNames(string dbName)
     {

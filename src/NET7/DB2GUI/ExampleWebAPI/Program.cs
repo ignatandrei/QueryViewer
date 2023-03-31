@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Generated;
 using System.Text.Json;
 using ExampleWebAPI;
+using System.Xml.Linq;
 
 class Program
 {
@@ -27,11 +28,11 @@ class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
+        List<Type> typesContext = new();
         //this line register contexts
-        foreach (var item in UtilsControllers.registerContexts)
+        foreach (IRegisterContext item in UtilsControllers.registerContexts)
         {
-            item.AddServices(builder.Services, builder.Configuration);
+           typesContext.Add( item.AddServices(builder.Services, builder.Configuration));
         }
         builder.Services.AddCors(sa => sa.AddPolicy("default", b =>
                 b
@@ -40,6 +41,21 @@ class Program
                 .AllowAnyHeader()
                 .AllowAnyMethod()
         ));
+        builder.Services.AddTransient((ctx) =>
+        {
+            Func<string, DbContext?> a = (string dbName) =>
+            {
+                var t = typesContext.First(it => it.Name == dbName);
+                
+                var req = ctx.GetRequiredService(t);
+                if (req == null) return null;
+                return req as DbContext;
+            };
+            return a;
+        });
+
+
+
         var app = builder.Build();
         app.UseCors("default");
         // Configure the HTTP request pipeline.

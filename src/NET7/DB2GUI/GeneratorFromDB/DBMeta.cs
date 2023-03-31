@@ -13,6 +13,10 @@ public record AllDB
     {
         return data[id];
     }
+    public bool ExistsDB(string id)
+    {
+        return data.ContainsKey(id);
+    }
     public MetaDB[] DBs
     {
         get
