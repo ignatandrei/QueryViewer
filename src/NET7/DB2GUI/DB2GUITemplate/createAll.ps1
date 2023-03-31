@@ -11,11 +11,17 @@ $xml = [xml]( Get-Content "MyTemplate.vstemplate")
 
 
 $node= $xml.VSTemplate.TemplateContent.Project
-gci *.* -r -Exclude *.*sproj,*.vstemplate, __TemplateIcon.ico | % { 
+gci *.* -r -Exclude *.*sproj,*.vstemplate, __TemplateIcon.ico | % {
+
+	#find if replace parameters  - takes longer now,but less for developer
+	# $contentFile = ( Get-Content $_.FullName)
+	$str = Select-String -Path $_.FullName -Pattern "safeprojectname"
+	$containsWord = ($str  -ne $null)?"true":"false"
+	
 	$rel = Resolve-Path -Relative $_
 	$rel = $rel.replace( ".\","")
 	$newelement = $xml.CreateElement("ProjectItem")
-	$newelement.SetAttribute("ReplaceParameters", "true")
+	$newelement.SetAttribute("ReplaceParameters", $containsWord)
 	# $newelement.SetAttribute("TargetFileName", $rel)
 	$newelement.InnerText =$rel
 	$node.AppendChild($newelement)
@@ -123,7 +129,12 @@ Write-Host "modify create.ps1"
 gci create.ps1 -r | % { 
 	$content  = Get-Content $_.FullName 
 	$newContent = $content
-	$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.examplecrats'	
+	$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.crats'	
+	$newContent = $newContent -replace 'ExampleModels','$ext_safeprojectname$.Models'	
+	$newContent = $newContent -replace 'ExampleContext','$ext_safeprojectname$.Context'	
+	$newContent = $newContent -replace 'ExampleControllers','$ext_safeprojectname$.Controllers'	
+	#$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.crats'	
+
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent
 		# Write-Host 'replacing ' $_.FullName 
@@ -148,8 +159,23 @@ gci *.*sproj -r | % {
 		
 }
 
-pop-location 
 
+
+Write-Host "modify .t4 files"
+gci *.t4 -r | % { 
+	$content  = Get-Content $_.FullName 
+	$newContent = $content
+	#$newContent = $newContent -replace 'ExampleControllers','$ext_safeprojectname$.'$ext_safeprojectname$.Controllers''
+	$newContent = $newContent -replace 'Example','$ext_safeprojectname$.'
+	if ($content -ne $newContent) {
+		Set-Content -Path  $_.FullName -Value $newContent
+		# Write-Host 'replacing ' $_.FullName 
+		
+	}
+		
+}
+
+pop-location 
 
 
 

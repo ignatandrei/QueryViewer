@@ -6,7 +6,7 @@ if (directory.EndsWith(@"bin\Debug\net7.0"))
     directory = directory.Replace(@"bin\Debug\net7.0", "");
 if (directory.EndsWith(@"bin\Debug\net7.0\"))
     directory = directory.Replace(@"bin\Debug\net7.0\", "");
-AnsiConsole.MarkupLine("[blue]!!!Make sure you have edited connectiondetails.txt file !");
+AnsiConsole.MarkupLine("[blue]!!!Make sure you have edited connectiondetails.txt file ![/]");
 AnsiConsole.MarkupLine($":play_button: Running in folder {pathGenerateFromDB}");
 //Console.WriteLine(pathGenerateFromDB); 
 string file = "connectionDetails.txt";
@@ -61,7 +61,7 @@ skip runPowershell connection {nrCon} at {DateTime.Now:hh:mm:ss}
     }
     catch(Exception ex)
     {
-            Console.WriteLine($"[red]{ex.Message}[/]:person_facepalming:");
+       Console.WriteLine($"[red]ERROR[/]:person_facepalming:");
     }
 
     var messageEnd = $"""

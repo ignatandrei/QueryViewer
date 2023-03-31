@@ -1,6 +1,6 @@
 ﻿namespace Generated;
 [ApiController]
-[Route("[controller]/[action]")]
+[Route("api/[controller]/[action]")]
 
 public class MetaDataController
 {

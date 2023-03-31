@@ -52,7 +52,7 @@
 namespace <#= NamespaceHint #>;
 <# } #>
 [ApiController]
-[Route("[controller]")]    
+[Route("api/[controller]")]    
 public partial class REST_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
 {
     private <#= Options.ContextName #> _context;
@@ -197,7 +197,7 @@ using <#= ns #>;
 namespace <#= NamespaceHint #>;
 <# } #>
 [ApiController]
-[Route("[controller]/[action]")]    
+[Route("api/[controller]/[action]")]    
 public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
 {
     private ISearchData<#= EntityType.Name #> _search;
@@ -502,10 +502,10 @@ private void SaveOutputController(string outputFileName,string text) {
   //string w= Host.ResolvePath("~/generatedFile.txt");
   
   string w=Host.TemplateFile;
-  Console.WriteLine(w);
+  Console.WriteLine("I am running  in  "+ w);
   string templateDirectory = Path.GetDirectoryName(w);
 //modify this with path in create.ps1
-    string outputFilePath = Path.Combine(templateDirectory, "../../Generated/" + Options.ContextName +"/" );
+   string outputFilePath = Path.Combine(templateDirectory, "../../../ExampleControllers/Generated/" + Options.ContextName +"/" );
   outputFilePath = Path.Combine(outputFilePath ,outputFileName);
   var dir=System.IO.Path.GetDirectoryName(outputFilePath);
     dir=System.IO.Path.GetFullPath(dir);
