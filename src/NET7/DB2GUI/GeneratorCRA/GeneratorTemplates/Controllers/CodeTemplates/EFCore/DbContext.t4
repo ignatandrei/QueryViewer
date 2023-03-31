@@ -42,7 +42,7 @@ namespace <#= NamespaceHint #>;
 #>
 public partial class Register<#= Options.ContextName #> : IRegisterContext
 {
-    public     IServiceCollection AddServices(IServiceCollection services, ConfigurationManager configuration){
+    public Type AddServices(IServiceCollection services, ConfigurationManager configuration){
         
         var cnString = configuration.GetConnectionString("<#= Options.ContextName #>");
         if (string.IsNullOrWhiteSpace(cnString))
