@@ -17,6 +17,7 @@ import { ClientListComponent } from './Admin/client-list/client-list.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseAdminGuiComponent } from './Admin/database-admin-gui/database-admin-gui.component';
+import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { DatabaseAdminGuiComponent } from './Admin/database-admin-gui/database-a
     AdminComponent,
     ClientComponent,
     ClientListComponent,
-    DatabaseAdminGuiComponent
+    DatabaseAdminGuiComponent,
+    DatabaseGuiComponent
   ],
   imports: [
     BrowserModule,

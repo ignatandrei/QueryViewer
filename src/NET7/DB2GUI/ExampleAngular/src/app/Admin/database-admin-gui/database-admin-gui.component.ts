@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseAdmin } from '../classes/DatabaseAdmin';
 
+
 @Component({
   selector: 'app-database-admin-gui',
   templateUrl: './database-admin-gui.component.html',

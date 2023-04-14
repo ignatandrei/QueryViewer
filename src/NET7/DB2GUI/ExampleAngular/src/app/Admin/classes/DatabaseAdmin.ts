@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 
@@ -16,6 +16,13 @@ export class DatabaseAdmin {
 
     public getDatabases():Observable<string[]|never>{      
         var data=this.http.get<string[]>(this.baseUrl+'MetaData/DBNames');
+        return data;
+    }
+
+    public getDatabaseTables(id:string):Observable<string[]|never>{
+       
+        if(id.length === 0) return of([] as string[]); 
+        var data=this.http.get<string[]>(this.baseUrl+`MetaData/TableNames/${id}`);
         return data;
     }
 
