@@ -1,6 +1,6 @@
 <h1 *ngIf="data==null">Loading</h1>
 <div *ngIf="data != null">
-    You can administer the databases 
+    
     <ng-template ngFor let-i="index" let-item [ngForOf]="data">
         <p>
     <a mat-raised-button color="primary" [routerLink]="'/admin/databases/'+item" >{{i+1}} {{item}}</a>

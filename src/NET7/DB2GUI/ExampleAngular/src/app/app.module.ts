@@ -18,6 +18,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseAdminGuiComponent } from './Admin/database-admin-gui/database-admin-gui.component';
 import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.component';
+import { BreadcrumbModule } from 'xng-breadcrumb';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.componen
     DatabaseGuiComponent
   ],
   imports: [
+    BreadcrumbModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -41,7 +44,8 @@ import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.componen
     MatListModule,
     FormsModule,
     HttpClientModule,
-    MatButtonModule
+    MatButtonModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -8,16 +8,26 @@ import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.componen
 // import { ClientListComponent } from './Admin/client-list/client-list.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/admin', pathMatch: 'full' },
-  { path: 'admin', component:AdminComponent},
-  // {path:'admin/client/:id',component:ClientComponent},
-  // {path:'admin/clientList',component:ClientListComponent},
-  { path: 'admin/databases', component:DatabaseAdminGuiComponent },
-  {path: "admin/databases/:idDB", component:DatabaseGuiComponent}
-];
+  { path: '', redirectTo: 'admin', pathMatch: 'full' },
+  {
+    path: 'admin',
+    children:[
+      {path:'',   component: AdminComponent},
+
+  {
+    path:'databases',
+    pathMatch: 'prefix'
+
+  ,children: [
+    {path:'', component:DatabaseAdminGuiComponent , pathMatch: 'full'},
+    { path: ':idDB', component: DatabaseGuiComponent , pathMatch: 'full'}
+  ] 
+},
+]
+  }];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes,{ enableTracing: true })],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

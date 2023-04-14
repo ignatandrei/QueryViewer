@@ -13,7 +13,9 @@ export class DatabaseGuiComponent implements OnInit {
   public idDB: string | null = null;
   public data: string[]|null = null;
   constructor(private route: ActivatedRoute, private db:DatabaseAdmin) { 
-    this.idDB = this.route.snapshot.paramMap.get('idDB');
+     this.route.paramMap.subscribe(it=>{
+      this.idDB = it.get("idDB");
+    });
   }
 
   ngOnInit(): void {
