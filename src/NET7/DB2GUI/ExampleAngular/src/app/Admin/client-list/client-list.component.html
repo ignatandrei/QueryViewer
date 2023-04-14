@@ -1,0 +1,18 @@
+<p *ngIf="ClientList== null">Loading client list</p>
+
+<p *ngIf="ClientList != null">Number of clients: {{ClientList.length}} </p>
+
+<button color="primary" mat-raised-button (click)="AddClient()">Add Client</button>
+
+<table id="customers">
+    <tr>
+        <td>No</td>
+        <td>Client Name</td>
+        <td>Actions</td>
+    </tr>
+    <tr *ngFor="let client of ClientList; let i = index">
+        <td>{{i+1}}</td>
+        <td>{{client.nameClient}}</td>
+        <td><button color="accent" mat-raised-button (click)="gotoClient(client)">Edit</button></td>
+    </tr>
+</table>
