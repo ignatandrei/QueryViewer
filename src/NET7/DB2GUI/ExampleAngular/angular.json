@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "RealCodeScannerAng": {
+    "ExampleAngular": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -67,10 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "RealCodeScannerAng:build:production"
+              "browserTarget": "ExampleAngular:build:production"
             },
             "development": {
-              "browserTarget": "RealCodeScannerAng:build:development"
+              "browserTarget": "ExampleAngular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +78,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "RealCodeScannerAng:build"
+            "browserTarget": "ExampleAngular:build"
           }
         },
         "test": {
