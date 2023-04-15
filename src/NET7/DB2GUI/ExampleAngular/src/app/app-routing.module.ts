@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './Admin/admin.component';
 import { DatabaseAdminGuiComponent } from './Admin/database-admin-gui/database-admin-gui.component';
 import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.component';
+import { DatabaseTableGuiComponent } from './Admin/database-table-gui/database-table-gui.component';
 
 // import { ClientComponent } from './Admin/client/client.component';
 // import { ClientListComponent } from './Admin/client-list/client-list.component';
@@ -19,8 +20,16 @@ const routes: Routes = [
     pathMatch: 'prefix'
 
   ,children: [
-    {path:'', component:DatabaseAdminGuiComponent , pathMatch: 'full'},
-    { path: ':idDB', component: DatabaseGuiComponent , pathMatch: 'full'}
+    {path:'', component:DatabaseAdminGuiComponent },
+    { path: ':idDB', 
+      children: [
+        {path:'', component:DatabaseGuiComponent},
+        {path:'tables', children:[
+          {path:'', component:DatabaseGuiComponent},
+          {path:':idTable', component:DatabaseTableGuiComponent}
+        ]},
+      ]
+    }
   ] 
 },
 ]

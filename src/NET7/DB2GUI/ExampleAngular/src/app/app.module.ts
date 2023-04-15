@@ -20,6 +20,7 @@ import { DatabaseAdminGuiComponent } from './Admin/database-admin-gui/database-a
 import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.component';
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { RouterModule } from '@angular/router';
+import { DatabaseTableGuiComponent } from './Admin/database-table-gui/database-table-gui.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { RouterModule } from '@angular/router';
     ClientComponent,
     ClientListComponent,
     DatabaseAdminGuiComponent,
-    DatabaseGuiComponent
+    DatabaseGuiComponent,
+    DatabaseTableGuiComponent
   ],
   imports: [
     BreadcrumbModule,

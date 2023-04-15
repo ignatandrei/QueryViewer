@@ -13,7 +13,7 @@
     <tr *ngFor="let table of data;let item=index">
       <td>{{item+1}}</td>
       <td>
-        <a mat-raised-button color="primary" [routerLink]="'/admin/databases/'+idDB+'/tables/'+ item" >{{table}}</a>
+        <a mat-raised-button color="primary" [routerLink]="'/admin/databases/'+idDB+'/tables/'+ table" >{{table}}</a>
 
       </td>
     </tr>
