@@ -15,6 +15,7 @@ import { AdminComponent } from './Admin/admin.component';
 import { ClientComponent } from './Admin/client/client.component';
 import { ClientListComponent } from './Admin/client-list/client-list.component';
 import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
 import { DatabaseAdminGuiComponent } from './Admin/database-admin-gui/database-admin-gui.component';
 import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.component';
@@ -49,7 +50,8 @@ import { TableData_ModifiedFile } from './Admin/Generated/Models/ApplicationDBCo
     FormsModule,
     HttpClientModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
+    MatTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
