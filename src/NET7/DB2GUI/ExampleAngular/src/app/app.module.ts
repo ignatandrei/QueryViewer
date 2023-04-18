@@ -21,6 +21,7 @@ import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.componen
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { RouterModule } from '@angular/router';
 import { DatabaseTableGuiComponent } from './Admin/database-table-gui/database-table-gui.component';
+import { TableData_ModifiedFile } from './Admin/Generated/Models/ApplicationDBContext/ModifiedFile';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { DatabaseTableGuiComponent } from './Admin/database-table-gui/database-t
     ClientListComponent,
     DatabaseAdminGuiComponent,
     DatabaseGuiComponent,
-    DatabaseTableGuiComponent
+    DatabaseTableGuiComponent,
+    TableData_ModifiedFile
   ],
   imports: [
     BreadcrumbModule,

@@ -1,1 +1,11 @@
 <p>Table {{idTable}}</p>
+Steps :
+<ol>
+    <li>Goto @NgModule => declarations:  and add TableData_{{idTable}} </li>
+    <li>Add here 
+        &lt;span *ngIf="idTable == '{{idTable}}'"&gt;
+            &lt;app-tabledata-ModifiedFile&gt;&lt;/app-tabledata-ModifiedFile&gt;
+            &lt;/span&gt;        
+        </li>    
+</ol>
+<app-tabledata-ModifiedFile></app-tabledata-ModifiedFile>
