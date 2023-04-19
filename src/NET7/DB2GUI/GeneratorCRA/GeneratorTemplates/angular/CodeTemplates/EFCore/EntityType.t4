@@ -139,7 +139,7 @@ export class <#=nameClass#>_Interaction {
     <p></p>    
      <button mat-raised-button color="primary" (click)="showAllClickHandler()">Show all</button>
 
-     <span *ngIf="dataTable!=null">Loaded {{dataTable.length}} records</span>
+     <span *ngIf="dataTable!=null">Loaded {{dataTable!.length}} records</span>
     <div *ngIf="dataTable!=null">
      <mat-table #table [dataSource]="dataSource!" matSort>
 
