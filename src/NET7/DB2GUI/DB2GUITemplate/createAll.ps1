@@ -99,6 +99,7 @@ Get-ChildItem  -Directory -Recurse -Filter "node_modules" | Remove-Item -Recurse
 Get-ChildItem  -Directory -Recurse -Filter ".vscode" | Remove-Item -Recurse
 Get-ChildItem  -Directory -Recurse -Filter ".config" | Remove-Item -Recurse
 Get-ChildItem  -Directory -Recurse -Filter "Generated" | Remove-Item -Recurse
+Get-ChildItem  -Directory -Recurse -Filter ".angular" | Remove-Item -Recurse
 
 Write-Host "modify .cs files"
 gci *.cs -r | % { 
