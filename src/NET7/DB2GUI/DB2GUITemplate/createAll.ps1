@@ -132,7 +132,7 @@ gci create.ps1 -r | % {
 	$content  = Get-Content $_.FullName 
 	$newContent = $content
 	$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.crats'	
-	$newContent = $newContent -replace 'ExampleAngular','$ext_safeprojectname$.crats'	
+	$newContent = $newContent -replace 'ExampleAngular','$ext_safeprojectname$.Angular'	
 	$newContent = $newContent -replace 'ExampleModels','$ext_safeprojectname$.Models'	
 	$newContent = $newContent -replace 'ExampleContext','$ext_safeprojectname$.Context'	
 	$newContent = $newContent -replace 'ExampleControllers','$ext_safeprojectname$.Controllers'	
