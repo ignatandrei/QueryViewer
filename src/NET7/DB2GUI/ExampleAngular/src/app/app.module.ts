@@ -12,8 +12,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { AdminComponent } from './Admin/admin.component';
-import { ClientComponent } from './Admin/client/client.component';
-import { ClientListComponent } from './Admin/client-list/client-list.component';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,19 +20,15 @@ import { DatabaseGuiComponent } from './Admin/database-gui/database-gui.componen
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { RouterModule } from '@angular/router';
 import { DatabaseTableGuiComponent } from './Admin/database-table-gui/database-table-gui.component';
-import { TableData_ModifiedFile } from './Admin/Generated/Models/ApplicationDBContext/ModifiedFile';
 
 @NgModule({
   declarations: [
     AppComponent,
     MynavigationComponent,
     AdminComponent,
-    ClientComponent,
-    ClientListComponent,
     DatabaseAdminGuiComponent,
     DatabaseGuiComponent,
     DatabaseTableGuiComponent,
-    TableData_ModifiedFile
   ],
   imports: [
     BreadcrumbModule,
