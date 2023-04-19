@@ -76,13 +76,13 @@ function Generate{
 }
 
 
-#Generate "Models"  "../ExampleModels/Generated/" $project
+Generate "Models"  "../ExampleModels/Generated/" $project
 
-#Generate "Context"  "../ExampleContext/Generated/" $project
+Generate "Context"  "../ExampleContext/Generated/" $project
 
-#Generate "Controllers"  "../ExampleControllers/Generated/" $project 
+Generate "Controllers"  "../ExampleControllers/Generated/" $project 
 
-#Generate "crats"  "../examplecrats/src/Admin/Generated/" $project
+Generate "crats"  "../examplecrats/src/Admin/Generated/" $project
 
 Generate "angular"  "../ExampleAngular/src/app/Admin/Generated/" $project
 
