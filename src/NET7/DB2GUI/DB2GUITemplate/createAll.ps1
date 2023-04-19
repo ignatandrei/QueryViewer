@@ -84,6 +84,7 @@ copy-item -Path ..\ExampleWebAPI\* 			-Destination GeneratorFromDBTemp\ExampleWe
 copy-item -Path ..\GeneratorPowershell\* 	-Destination GeneratorFromDBTemp\GeneratorPowershell\ 						-Force -Recurse
 copy-item -Path ..\GeneratorFromDB\* 		-Destination GeneratorFromDBTemp\GeneratorFromDB\ 							-Force -Recurse
 copy-item -Path ..\examplecrats\* 		    -Destination GeneratorFromDBTemp\examplecrats\ 	-Exclude node_modules		-Force -Recurse
+copy-item -Path ..\ExampleAngular\*         -Destination GeneratorFromDBTemp\ExampleAngular\ 	-Exclude node_modules	-Force -Recurse
 copy-item -Path ..\GeneratorCRA\* 		    -Destination GeneratorFromDBTemp\GeneratorCRA\ 								-Force -Recurse
 
 
@@ -130,6 +131,7 @@ gci create.ps1 -r | % {
 	$content  = Get-Content $_.FullName 
 	$newContent = $content
 	$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.crats'	
+	$newContent = $newContent -replace 'ExampleAngular','$ext_safeprojectname$.crats'	
 	$newContent = $newContent -replace 'ExampleModels','$ext_safeprojectname$.Models'	
 	$newContent = $newContent -replace 'ExampleContext','$ext_safeprojectname$.Context'	
 	$newContent = $newContent -replace 'ExampleControllers','$ext_safeprojectname$.Controllers'	
@@ -186,7 +188,9 @@ AddFiles "ExampleWebAPI"
 AddFiles "GeneratorPowershell"
 AddFiles "GeneratorFromDB"
 AddFiles "examplecrats"
+AddFiles "ExampleAngular"
 AddFiles "GeneratorCRA"
+
 
 
 Compress-Archive -DestinationPath .\a -Path GeneratorFromDBTemp\*
