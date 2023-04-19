@@ -84,7 +84,7 @@ copy-item -Path ..\ExampleWebAPI\* 			-Destination GeneratorFromDBTemp\ExampleWe
 copy-item -Path ..\GeneratorPowershell\* 	-Destination GeneratorFromDBTemp\GeneratorPowershell\ 						-Force -Recurse
 copy-item -Path ..\GeneratorFromDB\* 		-Destination GeneratorFromDBTemp\GeneratorFromDB\ 							-Force -Recurse
 copy-item -Path ..\examplecrats\* 		    -Destination GeneratorFromDBTemp\examplecrats\ 	-Exclude node_modules		-Force -Recurse
-copy-item -Path ..\ExampleAngular\*         -Destination GeneratorFromDBTemp\ExampleAngular\ 	-Exclude node_modules	-Force -Recurse
+copy-item -Path ..\ExampleAngular\*         -Destination GeneratorFromDBTemp\ExampleAngular\ -Exclude node_modules,.angular	-Force -Recurse
 copy-item -Path ..\GeneratorCRA\* 		    -Destination GeneratorFromDBTemp\GeneratorCRA\ 								-Force -Recurse
 
 

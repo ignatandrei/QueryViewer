@@ -34,6 +34,9 @@
 				<ProjectTemplateLink ProjectName="$safeprojectname$.Controllers" CopyParameters="true">
                     ExampleControllers\MyTemplate.vstemplate
                 </ProjectTemplateLink>
+				<ProjectTemplateLink ProjectName="$safeprojectname$.ExampleAngular" CopyParameters="true">
+                    ExampleAngular\MyTemplate.vstemplate
+                </ProjectTemplateLink>
 				
 				<ProjectTemplateLink ProjectName="$safeprojectname$.crats" CopyParameters="true">
                     examplecrats\MyTemplate.vstemplate
