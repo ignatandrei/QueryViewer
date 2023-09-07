@@ -199,3 +199,4 @@ Remove-Item .\GeneratorFromDB.zip
 Remove-Item .\ProjectTemplates\GeneratorFromDB.zip
 Copy-Item .\a.zip .\ProjectTemplates\GeneratorFromDB.zip
 Move-Item .\a.zip .\GeneratorFromDB.zip
+Write-Host ' rebuild and goto http://visualstudiogallery.msdn.microsoft.com/'
