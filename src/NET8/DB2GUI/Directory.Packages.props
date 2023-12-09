@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
+
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1" />
+	<PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
+
+  </ItemGroup>
+</Project>
