@@ -1,8 +1,22 @@
 ﻿
+using Generated;
+using k8s.KubeConfigModels;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>",1433);
+var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>");
 
+builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAPI))
+    .WithEnvironment(ctx=>
+    {
+        var connectionStringName = $"ConnectionStrings__ApplicationDBContext";
+        var res=rb.Resource;
+        var cn = res.GetConnectionString();
+        ctx.EnvironmentVariables[connectionStringName] = cn+ $";database=tests;";
+        
+    })
+    .WithReference(rb, "");
+    
 //var apiservice = builder.AddProject<Projects.AspireSample_ApiService>("apiservice");
 
 //builder.AddProject<Projects.AspireSample_Web>("webfrontend")

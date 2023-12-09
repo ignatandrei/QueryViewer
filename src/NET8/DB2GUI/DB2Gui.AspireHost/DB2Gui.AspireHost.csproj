@@ -29,5 +29,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\DB2GUI.ServiceDefaults\DB2GUI.ServiceDefaults.csproj" />
+	  <ProjectReference Include="..\ExampleWebAPI\ExampleWebAPI.csproj" />
 	</ItemGroup>
 </Project>
