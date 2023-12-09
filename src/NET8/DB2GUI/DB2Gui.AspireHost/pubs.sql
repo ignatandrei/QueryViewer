@@ -60,11 +60,11 @@ BEGIN
 END
 ELSE ALTER DATABASE [pubs] SET RECOVERY SIMPLE WITH NO_WAIT
 GO
-IF OBJECT_ID('dbo.id') IS NOT NULL
+--IF OBJECT_ID('dbo.id') IS NOT NULL
 execute sp_addtype id      ,'varchar(11)' ,'NOT NULL'
-IF OBJECT_ID('dbo.tid') IS NOT NULL
+--IF OBJECT_ID('dbo.tid') IS NOT NULL
 execute sp_addtype tid     ,'varchar(6)'  ,'NOT NULL'
-IF OBJECT_ID('dbo.empid') IS NOT NULL
+--IF OBJECT_ID('dbo.empid') IS NOT NULL
 execute sp_addtype empid   ,'char(9)'     ,'NOT NULL'
 
 --raiserror('Now at the create table section ....',0,1)

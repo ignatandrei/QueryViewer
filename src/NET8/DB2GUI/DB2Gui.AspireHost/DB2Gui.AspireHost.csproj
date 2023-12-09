@@ -5,8 +5,27 @@
     <Nullable>enable</Nullable>
 	  <IsAspireHost>true</IsAspireHost>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="northwind.sql" />
+    <None Remove="pubs.sql" />
+    <None Remove="tests.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="tests.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="northwind.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="pubs.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Aspire.Hosting" />
+		<PackageReference Include="Microsoft.Data.SqlClient" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\DB2GUI.ServiceDefaults\DB2GUI.ServiceDefaults.csproj" />

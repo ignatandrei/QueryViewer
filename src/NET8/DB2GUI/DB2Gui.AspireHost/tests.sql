@@ -7,11 +7,12 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YourStrong@Passw0rd>" `
 dotnet ef dbcontext scaffold "Trusted_Connection=Yes;Data Source=.;Initial Catalog=tests;UID=sa;PWD=<YourStrong@Passw0rd>;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer --force --no-onconfiguring --no-pluralize --no-build --json
 
 */
-create database tests
-go
+--create database tests
+--go
 
-USE [tests]
-GO
+--USE [tests]
+--go
+
 create table test(
 id int,
 name varchar(200)
