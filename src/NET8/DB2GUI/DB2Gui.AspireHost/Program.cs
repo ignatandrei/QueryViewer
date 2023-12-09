@@ -4,28 +4,48 @@ using k8s.KubeConfigModels;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>");
+var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>",1433);
 
-builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAPI))
-    .WithEnvironment(ctx=>
+var api= builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAPI))
+    .WithEnvironment(ctx =>
     {
         var connectionStringName = $"ConnectionStrings__";
-        var res=rb.Resource;
+        var res = rb.Resource;
         var cn = res.GetConnectionString();
-        ctx.EnvironmentVariables[connectionStringName+ "ApplicationDBContext"] = cn+ $";database=tests;";
-        ctx.EnvironmentVariables[connectionStringName+ "NorthwindDBContext"] = cn + $";database=northwind;";
-        ctx.EnvironmentVariables[connectionStringName+ "PubsDBContext"] = cn + $";database=pubs;";
+        ctx.EnvironmentVariables[connectionStringName + "ApplicationDBContext"] = cn + $";database=tests;";
+        ctx.EnvironmentVariables[connectionStringName + "NorthwindDBContext"] = cn + $";database=northwind;";
+        ctx.EnvironmentVariables[connectionStringName + "PubsDBContext"] = cn + $";database=pubs;";
     })
-    //.WithReference(rb, "")
+    //.WithReference(rb.AddDatabase("tests"), "ApplicationDBContext")
+    //.WithReference(rb.AddDatabase("northwind"), "NorthwindDBContext")
+    //.WithReference(rb.AddDatabase("pubs"), "PubsDBContext")
+    //.WithReference(rb.AddDatabase("NotCreated"), "NotCreated")
+
     ;
+builder.AddProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp))
+    .WithEnvironment(ctx =>
+    {
+       if(api.Resource.TryGetAllocatedEndPoints(out var end))
+        {
+            if(end.Any())
+                ctx.EnvironmentVariables["hostApi"] = end.First().UriString;
+        }
+       
+    })
+    ;
+builder.AddExecutable
     
 //var apiservice = builder.AddProject<Projects.AspireSample_ApiService>("apiservice");
 
 //builder.AddProject<Projects.AspireSample_Web>("webfrontend")
 //    .WithReference(cache)
 //    .WithReference(apiservice);
+var app = builder.Build();
+//Expected allocated endpoints!
+//await CreateData(rb);
+//await app.RunAsync();
 
-await Task.WhenAll(builder.Build().RunAsync(),CreateData(rb));
+await Task.WhenAll(app.RunAsync(),CreateData(rb));
 
 async Task<bool> CreateData(IResourceBuilder<SqlServerContainerResource> db)
 {
