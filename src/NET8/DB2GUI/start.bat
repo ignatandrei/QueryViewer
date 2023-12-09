@@ -1,0 +1,1 @@
+wt new-tab --title webapi -d ExampleWebAPI PowerShell -noexit -c "dotnet watch run --no-hot-reload"  ; new-tab --title react -d "examplecrats" PowerShell -noexit -c "npm start"; new-tab --title generator -d GeneratorPowershell PowerShell -noexit -c "gci"; new-tab --title react -d "examplecrats" PowerShell -c "code ."

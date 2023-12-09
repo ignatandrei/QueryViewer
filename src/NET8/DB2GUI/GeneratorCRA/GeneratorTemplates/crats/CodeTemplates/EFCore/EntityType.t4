@@ -1,0 +1,375 @@
+<#@ output extension=".tsx" #>
+<#@ template hostSpecific="true" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.Extensions.DependencyInjection.Abstractions" #>
+<#@ parameter name="EntityType" type="Microsoft.EntityFrameworkCore.Metadata.IEntityType" #>
+<#@ parameter name="Options" type="Microsoft.EntityFrameworkCore.Scaffolding.ModelCodeGenerationOptions" #>
+<#@ parameter name="NamespaceHint" type="System.String" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
+<#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
+<#
+    if (EntityType.IsSimpleManyToManyJoinEntityType())
+    {
+        // Don't scaffold these
+        return "";
+    }
+    string nameClass = Options.ContextName + "_"+ EntityType.Name +"_Table";
+    var services = (IServiceProvider)Host;
+    var annotationCodeGenerator = services.GetRequiredService<IAnnotationCodeGenerator>();
+    var code = services.GetRequiredService<ICSharpHelper>();
+
+    var usings = new List<string>
+    {
+        "{ Button,Input ,Spin, Table } from \"antd\"",
+        "{ concatMap, delay, map,Observable,of,scan } from \"rxjs\"",
+        "{ useState,useEffect } from \"react\"",
+        "JsonStreamDecoder from \"../../../Common/asyncEnumerable\"",
+        "{ ColumnsType } from \"antd/es/table\"",
+        "{ ajax } from \"rxjs/ajax\"",
+        "useRxObs from \"../../../../useRXEffect\"",
+        "DatabaseTableSelector, { SearchData } from \"../../../DatabaseTableSelector\"",
+        "{ Link } from \"react-router-dom\"",
+        "useSearchURL from \"../../../searchMatches\"",
+
+    };
+
+
+#>
+
+
+export class <#=nameClass#> 
+{
+
+baseUrl:string = '';
+    constructor(cc: Partial<<#=nameClass#>> | null = null) {
+      this.baseUrl=process.env.REACT_APP_URL+'api/'; 
+
+    if (cc != null) {
+      // Object.keys(tilt).forEach((key) => {
+      //   (this as any)[key] = (tilt as any)[key];
+      // });
+      Object.assign(this,cc);
+    }
+    }
+
+<#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var isNullable = property.IsNullable && !property.ClrType.IsValueType;
+        var clrType=code.Reference(property.ClrType);
+        var tv= GetJsTypeAndDefaultValue(clrType,isNullable);
+        var jsType= tv.Item1;
+        var defVal=tv.Item2;
+        
+        #>
+        public <#= property.Name.ToLower() #> : <#=jsType #>  = <#=defVal#>;
+        <#
+    } // foreach property 
+#>
+}
+export class <#=nameClass#>_Interaction {
+    baseUrl:string = '';
+    constructor() {
+      this.baseUrl=process.env.REACT_APP_URL+'api/'; 
+    }
+
+    
+    public getAllCount():Observable<number>{
+
+        var data=ajax.getJSON(this.baseUrl+'AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name#>/GetAllCount')
+        .pipe(
+            map(response => {
+
+                return response as number;
+            })
+            //takeUntil(cancel)
+          );
+          return data;
+    }    
+     public getSearchSimple(searchData:SearchData ):Observable<<#=nameClass#>[]>{
+        
+        var url= this.baseUrl+'AdvancedSearch_<#=Options.ContextName + "_"+ EntityType.Name #>/';
+        url+=`GetSearchSimple?ColumnName=${searchData.ColumnName}&Operator=${searchData.Operator}&Value=${searchData.Value}`;        
+        var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>(url)                
+        .pipe(
+            map(it=>new <#=nameClass#>(it)),                    
+            concatMap((x:<#=nameClass#>,index:number)=>{
+              if((index+1) % 100 === 0)
+              return of<<#=nameClass#>>(x).pipe(delay(5*1000));
+            else
+              return of<<#=nameClass#>>(x);
+            }),
+            
+            scan((acc:<#=nameClass#>[],value:<#=nameClass#>)=>[...acc, value] as <#=nameClass#>[], [] as <#=nameClass#>[]),
+            
+          );
+          return data as Observable<<#=nameClass#>[]>;
+
+    }
+
+            public getAll():Observable<<#=nameClass#>[]>{
+                //var data=ajax.getJSON(this.baseUrl+'AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')
+                //.pipe(
+                //    map(response => {        
+                //        return response as <#=nameClass#>[];
+                //    })
+                //  );
+                                var data=JsonStreamDecoder.fromFetchStream<<#=nameClass#>>(this.baseUrl+'AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>/GetAll')                
+                .pipe(
+                    map(it=>new <#=nameClass#>(it)),                    
+                    concatMap((x:<#=nameClass#>,index:number)=>{
+                      if((index+1) % 100 === 0)
+                      return of<<#=nameClass#>>(x).pipe(delay(5*1000));
+                    else
+                      return of<<#=nameClass#>>(x);
+                    }),
+                    
+                    scan((acc:<#=nameClass#>[],value:<#=nameClass#>)=>[...acc, value] as <#=nameClass#>[], [] as <#=nameClass#>[]),
+                    
+                  );
+                  return data as Observable<<#=nameClass#>[]>;
+
+            }
+         }
+let inputValueSearch_<#= EntityType.Name #> = '';
+export default function TableData_<#= EntityType.Name #>() 
+{
+    const nameTable = '<#= EntityType.Name #>';
+    const nameDB = '<#= Options.ContextName #>';
+    const [loading,setLoading]= useState<boolean>(false);
+    const [showAll, searchSimpleData]=useSearchURL();
+    
+    const interaction=new <#=nameClass#>_Interaction();
+    const [dataTable,setDataTable]= useState<<#=nameClass#>[]|null>(null);
+const [dataTableFiltered, setDataTableFiltered] = useState<<#=nameClass#>[] | null>(null);
+    
+const columns : ColumnsType<<#=nameClass#>> =[
+    {
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
+        width: '5%',
+        render:(item: any, record: <#=nameClass#>, index: any)=>(<>{index+1}</>)
+      }
+
+  <#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var isNullable = property.IsNullable && !property.ClrType.IsValueType;
+        var clrType=code.Reference(property.ClrType);
+        var tv= GetJsTypeAndDefaultValue(clrType,isNullable);
+        var jsType= tv.Item1;
+        var defVal=tv.Item2;
+        var namePropJS=property.Name.ToLower();
+        
+#>
+   ,{
+    title: '<#= property.Name #>',
+    dataIndex: '<#= namePropJS #>',
+    key: '<#= namePropJS #>',
+    sorter: (a:<#=nameClass#>, b:<#=nameClass#>) => 
+    {
+        if(a.<#= namePropJS #> == null && b.<#= namePropJS #> == null)
+            return 0;
+        
+        if(a.<#= namePropJS #> == null)
+            return -1;
+        if(b.<#= namePropJS #> == null)
+            return 1;
+        <# if(jsType == "number" || jsType == "number|null"){ #>
+            return a.<#= namePropJS #> - b.<#= namePropJS #>;
+        <# } else { #>
+        
+        return a.<#= namePropJS #>.toString().localeCompare(b.<#= namePropJS #>.toString());
+        <#  }// jstype number #>
+    }
+  } 
+
+<#
+    }//end foreach
+#>
+  
+];
+
+
+    const filterData = (val: string, data: <#=nameClass#>[]) => {
+        if (val == null || val === '') {
+            setDataTableFiltered(data);
+            return;
+        }
+        if (data == null) {
+            setDataTableFiltered(null);
+            return;
+        }
+        val = val.toLowerCase();
+        var f = data.filter(it => {
+<#    
+foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+    var namePropJS=property.Name.ToLower();
+
+#>
+    if (it.<#=namePropJS#> != null)
+       if (it.<#=namePropJS#>.toString().toLowerCase().includes(val))
+        return true;
+
+<#
+    }
+#>
+        return false;
+        });
+        setDataTableFiltered(f);
+    }
+    useEffect(()=>{
+        document.title = nameTable+" - "+nameDB;
+    })
+    const [isLoadingNrRec, errorNrRect, nrRecords]= useRxObs(interaction.getAllCount());
+    
+    
+
+    const showAllClickHandler=()=>{
+        setDataTable(null);
+        setLoading(true);
+        interaction.getAll().subscribe({
+          next: (data:<#=nameClass#>[])=>{
+                
+                setDataTable(data);
+                filterData(inputValueSearch_<#= EntityType.Name #>, data);
+            },
+            complete:()=>{ setLoading(false);}
+          }
+        )
+    };
+    const searchSimple=(searchData: SearchData)=>{
+        if(!searchData.IsValid()){
+            window.alert("Invalid search data");
+            return;
+        }
+        setDataTable(null);
+        setLoading(true);
+        interaction.getSearchSimple(searchData).subscribe({
+          next: (data:<#=nameClass#>[])=>{
+                
+                setDataTable(data);
+                filterData(inputValueSearch_<#= EntityType.Name #>, data);
+            },
+            complete:()=>{ setLoading(false);}
+          }
+        )
+
+    };
+    useEffect(()=>{
+        if (typeof showAll==="boolean" &&  showAll){
+            showAllClickHandler();
+        }
+        else{
+            //console.log('basd',searchSimpleData,searchSimpleData != null && typeof searchSimpleData !== "boolean" && searchSimpleData.IsValid());
+            if (searchSimpleData != null && typeof searchSimpleData !== "boolean" && searchSimpleData.IsValid())
+                searchSimple(searchSimpleData);
+        }
+            
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
+
+    return (
+    <>
+        Table {nameTable} 
+        {isLoadingNrRec && <Spin />} 
+        {errorNrRect && <> - error loading data </>}
+        {nrRecords != null && <> - {nrRecords} records</>}
+        <p></p>
+        <Button type="primary" loading={loading} onClick={showAllClickHandler}>Load All <#= EntityType.Name #></Button>
+        <Link to="/Admin/Databases/<#= Options.ContextName #>/tables/<#= EntityType.Name #>/search/showall" target={"_blank"}>Direct Link</Link>
+
+        <DatabaseTableSelector DBName={nameDB} TableName={nameTable} loadingData={loading} searchSimple={searchSimple}  />                    <div>
+            {dataTable == null && "no data loaded"}
+            {dataTable !=null &&             
+                <>
+                Number rows loaded {dataTable?.length} {loading && <Spin />} / filtered {dataTableFiltered?.length} / Search -{inputValueSearch_<#= EntityType.Name #>}-
+                {true /*!loading*/ &&
+                            <Input placeholder="SearchHere" onChange={(e) => {
+                                inputValueSearch_<#= EntityType.Name #>=(e.target.value);
+                                filterData(inputValueSearch_<#= EntityType.Name #>, dataTable!);
+                            }
+                            } />
+                        }
+                        
+  <Table pagination= {false} dataSource={dataTableFiltered!} columns={columns} />;
+  </>
+            }
+        </div>
+
+    </>
+    )
+}
+<#
+    var previousOutput = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+    WriteLine("//this was autogenerated by a tool. Do not modify! Use partial");
+    foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
+    {
+#>
+ import <#= ns #>;
+<#
+    }
+
+    WriteLine("");
+
+    GenerationEnvironment.Append(previousOutput);
+#>
+<#+
+
+private System.Tuple<string,string> GetJsTypeAndDefaultValue(string clrType,bool isNullable ){
+        clrType = clrType.Replace("?","");
+        var IsArray = (clrType.IndexOf("[]")>0);
+        clrType = clrType.Replace("[]","");      
+        string jsType="";
+        string defVal = "";
+
+        switch(clrType){
+            case "DateTime":
+                jsType="Date";
+                defVal="new Date()";
+                break;
+            case "bool":
+                jsType="boolean";
+                defVal="false";
+                break;
+            case "float":
+            case "int":
+            case "long":
+            case "short":
+            case "decimal":
+            case "double":
+            case "byte":
+                jsType="number";
+                defVal="0";
+                break;
+            case "string":
+                jsType="string";
+                defVal="''";
+                break;            
+            default:
+                jsType="please_edit_GetJsTypeAndDefaultValue_"+ clrType;
+                defVal="''";
+                break;
+        }
+        if(IsArray )
+        {
+            jsType +="[]";
+            defVal ="[]";
+        }
+        if(isNullable ) {
+            jsType +="|null";
+            defVal ="null";
+        }
+        return System.Tuple.Create(jsType ,defVal);
+}
+#>

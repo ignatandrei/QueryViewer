@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="ignatandrei.DB2Code" Version="2023.09.07.1937" Language="en-US" Publisher="ignatandrei" />
+        <DisplayName>DB2Code</DisplayName>
+        <Description xml:space="preserve">Database 2 Code
+Steps to generate
+Start a new project with DB2Code template
+Modify the connection details from GeneratorPowershell
+Run the project and it will generate the code for you
+If it shows an error , please copy the powershell command and run it from the terminal ( easy way: put into file a.bat)
+The code will be generated - run the WebAPI project ( modify connection string if you want )
+If you want to use the REACT CRA, run the npm install and npm start
+Modify the templates if you want to change something</Description>
+        <MoreInfo>https://github.com/ignatandrei/queryViewer/</MoreInfo>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\GeneratorFromDB.zip" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+</PackageManifest>

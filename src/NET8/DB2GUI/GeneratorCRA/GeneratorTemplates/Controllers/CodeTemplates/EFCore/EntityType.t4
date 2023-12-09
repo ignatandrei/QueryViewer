@@ -1,0 +1,522 @@
+//modified 2023-09-03
+<#@ template hostSpecific="true" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.Extensions.DependencyInjection.Abstractions" #>
+<#@ parameter name="EntityType" type="Microsoft.EntityFrameworkCore.Metadata.IEntityType" #>
+<#@ parameter name="Options" type="Microsoft.EntityFrameworkCore.Scaffolding.ModelCodeGenerationOptions" #>
+<#@ parameter name="NamespaceHint" type="System.String" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
+<#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
+<#
+    //Console.WriteLine("!!!!");
+    if (EntityType.IsSimpleManyToManyJoinEntityType())
+    {
+        // Don't scaffold these
+        return "";
+    }
+
+    var services = (IServiceProvider)Host;
+    var annotationCodeGenerator = services.GetRequiredService<IAnnotationCodeGenerator>();
+    var code = services.GetRequiredService<ICSharpHelper>();
+
+    var usings = new List<string>
+    {
+        "System",
+        "System.Collections.Generic",
+        "Microsoft.AspNetCore.Mvc"
+    };
+
+    if (Options.UseDataAnnotations)
+    {
+        usings.Add("System.ComponentModel.DataAnnotations");
+        usings.Add("System.ComponentModel.DataAnnotations.Schema");
+        usings.Add("Microsoft.EntityFrameworkCore");
+    }
+    //Console.WriteLine("!!!!");
+    var key = EntityType.FindPrimaryKey();
+    var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+
+
+    if (!string.IsNullOrEmpty(NamespaceHint))
+    {
+#>
+namespace <#= NamespaceHint #>;
+<# } #>
+[ApiController]
+[Route("api/[controller]")]    
+public partial class REST_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
+{
+    private <#= Options.ContextName #> _context;
+    public REST_<#=Options.ContextName#>_<#= EntityType.Name #>Controller(<#= Options.ContextName #> context)
+	{
+        _context=context;
+	}
+    [HttpGet]
+    public async Task<<#= EntityType.Name #>_Table[]> Get(){
+        var data= await _context.<#= EntityType.Name #>.ToArrayAsync();
+        var ret = data.Select(it => (<#= EntityType.Name #>_Table)it!).ToArray();
+        return ret;
+
+        
+    }
+    <# if(hasOneKey){ 
+        
+        Console.WriteLine(code == null);
+
+        var lambda= code.Lambda(key.Properties, "e") ;
+        Console.WriteLine(lambda == null);
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        Console.WriteLine(pk == null) ;
+        var keyType=pk.GetKeyType();        
+        Console.WriteLine(keyType == null);
+        var dot=lambda.IndexOf(".");
+        var namePK=lambda.Substring(dot+1);
+
+    #>
+
+        [HttpGet("{id}")]
+    public async Task<ActionResult<<#= EntityType.Name #>_Table>> Get<#= EntityType.Name #>(<#= code.Reference(keyType) #> id)
+    {
+        if (_context.<#= EntityType.Name #> == null)
+        {
+            return NotFound();
+        }
+        var item = await _context.<#= EntityType.Name #>.FirstOrDefaultAsync(<#= lambda #>==id);
+
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        return (<#= EntityType.Name #>_Table)item!;
+    }
+
+
+    [HttpPatch("{id}")]
+        public async Task<IActionResult> Put<#= EntityType.Name #>(<#= code.Reference(keyType) #> id, <#= EntityType.Name #> value)
+        {
+            if (id != value.<#= namePK #>)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(value).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!<#= EntityType.Name #>Exists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<<#= EntityType.Name #>>> Post<#= EntityType.Name #>(<#= EntityType.Name #>_Table value)
+        {
+          
+            var val = new <#= EntityType.Name #>();
+            val.CopyFrom(value);
+            _context.<#= EntityType.Name #>.Add(val);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("Get<#= EntityType.Name #>", new { id = val.<#=namePK#> }, val);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete<#= EntityType.Name #>(<#= code.Reference(keyType) #> id)
+        {
+            if (_context.<#= EntityType.Name #> == null)
+            {
+                return NotFound();
+            }
+            var item = await _context.<#= EntityType.Name #>.FirstOrDefaultAsync(<#= lambda #>==id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            _context.<#= EntityType.Name #> .Remove(item);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool <#= EntityType.Name #>Exists(<#= code.Reference(keyType) #> id)
+        {
+            return (_context.<#= EntityType.Name #>.Any(<#= lambda #>  == id));
+        }
+
+    <# } #>
+}    
+<#
+    var previousOutput = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+    WriteLine("//4.this was autogenerated by a tool. Do not modify! Use partial");
+    foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
+    {
+#>
+using <#= ns #>;
+<#
+    }
+
+    WriteLine("");
+
+    GenerationEnvironment.Append(previousOutput);
+    var restController = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+    WriteLine("//5.this was autogenerated by a tool. Do not modify! Use partial");
+    foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
+    {
+#>
+using <#= ns #>;
+<#
+    }
+
+        if (!string.IsNullOrEmpty(NamespaceHint))
+    {
+#>
+namespace <#= NamespaceHint #>;
+<# } #>
+[ApiController]
+[Route("api/[controller]/[action]")]    
+public partial class AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>Controller : Controller
+{
+    private ISearchData<#= EntityType.Name #> _search;
+    public AdvancedSearch_<#=Options.ContextName#>_<#= EntityType.Name #>Controller(ISearchData<#= EntityType.Name #> search)
+	{
+        _search=search;
+	}
+    [HttpGet]
+    public async Task<long> GetAllCount()
+    {
+       return await _search.GetAllCount();
+        
+    }
+    
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> GetAll()
+    {
+        await foreach(var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(null))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+        
+    }
+    [HttpGet]   
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> GetSearchSimple(string ColumnName, string Operator, string Value){
+           var search = new Search<#= EntityType.Name #>();
+           search.PageSize = int.MaxValue - 1;
+        search.SearchFields = new SearchField<e<#= EntityType.Name #>Columns>[1];
+        search.SearchFields[0]= new SearchField<e<#= EntityType.Name #>Columns>();
+        if(Enum.TryParse< e<#= EntityType.Name #>Columns >(ColumnName,true ,out var valField)){
+            search.SearchFields[0].FieldName = valField;
+        }
+        else
+        {
+            search.SearchFields[0].FieldName = (e<#= EntityType.Name #>Columns )int.Parse(ColumnName);;
+        }
+        search.SearchFields[0].Value= Value;
+        var criteria= SearchCriteria.None;
+        if(Enum.TryParse<SearchCriteria>(Operator,true,out var value))
+        {
+            criteria = value;
+        }
+        else
+        {
+            criteria = (SearchCriteria)int.Parse(Operator);
+        }
+        
+        search.SearchFields[0].Criteria= criteria;
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(search))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+
+    }
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> GetWithSearch(Search<#= EntityType.Name #> s)
+    {
+        await foreach(var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(s))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+        
+    }
+    [HttpGet]
+    public async Task<long> GetWithSearchCount(Search<#= EntityType.Name #>? s)
+    {
+        if (s == null)
+            return await GetAllCount();
+
+        return await _search.GetAllCount(s);
+    }
+<#if(hasOneKey){
+var pk=key.Properties[0].FindContainingPrimaryKey() ;
+#>
+
+//has one key
+    [HttpGet]
+    public async Task<<#= EntityType.Name #>_Table?> GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
+        var data=await _search.<#= EntityType.Name #>GetSingle(id);
+       if(data == null)
+        return null;
+       return (<#= EntityType.Name #>_Table)data;
+    }
+
+<# }//end one key  #>
+        <#
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var isNullable = property.IsNullable;
+        var hasArray=0;
+        var propType=code.Reference(property.ClrType);
+        if(propType.Contains("[]"))
+            hasArray=1;
+
+        var hasLess = 0;
+        var hasString=0;
+        var hasDateTime=0;
+        var propTypeNotNull= propType.Replace("?","");
+
+        if ("float" == propTypeNotNull ||  "byte" == propTypeNotNull || "string" == propTypeNotNull || "short" == propTypeNotNull || "int" == propTypeNotNull || "long" == propTypeNotNull  || "double" == propTypeNotNull || "DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull || "decimal" == propTypeNotNull)
+    hasLess=1;
+
+if ("string" == propType) 
+    hasString=1;
+
+if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
+    hasDateTime=1;
+
+
+     #>
+
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_EqualValue( <#= code.Reference(property.ClrType) #>  value)
+    {
+        var sc = GeneratorFromDB.SearchCriteria.Equal;
+        await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, value))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_DifferentValue( <#= code.Reference(property.ClrType) #>  value)
+    {
+        var sc = GeneratorFromDB.SearchCriteria.Different;
+        await foreach (var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc, value))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+    [HttpGet]
+    public  async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_SimpleSearch(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
+        await foreach(var item in _search.<#= EntityType.Name #>SimpleSearch_<#= property.Name #>(sc,value))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+
+    <# if(isNullable){#>
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_FindNull(){
+        var sc = GeneratorFromDB.SearchCriteria.Equal;
+        await foreach(var item in _search.<#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(sc))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_FindNotNull(){
+        var sc = GeneratorFromDB.SearchCriteria.Different;
+        await foreach(var item in _search.<#= EntityType.Name #>SimpleSearchNull_<#= property.Name #>(sc))
+        {
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+    <# } // if(isNullable)#>
+     <#if(hasArray==1) {continue;} #>
+
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_EqualValues( <#= code.Reference(property.ClrType) #>[]  values)
+    {
+        string? value=null;
+        if(values.Length>0)
+            value=string.Join( ",",values);
+        var sc=Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.InArray,e<#= EntityType.Name #>Columns.<#= property.Name #>,value);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+        
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_DifferentValues( <#= code.Reference(property.ClrType) #>[]  values)
+    {
+        string? value=null;
+        if(values.Length>0)
+            value=string.Join( ",",values);
+        var sc=Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.NotInArray,e<#= EntityType.Name #>Columns.<#= property.Name #>,value);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+        
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+    <# if(hasString == 1){ #>
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_Contains(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.Contains, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_EndsWith(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.EndsWith, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+
+      [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_StartsWith(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.StartsWith, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+
+
+    <# } // has string #>
+    <# if(hasLess == 1 || hasString == 1){ #>
+      [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_LessOrEqual(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.LessOrEqual, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val.ToString());
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_Less(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.Less, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val.ToString());
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+     
+      [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_GreaterOrEqual(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.GreaterOrEqual, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val.ToString());
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_Greater(<#= propTypeNotNull #>  val)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.Greater, e<#= EntityType.Name #>Columns.<#= property.Name #>  , val.ToString());
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }
+     [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_Between( <#= propTypeNotNull #>  valStart, <#= propTypeNotNull #> valEnd)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.Between, e<#= EntityType.Name #>Columns.<#= property.Name #>, valStart +","+ valEnd);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }    
+
+    [HttpGet]
+    public async IAsyncEnumerable<<#= EntityType.Name #>_Table> <#= property.Name #>_NotBetween( <#= propTypeNotNull #>  valStart, <#= propTypeNotNull #> valEnd)
+    {
+        var sc = Search<#= EntityType.Name #>.FromSearch(GeneratorFromDB.SearchCriteria.NotBetween, e<#= EntityType.Name #>Columns.<#= property.Name #>, valStart +","+ valEnd);
+        await foreach (var item in _search.<#= EntityType.Name #>Find_AsyncEnumerable(sc))
+        {
+
+            yield return (<#= EntityType.Name #>_Table)item!;
+        }
+    }    
+
+    <# } //less or string #>
+    <# } //property #>
+    
+
+
+    
+
+
+}//end class
+
+<#
+
+    string FileName = "AdvancedSearch"+ EntityType.Name +"Advanced.cs";
+    SaveOutputController(FileName ,GenerationEnvironment.ToString());
+    GenerationEnvironment = restController;
+#>
+<#+
+private void SaveOutputController(string outputFileName,string text) {
+  //string w= Host.ResolvePath("~/generatedFile.txt");
+  
+  string w=Host.TemplateFile;
+  Console.WriteLine("I am running  in  "+ w);
+  string templateDirectory = Path.GetDirectoryName(w);
+//modify this with path in create.ps1
+   string outputFilePath = Path.Combine(templateDirectory, "../../../GenerateDataForTest.Controllers/Generated/" + Options.ContextName +"/" );
+  outputFilePath = Path.Combine(outputFilePath ,outputFileName);
+  var dir=System.IO.Path.GetDirectoryName(outputFilePath);
+    dir=System.IO.Path.GetFullPath(dir);
+  Console.WriteLine("!!"+dir);
+  if(!System.IO.Directory.Exists(dir))
+    System.IO.Directory.CreateDirectory(dir);
+
+  //
+  
+  File.WriteAllText(outputFilePath, text); 
+  //this.GenerationEnvironment.Remove(0, this.GenerationEnvironment.Length);
+}
+#>

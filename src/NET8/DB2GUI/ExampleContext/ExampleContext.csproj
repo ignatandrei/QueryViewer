@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    
+    
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="7.0.1" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
+
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExampleModels\ExampleModels.csproj" />
+    <ProjectReference Include="..\GeneratorFromDB\GeneratorFromDB.csproj" />
+  </ItemGroup>
+  
+</Project>
