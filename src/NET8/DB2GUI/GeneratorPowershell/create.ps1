@@ -11,8 +11,9 @@ param (
 
 )
 cls
+Write-host "starting "
 try{
-# dotnet tool update --global dotnet-ef --version 7.0.1
+# dotnet tool update --global dotnet-ef --version 8.0.0
 #dotnet tool restore
 }
 catch{
@@ -25,6 +26,7 @@ dotnet tool list -g
 Write-Host "search for CRA in $ProjectCRA"
 
 $projectsFull = gci -Path $ProjectCRA -File  -Filter *.csproj | Select-Object  Fullname | Select-Object -First 1
+Write-Host "found project data"
 $project = $projectsFull.Fullname
 
 
@@ -64,7 +66,7 @@ function Generate{
     $pathToContext= $paramPathToGenerated + "DB/"+$nameContext
 
 
-
+    Write-Host $connection
     # https://docs.microsoft.com/ro-ro/ef/core/managing-schemas/scaffolding?tabs=dotnet-core-cli
     dotnet ef dbcontext scaffold $connection --data-annotations  -p $project -s $project $provider -v -f --no-pluralize --no-onconfiguring --use-database-names  --context $nameContext  --context-namespace Generated --namespace Generated --context-dir $pathToContext --output-dir $pathToModels  --prefix-output --force --json #--no-build
 
@@ -82,9 +84,9 @@ Generate "Context"  "../ExampleContext/Generated/" $project
 
 Generate "Controllers"  "../ExampleControllers/Generated/" $project 
 
-Generate "crats"  "../examplecrats/src/Admin/Generated/" $project
+# Generate "crats"  "../examplecrats/src/Admin/Generated/" $project
 
-Generate "angular"  "../ExampleAngular/src/app/Admin/Generated/" $project
+# Generate "angular"  "../ExampleAngular/src/app/Admin/Generated/" $project
 
 return
 

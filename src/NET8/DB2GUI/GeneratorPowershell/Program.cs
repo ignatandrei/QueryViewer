@@ -6,6 +6,10 @@ if (directory.EndsWith(@"bin\Debug\net7.0"))
     directory = directory.Replace(@"bin\Debug\net7.0", "");
 if (directory.EndsWith(@"bin\Debug\net7.0\"))
     directory = directory.Replace(@"bin\Debug\net7.0\", "");
+if (directory.EndsWith(@"bin\Debug\net8.0"))
+    directory = directory.Replace(@"bin\Debug\net8.0", "");
+if (directory.EndsWith(@"bin\Debug\net8.0\"))
+    directory = directory.Replace(@"bin\Debug\net8.0\", "");
 AnsiConsole.MarkupLine("[blue]!!!Make sure you have edited connectiondetails.txt file ![/]");
 AnsiConsole.MarkupLine($":play_button: Running in folder {pathGenerateFromDB}");
 //Console.WriteLine(pathGenerateFromDB); 
@@ -54,7 +58,7 @@ skip runPowershell connection {nrCon} at {DateTime.Now:hh:mm:ss}
         foreach (var errMessage in RunPowerShell(item, directory))
         {
 
-                Console.WriteLine($"Error running Powershell");
+                Console.WriteLine($"Error running Powershell:" +errMessage);
                 //AnsiConsole.MarkupLine("[red]!!!ERROR:"+errMessage);
 
         }
