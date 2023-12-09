@@ -32,7 +32,7 @@ public class TestOrderDetail
     {
         get
         {
-            var ext = extensions.GetOptions<NorthwindDBContext>();
+            var ext = Extensions.GetOptions<NorthwindDBContext>();
             return new NorthwindDBContext(ext);
 
             

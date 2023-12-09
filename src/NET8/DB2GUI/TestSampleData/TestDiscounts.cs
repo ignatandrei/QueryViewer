@@ -32,7 +32,7 @@ public class TestDiscounts
     {
         get
         {
-            var ext = extensions.GetOptions<PubsDBContext>();
+            var ext = Extensions.GetOptions<PubsDBContext>();
             return new PubsDBContext(ext);
 
 

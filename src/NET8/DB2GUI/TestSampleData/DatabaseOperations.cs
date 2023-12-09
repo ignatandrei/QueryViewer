@@ -4,7 +4,7 @@
 {
     public static void Restore(DbContext cnt, string nameDB)
     {
-        string file = Path.Combine(@"C:\all\QueryViewer\src\NET7\DB2GUI", "Backup" + nameDB + ".db");
+        string file = Path.Combine(@$"{Extensions.folder}", "Backup" + nameDB + ".db");
         if (File.Exists(file))
         {
 

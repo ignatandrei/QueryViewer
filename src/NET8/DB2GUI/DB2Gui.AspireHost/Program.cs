@@ -16,7 +16,8 @@ builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAPI))
         ctx.EnvironmentVariables[connectionStringName+ "NorthwindDBContext"] = cn + $";database=northwind;";
         ctx.EnvironmentVariables[connectionStringName+ "PubsDBContext"] = cn + $";database=pubs;";
     })
-    .WithReference(rb, "");
+    //.WithReference(rb, "")
+    ;
     
 //var apiservice = builder.AddProject<Projects.AspireSample_ApiService>("apiservice");
 

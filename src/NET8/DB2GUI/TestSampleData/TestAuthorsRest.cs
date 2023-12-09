@@ -28,7 +28,7 @@ public class TestRest
     {
         get
         {
-            var ext = extensions.GetOptions<PubsDBContext>();
+            var ext = Extensions.GetOptions<PubsDBContext>();
             return new PubsDBContext(ext);
 
         }
