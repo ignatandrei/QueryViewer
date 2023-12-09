@@ -9,11 +9,12 @@ var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>");
 builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAPI))
     .WithEnvironment(ctx=>
     {
-        var connectionStringName = $"ConnectionStrings__ApplicationDBContext";
+        var connectionStringName = $"ConnectionStrings__";
         var res=rb.Resource;
         var cn = res.GetConnectionString();
-        ctx.EnvironmentVariables[connectionStringName] = cn+ $";database=tests;";
-        
+        ctx.EnvironmentVariables[connectionStringName+ "ApplicationDBContext"] = cn+ $";database=tests;";
+        ctx.EnvironmentVariables[connectionStringName+ "NorthwindDBContext"] = cn + $";database=northwind;";
+        ctx.EnvironmentVariables[connectionStringName+ "PubsDBContext"] = cn + $";database=pubs;";
     })
     .WithReference(rb, "");
     
