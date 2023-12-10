@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject IConfiguration Configuration
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -12,5 +13,10 @@
         <article class="content px-4">
             @Body
         </article>
+
+        <section id="footer">
+            API: @Configuration["HOSTAPI"]
+        </section>
     </main>
+   
 </div>

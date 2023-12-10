@@ -1,6 +1,5 @@
 ﻿
-namespace DB2Gui.AspireHost;
-
+namespace Aspire.Hosting;
 public static class BlazorWebAssemblyProjectExtensions
 {
     public static IResourceBuilder<ProjectResource> AddWebAssemblyProject<TProject>(
@@ -26,11 +25,22 @@ public static class BlazorWebAssemblyProjectExtensions
             {
                 if (end.Any())
                 {
+                    
                     var fileContent = File.ReadAllText(file);
-                    var dict=JsonSerializer.Deserialize<Dictionary<string,object>>(fileContent);
+
+                    Dictionary<string, object>? dict;
+                    if (!string.IsNullOrWhiteSpace(fileContent))
+                        dict = new Dictionary<string, object>();
+                    else
+                        dict = JsonSerializer.Deserialize<Dictionary<string,object>>(fileContent!);
+
                     ArgumentNullException.ThrowIfNull(dict);
-                    dict["HOSTAPI"] = end.First().UriString;
-                    File.WriteAllText(file,JsonSerializer.Serialize(dict));
+                    dict["HOSTAPI"] = end.First().UriString;                    
+                    JsonSerializerOptions opt = new JsonSerializerOptions(JsonSerializerOptions.Default)
+                            { WriteIndented=true};
+                    File.WriteAllText(file,JsonSerializer.Serialize(dict,opt));
+                    ctx.EnvironmentVariables["HOSTAPI"]=end.First().UriString;
+                    
                 }
                     
             }

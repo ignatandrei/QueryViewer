@@ -1,10 +1,9 @@
-﻿
-await DeleteDockerContainers();
+﻿DeleteDockerContainers();
 var builder = DistributedApplication.CreateBuilder(args);
 
 var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>",1433);
 
-var api= builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAPI))
+var api = builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAPI))
     .WithEnvironment(ctx =>
     {
         var connectionStringName = $"ConnectionStrings__";
@@ -18,31 +17,28 @@ var api= builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAP
     //.WithReference(rb.AddDatabase("northwind"), "NorthwindDBContext")
     //.WithReference(rb.AddDatabase("pubs"), "PubsDBContext")
     //.WithReference(rb.AddDatabase("NotCreated"), "NotCreated")
-
     ;
-if (api.Resource.TryGetAllocatedEndPoints(out var end))
-{
-    if (end.Any())
-    {
-        var s1 = end;
-    }
-}
+ 
 
-var s =api.GetEndpoint("http");
-builder.AddProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp))
-    
-    .WithReference(api.GetEndpoint("http"))
-//.WithReference(api);
-;
-    //.WithEnvironment(ctx =>
-    //{
-    //    if (api.Resource.TryGetAllocatedEndPoints(out var end))
-    //    {
-    //        if (end.Any())
-    //            ctx.EnvironmentVariables["HOSTAPI"] = end.First().UriString;
-    //    }
+builder.AddWebAssemblyProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp), api);
 
-    //})
+
+    //builder.AddProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp))
+
+    //    .WithReference(api.GetEndpoint("http"))
+
+    //    .WithEnvironment(ctx=>)
+    ////.WithReference(api);
+    //;
+    //    //.WithEnvironment(ctx =>
+    //    //{
+    //    //    if (api.Resource.TryGetAllocatedEndPoints(out var end))
+    //    //    {
+    //    //        if (end.Any())
+    //    //            ctx.EnvironmentVariables["HOSTAPI"] = end.First().UriString;
+    //    //    }
+
+    //    //})
     ;
 //builder.AddExecutable("notepad.exe","notepad.exe",Environment.CurrentDirectory);
 var app = builder.Build();
@@ -131,7 +127,7 @@ async Task<int> ExecuteSql(string cn, string sql)
     
 }
 
-async Task DeleteDockerContainers()
+void DeleteDockerContainers()
 {
     var process = new Process
     {

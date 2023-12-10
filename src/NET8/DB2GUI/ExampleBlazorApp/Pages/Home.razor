@@ -1,38 +1,13 @@
 ﻿@page "/"
-@* @inject WebAssemblyHostConfiguration Configuration;
- *@
-@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
-@inject IWebAssemblyHostEnvironment Env
-
-@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 
 <PageTitle>Databases</PageTitle>
 
-<h1>Database browser generated automatically</h1>
-a3
-@Configuration["HOSTAPI"]
-@{
-    var x= @Configuration.AsEnumerable().ToArray();
-}
-asdsa @x.Length basdasd
-@foreach (var a in x)
-{
-    <p>@a.Key = @a.Value</p>
-})
+<h1>Database browser </h1>
 
 
-@Env.Environment
+    
 
-
-b1
-@foreach(var a in Environment.GetEnvironmentVariables())
-{
-    <p>@a</p>
-})
-
-
-End12
 @* @if (databases == null)
 {
     <p><em>Loading...</em></p>

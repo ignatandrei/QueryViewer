@@ -5,16 +5,14 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 var hostApi = builder.Configuration["HOSTAPI"];
 if (string.IsNullOrEmpty(hostApi))
 {
-    hostApi =Environment.GetEnvironmentVariable("HOSTAPI");
-    if (string.IsNullOrEmpty(hostApi))
-    {
-        hostApi = builder.HostEnvironment.BaseAddress;
-    }
+    hostApi = builder.HostEnvironment.BaseAddress;
+    var dict = new Dictionary<string, string?> { { "HOSTAPI", hostApi } };
+    builder.Configuration.AddInMemoryCollection(dict.ToArray());
 }
-    
 
-Console.WriteLine($"hostApi: {hostApi}");
 builder.Services.AddKeyedScoped("db",(sp,_) => new HttpClient { BaseAddress = new Uri(hostApi) });
+
+
 builder.Services.AddSingleton(builder.Configuration);
 await Task.WhenAll(
        builder.Build().RunAsync(),
