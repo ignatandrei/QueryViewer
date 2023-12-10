@@ -1,7 +1,8 @@
 ﻿@page "/databases/{database}/tables/{table}"
+@using Microsoft.AspNetCore.Components.QuickGrid
 @inherits LayoutComponentBase
 
-<h3>Table @table in Database @database</h3>
+Table <h3>@table</h3> in Database <i>@database</i>
 
 @if (columns == null)
 {
@@ -9,10 +10,20 @@
 }
 else
 {
-    for (int i = 0; i < columns.Length; i++)
-    {
-        @columns[i].Name
-    }
+  
+    <div class="table-responsive">
+        <QuickGrid Items="@columns" Virtualize="true" class="table table-striped table-bordered" @ref="myGrid">
+            <PropertyColumn Property="@(p => p.Name)" Sortable="true"  />
+            <PropertyColumn Property="@(p => p.IsPk)" Sortable="true"  />
+            <PropertyColumn Property="@(p => p.IsNullable)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Type)" Sortable="true"  />
+            <PropertyColumn Property="@(p => p.TypeJS)" Sortable="true"  />
+        </QuickGrid>
+    </div>
+    <button @onclick="LoadData">
+        LoadData
+    </button>
+    
 }
 
 
@@ -27,8 +38,13 @@ else
     [Inject(Key = "db")]
     public HttpClient? HttpClient_WebApi { get; set; } = null;
 
-    public MetaColumn[]? columns = null;
+    QuickGrid<MetaColumn>? myGrid;
 
+    public IQueryable<MetaColumn>? columns = null;
+    private void LoadData()
+    {
+        
+    }
     protected override async Task OnInitializedAsync()
     {
         ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
@@ -36,8 +52,14 @@ else
         var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
         if (data != null)
         {
-            columns = data.OrderBy(a => a.Name).ToArray();
+            columns = data.AsQueryable();
+            
+            //await myGrid?.RefreshDataAsync();
+
+            //await Task.Delay(20_000);
+          
         }
+       
 
     }
 }

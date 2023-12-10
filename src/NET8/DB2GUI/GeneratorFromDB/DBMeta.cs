@@ -99,8 +99,30 @@ public record MetaTable(string Name)
         data.Add(item.Name, item);
     }
 }
-public record MetaColumn(string Name, string Type, bool IsNullable)
+public record MetaColumn(string Name, string Type, bool IsNullable):IComparable<MetaColumn>, IComparer<MetaColumn>
 {
     public bool IsPk { get; set; }
     public string TypeJS { get; set; } = "";
+
+    public int Compare(MetaColumn? a, MetaColumn? b)
+    {
+        if (a == null || b == null) return int.MinValue;
+        if (a.IsPk && !b.IsPk)
+        {
+            return -1;
+        }
+        else if (!a.IsPk && b.IsPk)
+        {
+            return 1;
+        }
+        else
+        {
+            return a.Name.CompareTo(b.Name);
+        };
+    }
+
+    public int CompareTo(MetaColumn? other)
+    {
+        return this.CompareTo(other);
+    }
 };
