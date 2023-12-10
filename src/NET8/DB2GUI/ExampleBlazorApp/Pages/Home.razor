@@ -1,31 +1,42 @@
 ﻿@page "/"
-@inject IConfiguration Configuration
-
 <PageTitle>Databases</PageTitle>
 
-<h1>Database browser </h1>
+<h1>Databases @(databases == null ?"":databases.Length.ToString())</h1>
+ 
 
-
-    
-
-@* @if (databases == null)
+@if (databases == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-} *@
+    for (int i = 0; i < databases.Length; i++)
+    {
+        var c = i;
+        var data = $"databases/{databases[c]}";
+        <NavLink class="nav-link" href="@data">
+            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@databases[c]
+            
+        </NavLink>
+        
+    }
+}
 
 
 @code {
     private string[]? databases= null;
-    // [Inject(Key = "db")]
-    // public HttpClient HttpClient_WebApi { get; set; }
+    [Inject(Key = "db")]
+    public HttpClient? HttpClient_WebApi { get; set; } = null;
 
     protected override async Task OnInitializedAsync()
     {
+        ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
 
-        //databases = await HttpClient_WebApi.GetFromJsonAsync<string[]>("api/MetaData/DBNames");
-        await Task.Delay(100000);
+        var data= await HttpClient_WebApi.GetFromJsonAsync<string[]>("api/MetaData/DBNames");
+        if (data != null)
+        {
+            databases = data.OrderBy(a=>a).ToArray();
+        }
+        
     }
 }

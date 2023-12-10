@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DB2Gui.AspireHost", "DB2Gui
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DB2GUI.ServiceDefaults", "DB2GUI.ServiceDefaults\DB2GUI.ServiceDefaults.csproj", "{39D0F186-46E7-47A4-8275-6D33A5800C8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleBlazorApp", "ExampleBlazorApp\ExampleBlazorApp.csproj", "{EB8246EA-450A-4BC9-A61B-17B8D8EE3B4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleBlazorApp", "ExampleBlazorApp\ExampleBlazorApp.csproj", "{EB8246EA-450A-4BC9-A61B-17B8D8EE3B4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

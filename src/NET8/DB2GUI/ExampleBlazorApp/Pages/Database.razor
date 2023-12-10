@@ -1,0 +1,46 @@
+﻿@page "/databases/{database}"
+@inherits LayoutComponentBase
+<h3>Database @database</h3>
+
+
+
+@if (tables == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    for (int i = 0; i < tables.Length; i++)
+    {
+        var c = i;
+        var data = $"databases/{database}/tables/{tables[c]}";
+        <NavLink class="nav-link" href="@data">
+            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@(c+1)) @tables[c]
+        </NavLink>
+
+    }
+}
+
+
+
+@code {
+    [Parameter]
+    public string? database { get; set; } = null;
+
+    [Inject(Key = "db")]
+    public HttpClient? HttpClient_WebApi { get; set; } = null;
+
+    public string[]? tables = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
+
+        var data = await HttpClient_WebApi.GetFromJsonAsync<string[]>($"api/MetaData/TableNames/{database}");
+        if (data != null)
+        {
+            tables = data.OrderBy(a => a).ToArray();
+        }
+
+    }
+}

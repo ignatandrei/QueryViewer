@@ -1,0 +1,43 @@
+﻿@page "/databases/{database}/tables/{table}"
+@inherits LayoutComponentBase
+
+<h3>Table @table in Database @database</h3>
+
+@if (columns == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    for (int i = 0; i < columns.Length; i++)
+    {
+        @columns[i].Name
+    }
+}
+
+
+@code {
+    [Parameter]
+    public string? database { get; set; } = null;
+
+    [Parameter]
+    public string? table { get; set; } = null;
+
+
+    [Inject(Key = "db")]
+    public HttpClient? HttpClient_WebApi { get; set; } = null;
+
+    public MetaColumn[]? columns = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
+
+        var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
+        if (data != null)
+        {
+            columns = data.OrderBy(a => a.Name).ToArray();
+        }
+
+    }
+}
