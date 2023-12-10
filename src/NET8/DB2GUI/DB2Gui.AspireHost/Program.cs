@@ -1,7 +1,5 @@
 ﻿
-using Generated;
-using k8s.KubeConfigModels;
-
+await DeleteDockerContainers();
 var builder = DistributedApplication.CreateBuilder(args);
 
 var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>",1433);
@@ -22,28 +20,37 @@ var api= builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebAP
     //.WithReference(rb.AddDatabase("NotCreated"), "NotCreated")
 
     ;
-builder.AddProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp))
-    .WithEnvironment(ctx =>
+if (api.Resource.TryGetAllocatedEndPoints(out var end))
+{
+    if (end.Any())
     {
-       if(api.Resource.TryGetAllocatedEndPoints(out var end))
-        {
-            if(end.Any())
-                ctx.EnvironmentVariables["hostApi"] = end.First().UriString;
-        }
-       
-    })
-    ;
-builder.AddExecutable
-    
-//var apiservice = builder.AddProject<Projects.AspireSample_ApiService>("apiservice");
+        var s1 = end;
+    }
+}
 
-//builder.AddProject<Projects.AspireSample_Web>("webfrontend")
-//    .WithReference(cache)
-//    .WithReference(apiservice);
+var s =api.GetEndpoint("http");
+builder.AddProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp))
+    
+    .WithReference(api.GetEndpoint("http"))
+//.WithReference(api);
+;
+    //.WithEnvironment(ctx =>
+    //{
+    //    if (api.Resource.TryGetAllocatedEndPoints(out var end))
+    //    {
+    //        if (end.Any())
+    //            ctx.EnvironmentVariables["HOSTAPI"] = end.First().UriString;
+    //    }
+
+    //})
+    ;
+//builder.AddExecutable("notepad.exe","notepad.exe",Environment.CurrentDirectory);
 var app = builder.Build();
 //Expected allocated endpoints!
 //await CreateData(rb);
-//await app.RunAsync();
+//await app.RunAsync(); 
+
+
 
 await Task.WhenAll(app.RunAsync(),CreateData(rb));
 
@@ -122,4 +129,27 @@ async Task<int> ExecuteSql(string cn, string sql)
         throw;
     }
     
+}
+
+async Task DeleteDockerContainers()
+{
+    var process = new Process
+    {
+        StartInfo = new ProcessStartInfo
+        {
+            FileName = "powershell.exe",
+            Arguments = $$"""
+-Command "docker rm -f $(docker ps -a -q)"
+""",
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+        }
+    };
+    process.Start();
+    while (!process.StandardOutput.EndOfStream)
+    {
+        var line = process.StandardOutput.ReadLine();
+        Console.WriteLine(line);
+    }
 }

@@ -1,7 +1,56 @@
 ﻿@page "/"
+@* @inject WebAssemblyHostConfiguration Configuration;
+ *@
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@inject IWebAssemblyHostEnvironment Env
 
-<PageTitle>Database</PageTitle>
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<PageTitle>Databases</PageTitle>
 
 <h1>Database browser generated automatically</h1>
+a3
+@Configuration["HOSTAPI"]
+@{
+    var x= @Configuration.AsEnumerable().ToArray();
+}
+asdsa @x.Length basdasd
+@foreach (var a in x)
+{
+    <p>@a.Key = @a.Value</p>
+})
 
 
+@Env.Environment
+
+
+b1
+@foreach(var a in Environment.GetEnvironmentVariables())
+{
+    <p>@a</p>
+})
+
+
+End12
+@* @if (databases == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+} *@
+
+
+@code {
+    private string[]? databases= null;
+    // [Inject(Key = "db")]
+    // public HttpClient HttpClient_WebApi { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //databases = await HttpClient_WebApi.GetFromJsonAsync<string[]>("api/MetaData/DBNames");
+        await Task.Delay(100000);
+    }
+}
