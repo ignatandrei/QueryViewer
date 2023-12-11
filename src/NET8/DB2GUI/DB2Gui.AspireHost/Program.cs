@@ -20,7 +20,7 @@ var api = builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebA
     ;
  
 
-builder.AddWebAssemblyProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp), api);
+builder.AddWebAssemblyProject<Projects.ExampleBlazor>(nameof(Projects.ExampleBlazor), api);
 
 
     //builder.AddProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp))

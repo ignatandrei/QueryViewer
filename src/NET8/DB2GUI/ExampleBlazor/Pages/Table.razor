@@ -1,5 +1,4 @@
 ﻿@page "/databases/{database}/tables/{table}"
-@using Microsoft.AspNetCore.Components.QuickGrid
 @inherits LayoutComponentBase
 
 Table <h3>@table</h3> in Database <i>@database</i>
@@ -10,20 +9,21 @@ Table <h3>@table</h3> in Database <i>@database</i>
 }
 else
 {
-  
-    <div class="table-responsive">
-        <QuickGrid Items="@columns" Virtualize="true" class="table table-striped table-bordered" @ref="myGrid">
-            <PropertyColumn Property="@(p => p.Name)" Sortable="true"  />
-            <PropertyColumn Property="@(p => p.IsPk)" Sortable="true"  />
+
+    <div>
+        Number columns: @columns.Count()
+        @* <FluentGrid Items="@columns" Virtualize="true"  @ref="myGrid">            
+            <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.IsPk)" Sortable="true"   />
             <PropertyColumn Property="@(p => p.IsNullable)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Type)" Sortable="true"  />
-            <PropertyColumn Property="@(p => p.TypeJS)" Sortable="true"  />
-        </QuickGrid>
+            <PropertyColumn Property="@(p => p.Type)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.TypeJS)" Sortable="true" />
+        </FluentGrid> *@
     </div>
     <button @onclick="LoadData">
         LoadData
     </button>
-    
+
 }
 
 
@@ -38,12 +38,12 @@ else
     [Inject(Key = "db")]
     public HttpClient? HttpClient_WebApi { get; set; } = null;
 
-    QuickGrid<MetaColumn>? myGrid;
+    FluentGrid? myGrid;
 
     public IQueryable<MetaColumn>? columns = null;
     private void LoadData()
     {
-        
+
     }
     protected override async Task OnInitializedAsync()
     {
@@ -53,13 +53,13 @@ else
         if (data != null)
         {
             columns = data.AsQueryable();
-            
+
             //await myGrid?.RefreshDataAsync();
 
             //await Task.Delay(20_000);
-          
+
         }
-       
+
 
     }
 }

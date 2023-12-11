@@ -1,6 +1,6 @@
 {
-  "name": "ExampleBlazorApp",
-  "short_name": "ExampleBlazorApp",
+  "name": "ExampleBlazor",
+  "short_name": "ExampleBlazor",
   "id": "./",
   "start_url": "./",
   "display": "standalone",

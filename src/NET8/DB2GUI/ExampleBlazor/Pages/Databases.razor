@@ -1,8 +1,10 @@
-﻿@page "/"
+﻿@page "/databases"
+
 <PageTitle>Databases</PageTitle>
 
-<h1>Databases @(databases == null ?"":databases.Length.ToString())</h1>
- 
+
+<h1>Databases @(databases == null ? "" : databases.Length.ToString())</h1>
+
 
 @if (databases == null)
 {
@@ -16,15 +18,15 @@ else
         var data = $"databases/{databases[c]}";
         <NavLink class="nav-link" href="@data">
             <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@databases[c]
-            
+
         </NavLink>
-        
+        <br />
     }
 }
 
 
 @code {
-    private string[]? databases= null;
+    private string[]? databases = null;
     [Inject(Key = "db")]
     public HttpClient? HttpClient_WebApi { get; set; } = null;
 
@@ -32,11 +34,13 @@ else
     {
         ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
 
-        var data= await HttpClient_WebApi.GetFromJsonAsync<string[]>("api/MetaData/DBNames");
+        var data = await HttpClient_WebApi.GetFromJsonAsync<string[]>("api/MetaData/DBNames");
         if (data != null)
         {
-            databases = data.OrderBy(a=>a).ToArray();
+            databases = data.OrderBy(a => a).ToArray();
         }
-        
+
     }
 }
+
+
