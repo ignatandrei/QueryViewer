@@ -8,7 +8,7 @@
 		"ProjectForContext": "..\\ExampleContext\\ExampleContext.csproj",
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
 		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
-		"ConnectionString":"Server=127.0.0.1,29172;User ID=sa;Password=<YourStrong@Passw0rd>;Initial Catalog=tests;TrustServerCertificate=true;",
+		"ConnectionString":"Server=127.0.0.1;User ID=sa;Password=<YourStrong@Passw0rd>;Initial Catalog=tests;TrustServerCertificate=true;",
 		"ConnectionString1":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=tests;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;",
 		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	},
@@ -19,7 +19,7 @@
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
 		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
 		"NameContext": "PubsDBContext",
-		"ConnectionString":"Server=127.0.0.1,29172;User ID=sa;Password=<YourStrong@Passw0rd>;Initial Catalog=pubs;TrustServerCertificate=true;",
+		"ConnectionString":"Server=127.0.0.1;User ID=sa;Password=<YourStrong@Passw0rd>;Initial Catalog=pubs;TrustServerCertificate=true;",
 		"ConnectionString1":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=pubs;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;",
 		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	},
@@ -30,7 +30,7 @@
 		"ProjectForClasses": "..\\ExampleModels\\ExampleModels.csproj",
 		"ProjectWithDesigner": "..\\ExampleControllers\\ExampleControllers.csproj",
 		"NameContext": "NorthwindDBContext",
-		"ConnectionString":"Server=127.0.0.1,29172;User ID=sa;Password=<YourStrong@Passw0rd>;Initial Catalog=northwind;TrustServerCertificate=true;",
+		"ConnectionString":"Server=127.0.0.1;User ID=sa;Password=<YourStrong@Passw0rd>;Initial Catalog=northwind;TrustServerCertificate=true;",
 		"ConnectionString1":"Data Source=sqlservertestdbep.database.windows.net;Initial Catalog=Northwind;UId=myadmin;pwd=p@rola123;TrustServerCertificate=true;",
 		"ProjectCRA":"..\\GeneratorCRA\\GeneratorCRA.csproj"
 	}

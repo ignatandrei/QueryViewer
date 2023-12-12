@@ -506,7 +506,7 @@ private void SaveOutputController(string outputFileName,string text) {
   Console.WriteLine("I am running  in  "+ w);
   string templateDirectory = Path.GetDirectoryName(w);
 //modify this with path in create.ps1
-   string outputFilePath = Path.Combine(templateDirectory, "../../../GenerateDataForTest.Controllers/Generated/" + Options.ContextName +"/" );
+   string outputFilePath = Path.Combine(templateDirectory, "../../../ExampleControllers/Generated/" + Options.ContextName +"/" );
   outputFilePath = Path.Combine(outputFilePath ,outputFileName);
   var dir=System.IO.Path.GetDirectoryName(outputFilePath);
     dir=System.IO.Path.GetFullPath(dir);
