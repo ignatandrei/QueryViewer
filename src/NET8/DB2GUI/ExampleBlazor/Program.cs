@@ -1,3 +1,4 @@
+
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
@@ -15,6 +16,6 @@ if (string.IsNullOrEmpty(hostApi))
 }
 
 builder.Services.AddKeyedScoped("db", (sp, _) => new HttpClient { BaseAddress = new Uri(hostApi) });
-
+builder.Services.AddScoped<WebAPIInteraction>();
 
 await builder.Build().RunAsync();

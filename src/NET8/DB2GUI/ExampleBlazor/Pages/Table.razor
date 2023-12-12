@@ -1,6 +1,6 @@
 ﻿@page "/databases/{database}/tables/{table}"
 @inherits LayoutComponentBase
-
+@inject WebAPIInteraction interaction
 Table <h3>@table</h3> in Database <i>@database</i>
 Number records: @nrRecords
 @if (columns == null)
@@ -49,7 +49,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
-        nrRecords = await HttpClient_WebApi.GetFromJsonAsync<int>($"api/AdvancedSearch_{database}_{table}/GetAllCount");
+        ArgumentNullException.ThrowIfNull(database);
+        ArgumentNullException.ThrowIfNull(table);
+        nrRecords = await interaction.GetTableCount(database,table);
 
         var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
         if (data != null)

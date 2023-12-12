@@ -1,5 +1,5 @@
 ﻿@page "/databases/{database}/tables"
-
+@inject WebAPIInteraction interaction
 
 <h1>Tables</h1>
 
@@ -10,13 +10,16 @@
 }
 else
 {
-    for (int i = 0; i < tables.Length; i++)
+    int i= 0;
+    foreach (var t in tables.Keys)
     {
-        var c = i;
-        var data = $"databases/{database}/tables/{tables[c]}";
+        var nr= ++i;
+        var c = t;
+        var data = $"databases/{database}/tables/{c}";
         <NavLink class="nav-link" href="@data">
-            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@(c + 1)) @tables[c]
+            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@(nr)) @c 
         </NavLink>
+        @(tables[c] == null ? "" : tables[c].ToString() + " rows")
         <br />
     }
 }
@@ -30,7 +33,7 @@ else
     [Inject(Key = "db")]
     public HttpClient? HttpClient_WebApi { get; set; } = null;
 
-    public string[]? tables = null;
+    public Dictionary<string,int?>? tables = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,8 +42,26 @@ else
         var data = await HttpClient_WebApi.GetFromJsonAsync<string[]>($"api/MetaData/TableNames/{database}");
         if (data != null)
         {
-            tables = data.OrderBy(a => a).ToArray();
+            tables = data.OrderBy(a => a).ToDictionary(a => a, a => (int?)null);
         }
 
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (database == null || tables == null || tables.Count == 0)
+            return;
+        var tasks = tables.Keys
+            .Select(it => interaction.GetTableCount(database, it).AddData(it))
+            .ToArray();
+        await Task.WhenAll(tasks);
+        foreach (var t in tasks)
+        {
+            if(t.IsCompletedSuccessfully)
+                tables[t.Result.data] = t.Result.res;
+        }
+                
+        await InvokeAsync(StateHasChanged);
+        
+        await base.OnAfterRenderAsync(firstRender);
     }
 }
