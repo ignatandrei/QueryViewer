@@ -33,7 +33,7 @@ else
     [Inject(Key = "db")]
     public HttpClient? HttpClient_WebApi { get; set; } = null;
 
-    public Dictionary<string,int?>? tables = null;
+    public Dictionary<string,long?>? tables = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,7 +42,7 @@ else
         var data = await HttpClient_WebApi.GetFromJsonAsync<string[]>($"api/MetaData/TableNames/{database}");
         if (data != null)
         {
-            tables = data.OrderBy(a => a).ToDictionary(a => a, a => (int?)null);
+            tables = data.OrderBy(a => a).ToDictionary(a => a, a => (long?)null);
         }
 
     }

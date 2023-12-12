@@ -2,14 +2,13 @@
 @inherits LayoutComponentBase
 @inject WebAPIInteraction interaction
 Table <h3>@table</h3> in Database <i>@database</i>
-Number records: @nrRecords
 @if (columns == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-
+@* 
     <div>
         
         <FluentDataGrid Items="@columns">
@@ -18,12 +17,12 @@ else
             <PropertyColumn Property="@(p => p.IsNullable)"  Sortable="true" />
             <PropertyColumn Property="@(p => p.TypeJS)"  Sortable="true" />
         </FluentDataGrid>
-    </div>
+    </div> *@
 
-    <button @onclick="LoadData">
-        LoadData
-    </button>
-
+    
+    <ExampleBlazor.Pages.Generated.Order_Details_Extended_page 
+    database="@database" table="@table"
+    totalRecords="@nrRecords"></ExampleBlazor.Pages.Generated.Order_Details_Extended_page>
 }
 
 
@@ -34,7 +33,7 @@ else
     [Parameter]
     public string? table { get; set; } = null;
 
-    public int? nrRecords { get; set; } = null;
+    public long? nrRecords { get; set; } = null;
     [Inject(Key = "db")]
     public HttpClient? HttpClient_WebApi { get; set; } = null;
 
@@ -42,10 +41,7 @@ else
     FluentGrid? myGrid;
 
     public IQueryable<MetaColumn>? columns = null;
-    private void LoadData()
-    {
-
-    }
+    
     protected override async Task OnInitializedAsync()
     {
         ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
@@ -54,11 +50,9 @@ else
         nrRecords = await interaction.GetTableCount(database,table);
 
         var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
-        if (data != null)
+        if (data != null) 
         {
             columns = data.AsQueryable();
         }
-
-
     }
 }

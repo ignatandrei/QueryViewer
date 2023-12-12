@@ -9,9 +9,9 @@ public class WebAPIInteraction
         _httpClient = httpClient;
     }
 
-    public async Task<int> GetTableCount(string database,string table)
+    public async Task<long> GetTableCount(string database,string table)
     {
-        return  await _httpClient.GetFromJsonAsync<int>($"api/AdvancedSearch_{database}_{table}/GetAllCount");
+        return  await _httpClient.GetFromJsonAsync<long>($"api/AdvancedSearch_{database}_{table}/GetAllCount");
 
     }
 }
