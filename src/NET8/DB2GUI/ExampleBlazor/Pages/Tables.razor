@@ -17,9 +17,11 @@ else
         var c = t;
         var data = $"databases/{database}/tables/{c}";
         <NavLink class="nav-link" href="@data">
+            <FluentIcon Value="@(new Icons.Regular.Size24.Table())" />
             <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@(nr)) @c 
         </NavLink>
-        @(tables[c] == null ? "" : tables[c].ToString() + " rows")
+        
+        @(tables[c] == null ? "" : " rows : "+tables[c].ToString())
         <br />
     }
 }

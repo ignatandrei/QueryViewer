@@ -17,6 +17,7 @@ else
         var c = i;
         var data = $"databases/{databases[c]}";
         <NavLink class="nav-link" href="@data">
+            <FluentIcon Value="@(new Icons.Regular.Size24.Database())" />
             <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@databases[c]
 
         </NavLink>
