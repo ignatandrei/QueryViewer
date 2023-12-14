@@ -9,9 +9,16 @@
 else
 {
     
-    <ExampleBlazor.Pages.Generated.Order_Details_Extended_page 
-    database="@database" table="@table"
-    totalRecords="@nrRecords"></ExampleBlazor.Pages.Generated.Order_Details_Extended_page>
+    @if(componentType != null)
+    {
+        <DynamicComponent Type="@componentType" Parameters="@parameters" />
+    }
+    else
+    {
+        <span>Not found razor @componentTypeName</span>
+    }
+
+
 }
 
 
@@ -26,7 +33,9 @@ else
     [Inject(Key = "db")]
     public HttpClient? HttpClient_WebApi { get; set; } = null;
 
-
+    private Type? componentType = null;  
+    private string componentTypeName = string.Empty;
+    private Dictionary<string, object> parameters = new();
     FluentGrid? myGrid;
 
     public IQueryable<MetaColumn>? columns = null;
@@ -37,7 +46,13 @@ else
         ArgumentNullException.ThrowIfNull(database);
         ArgumentNullException.ThrowIfNull(table);
         nrRecords = await interaction.GetTableCount(database,table);
-
+        parameters.Add("database", database);
+        parameters.Add("table", table);
+        parameters.Add("totalRecords", nrRecords);
+        
+        
+        componentTypeName = $"ExampleBlazor.Pages.Generated.{table}_page";
+        componentType = Type.GetType(componentTypeName);
         var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
         if (data != null) 
         {
