@@ -89,6 +89,10 @@ function Generate{
 # Generate "angular"  "../ExampleAngular/src/app/Admin/Generated/" $project
 
 Generate "blazor"  "../ExampleBlazor/Pages/Generated/" $project 
+
+#blazor do not admit lowercase razor files
+$TextInfo = (Get-Culture).TextInfo
+get-childitem -Recurse ../ExampleBlazor/Pages/Generated/ -Filter *.razor | foreach { $NewName = $TextInfo.ToTitleCase($_); ren $_.FullName $NewName }
 return
 
 #Write-Host "search for csproj model in $projectModels"

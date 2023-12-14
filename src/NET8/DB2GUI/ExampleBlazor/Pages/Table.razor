@@ -1,4 +1,5 @@
 ﻿@page "/databases/{database}/tables/{table}"
+@using System.Globalization
 @inherits LayoutComponentBase
 @inject WebAPIInteraction interaction
 <h3>@table</h3> 
@@ -8,6 +9,8 @@
 }
 else
 {
+    
+    
     
     @if(componentType != null)
     {
@@ -39,7 +42,7 @@ else
     FluentGrid? myGrid;
 
     public IQueryable<MetaColumn>? columns = null;
-    
+
     protected override async Task OnInitializedAsync()
     {
         ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
@@ -49,13 +52,17 @@ else
         parameters.Add("database", database);
         parameters.Add("table", table);
         parameters.Add("totalRecords", nrRecords);
-        
-        componentTypeName = $"ExampleBlazor.Pages.Generated.Models.{database}.{table}_page";        
+        var textInfo = new CultureInfo("en-US", false).TextInfo;
+        // blazor do not admit lowercase razor files
+
+        string nameTableRazor = textInfo.ToTitleCase(table);
+        Console.WriteLine(nameTableRazor);
+        componentTypeName = $"ExampleBlazor.Pages.Generated.Models.{database}.{nameTableRazor}_Page";
         componentType = Type.GetType(componentTypeName);
         var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
         if (data != null) 
         {
             columns = data.AsQueryable();
         }
-    }
+    } 
 }

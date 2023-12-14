@@ -43,7 +43,7 @@
 
 
 <FluentDataGrid Items="@dataForQuery" Virtualize="true" GenerateHeader="GenerateHeaderOption.Sticky">
-    <PropertyColumn Property="@(p => p.number)" Sortable="true" >
+    <PropertyColumn Property="@(p => p.number)" Sortable="true"  IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending" >
        
     </PropertyColumn>
     <#
@@ -182,13 +182,13 @@
             if (item == null) continue;
             i++;
             dataArr.Add(new DataWithNumber<<#= nameTable #>>(i, item));
-            if ((i < 500 && i % 100 == 0) || (i > 500 && i % 1000 == 0))
+            if ((i<100 && i%10==0) || (i>100 && i < 900 && i % 100 == 0) || (i > 900 && i % 1000 == 0))
             {
-                Console.WriteLine($"i={i}");
+                //Console.WriteLine($"i={i}");
                 nrRecordsLoaded = i;
 
                 await InvokeAsync(StateHasChanged);
-                await Task.Delay(2_000);
+                await Task.Delay(i<500? 1_000:2_000);
             }
         }
         nrRecordsLoaded = i;
