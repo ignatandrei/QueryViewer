@@ -1,24 +1,13 @@
 ﻿@page "/databases/{database}/tables/{table}"
 @inherits LayoutComponentBase
 @inject WebAPIInteraction interaction
-Table <h3>@table</h3> in Database <i>@database</i>
+<h3>@table</h3> 
 @if (columns == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-@* 
-    <div>
-        
-        <FluentDataGrid Items="@columns">
-            <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.IsPk)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.IsNullable)"  Sortable="true" />
-            <PropertyColumn Property="@(p => p.TypeJS)"  Sortable="true" />
-        </FluentDataGrid>
-    </div> *@
-
     
     <ExampleBlazor.Pages.Generated.Order_Details_Extended_page 
     database="@database" table="@table"
