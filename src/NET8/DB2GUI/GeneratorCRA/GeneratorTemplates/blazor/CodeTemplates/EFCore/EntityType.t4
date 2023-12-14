@@ -1,4 +1,3 @@
-//modified 2023-09-03
 <#@ template hostSpecific="true" #>
 <#@ output extension="_page.razor" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore" #>
@@ -16,6 +15,7 @@
 <#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
 <#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
 <#
+        //modified 2023-09-03
     if (EntityType.IsSimpleManyToManyJoinEntityType())
     {
         // Don't scaffold these
@@ -25,7 +25,9 @@
     var services = (IServiceProvider)Host;
     var annotationCodeGenerator = services.GetRequiredService<IAnnotationCodeGenerator>();
     var code = services.GetRequiredService<ICSharpHelper>();
-
+    string nameTable= EntityType.Name;
+    var tableFields = EntityType.GetProperties().ToArray();
+    
 #>
 @using global::Generated
 
@@ -44,25 +46,25 @@
     <PropertyColumn Property="@(p => p.number)" Sortable="true" >
        
     </PropertyColumn>
-    <TemplateColumn Title="OrderID" SortBy="@sortByOrderId">
+    <#
+    foreach(var field in tableFields) {
+    #>
+    <TemplateColumn Title="<#= field.Name #>" SortBy="@sortBy<#= field.Name #>">
         <ColumnOptions>
-            OrderId => @filters[eOrder_Details_ExtendedColumns.OrderID]
+            <#= field.Name #> => @filters[e<#= nameTable #>Columns.<#= field.Name #>]
             <div class="search-box">
-                <FluentSearch type="search" Autofocus=true @bind-Value=filters[eOrder_Details_ExtendedColumns.OrderID] @oninput='(e)=>HandleColumnsFilter(eOrder_Details_ExtendedColumns.OrderID,e)' @bind-Value:after='()=>HandleClearColumnsFilter(eOrder_Details_ExtendedColumns.OrderID)' Placeholder="Order Id..." />
+                <FluentSearch type="search" Autofocus=true @bind-Value=filters[e<#= nameTable #>Columns.<#= field.Name #>] @oninput='(e)=>HandleColumnsFilter(e<#= nameTable #>Columns.<#= field.Name #>,e)' @bind-Value:after='()=>HandleClearColumnsFilter(e<#= nameTable #>Columns.<#= field.Name #>)' Placeholder="Order Id..." />
             </div>
         </ColumnOptions>
         <ChildContent>
-        <div>@context.data.OrderID</div>
+        <div>@context.data.<#= field.Name #></div>
         </ChildContent>
         
 
 
     </TemplateColumn>
-    <PropertyColumn Property="@(p => p.data.UnitPrice)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.data.ExtendedPrice)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.data.ProductID)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.data.Quantity)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.data.Discount)" Sortable="true" />
+    <# } //end foreach field
+    #>
 </FluentDataGrid>
 
 
@@ -79,11 +81,11 @@
     [Parameter]
     public long? totalRecords { get; set; } = null;
 
-    List<DataWithNumber<Order_Details_Extended>> dataArr = [];
+    List<DataWithNumber<<#= nameTable #>>> dataArr = [];
 
     public long recordFiltered  => Filtered.LongLength;
     public bool loading = false;
-    private DataWithNumber<Order_Details_Extended>[] Filtered
+    private DataWithNumber<<#= nameTable #>>[] Filtered
     {
         get
         {
@@ -93,23 +95,32 @@
             {
                 switch (item.Key)
                 {
-                    case eOrder_Details_ExtendedColumns.OrderID:
+                <#
+    foreach(var field in tableFields) {
+    #>
+                    case e<#= nameTable #>Columns.<#= field.Name #>:
                         arr = arr
-                        .Where(x => x.data.OrderID.ToString().Contains(item.Value, StringComparison.CurrentCultureIgnoreCase))
+                        .Where(x => x.data.<#= field.Name #>.ToString().Contains(item.Value, StringComparison.CurrentCultureIgnoreCase))
                         .ToArray();
                         break;
+<# } //end foreach field
+	#>
                 }
             }
             return arr;
         }
     }
 
-
-    GridSort<DataWithNumber<Order_Details_Extended>> sortByOrderId = GridSort<DataWithNumber<Order_Details_Extended>>
-       .ByAscending(p => p.data.OrderID)
+    <#
+    foreach(var field in tableFields) {
+    #>
+    GridSort<DataWithNumber<<#= nameTable #>>> sortBy<#= field.Name #> = GridSort<DataWithNumber<<#= nameTable #>>>
+       .ByAscending(p => p.data.<#= field.Name #>)
        .ThenDescending(p => p.number);
+    <# } //end foreach field
+	#>
 
-    public IQueryable<DataWithNumber<Order_Details_Extended>>? dataForQuery
+    public IQueryable<DataWithNumber<<#= nameTable #>>>? dataForQuery
     {
         get
         {
@@ -118,10 +129,14 @@
     }
 
     string nameNumberFilter = string.Empty;
-    string nameOrderIdFilter = string.Empty;
-    Dictionary<eOrder_Details_ExtendedColumns, string> filters =new() {
-        {eOrder_Details_ExtendedColumns.OrderID, string.Empty}        
-
+    
+    Dictionary<e<#= nameTable #>Columns, string> filters =new() {
+    <#
+    foreach(var field in tableFields) {
+    #>
+        {e<#= nameTable #>Columns.<#= field.Name #>, string.Empty},     
+        <# } //end foreach field
+	#>
     };
 
     public string filterText{
@@ -136,19 +151,17 @@
         return filters.Any(x => !string.IsNullOrWhiteSpace(x.Value));
     }
 
-    void HandleColumnsFilter(eOrder_Details_ExtendedColumns name, ChangeEventArgs args)
+    void HandleColumnsFilter(e<#= nameTable #>Columns name, ChangeEventArgs args)
     {
         if (args != null && args.Value != null)
         {
             filters[name] = args.Value.ToString() ?? "";
-            
-            
         }
     }
     
-    private void HandleClearColumnsFilter(eOrder_Details_ExtendedColumns name)
+    private void HandleClearColumnsFilter(e<#= nameTable #>Columns name)
     {
-        if (string.IsNullOrWhiteSpace(nameOrderIdFilter))
+        if (string.IsNullOrWhiteSpace(filters[name]))
         {
             filters[name] = string.Empty;
            
@@ -160,7 +173,7 @@
 
         var url = $"/api/AdvancedSearch_{database}_{table}/GetAll";
         ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
-        var data = HttpClient_WebApi.GetFromJsonAsAsyncEnumerable<Order_Details_Extended>(url);
+        var data = HttpClient_WebApi.GetFromJsonAsAsyncEnumerable<<#= nameTable #>>(url);
         ArgumentNullException.ThrowIfNull(data);
         int i = 0;
         loading = true;
@@ -168,7 +181,7 @@
         {
             if (item == null) continue;
             i++;
-            dataArr.Add(new DataWithNumber<Order_Details_Extended>(i, item));
+            dataArr.Add(new DataWithNumber<<#= nameTable #>>(i, item));
             if ((i < 500 && i % 100 == 0) || (i > 500 && i % 1000 == 0))
             {
                 Console.WriteLine($"i={i}");

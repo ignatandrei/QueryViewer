@@ -50,8 +50,7 @@ else
         parameters.Add("table", table);
         parameters.Add("totalRecords", nrRecords);
         
-        
-        componentTypeName = $"ExampleBlazor.Pages.Generated.{table}_page";
+        componentTypeName = $"ExampleBlazor.Pages.Generated.Models.{database}.{table}_page";        
         componentType = Type.GetType(componentTypeName);
         var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
         if (data != null) 
