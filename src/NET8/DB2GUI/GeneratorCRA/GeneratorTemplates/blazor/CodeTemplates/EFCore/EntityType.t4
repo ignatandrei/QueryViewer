@@ -27,3 +27,160 @@
     var code = services.GetRequiredService<ICSharpHelper>();
 
 #>
+@using global::Generated
+
+<FluentButton Loading="@loading"
+              OnClick="@LoadData" Appearance="Appearance.Accent">LoadData @nrRecordsLoaded / @totalRecords</FluentButton>
+
+@if (ExistsFilter())
+{
+    <text>
+        @recordFiltered records Filtered with : @filterText
+    </text>
+}
+
+
+<FluentDataGrid Items="@dataForQuery" Virtualize="true" GenerateHeader="GenerateHeaderOption.Sticky">
+    <PropertyColumn Property="@(p => p.number)" Sortable="true" >
+       
+    </PropertyColumn>
+    <TemplateColumn Title="OrderID" SortBy="@sortByOrderId">
+        <ColumnOptions>
+            OrderId => @filters[eOrder_Details_ExtendedColumns.OrderID]
+            <div class="search-box">
+                <FluentSearch type="search" Autofocus=true @bind-Value=filters[eOrder_Details_ExtendedColumns.OrderID] @oninput='(e)=>HandleColumnsFilter(eOrder_Details_ExtendedColumns.OrderID,e)' @bind-Value:after='()=>HandleClearColumnsFilter(eOrder_Details_ExtendedColumns.OrderID)' Placeholder="Order Id..." />
+            </div>
+        </ColumnOptions>
+        <ChildContent>
+        <div>@context.data.OrderID</div>
+        </ChildContent>
+        
+
+
+    </TemplateColumn>
+    <PropertyColumn Property="@(p => p.data.UnitPrice)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.data.ExtendedPrice)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.data.ProductID)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.data.Quantity)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.data.Discount)" Sortable="true" />
+</FluentDataGrid>
+
+
+@code {
+    [Inject(Key = "db")]
+    public HttpClient? HttpClient_WebApi { get; set; } = null;
+
+    [Parameter]
+    public string? database { get; set; } = null;
+
+    [Parameter]
+    public string? table { get; set; } = null;
+
+    [Parameter]
+    public long? totalRecords { get; set; } = null;
+
+    List<DataWithNumber<Order_Details_Extended>> dataArr = [];
+
+    public long recordFiltered  => Filtered.LongLength;
+    public bool loading = false;
+    private DataWithNumber<Order_Details_Extended>[] Filtered
+    {
+        get
+        {
+            var arr = dataArr.ToArray();
+            var existingFilters = filters.Where(x => !string.IsNullOrWhiteSpace(x.Value)).ToArray();
+            foreach (var item in filters)
+            {
+                switch (item.Key)
+                {
+                    case eOrder_Details_ExtendedColumns.OrderID:
+                        arr = arr
+                        .Where(x => x.data.OrderID.ToString().Contains(item.Value, StringComparison.CurrentCultureIgnoreCase))
+                        .ToArray();
+                        break;
+                }
+            }
+            return arr;
+        }
+    }
+
+
+    GridSort<DataWithNumber<Order_Details_Extended>> sortByOrderId = GridSort<DataWithNumber<Order_Details_Extended>>
+       .ByAscending(p => p.data.OrderID)
+       .ThenDescending(p => p.number);
+
+    public IQueryable<DataWithNumber<Order_Details_Extended>>? dataForQuery
+    {
+        get
+        {
+            return Filtered.AsQueryable();
+        }
+    }
+
+    string nameNumberFilter = string.Empty;
+    string nameOrderIdFilter = string.Empty;
+    Dictionary<eOrder_Details_ExtendedColumns, string> filters =new() {
+        {eOrder_Details_ExtendedColumns.OrderID, string.Empty}        
+
+    };
+
+    public string filterText{
+        get
+        {
+            var arr = filters.Where(x => !string.IsNullOrWhiteSpace(x.Value)).Select(x => $"{x.Value} in {x.Key}").ToArray();
+            return string.Join(";", arr);
+        }
+    }
+    public bool ExistsFilter()
+    {
+        return filters.Any(x => !string.IsNullOrWhiteSpace(x.Value));
+    }
+
+    void HandleColumnsFilter(eOrder_Details_ExtendedColumns name, ChangeEventArgs args)
+    {
+        if (args != null && args.Value != null)
+        {
+            filters[name] = args.Value.ToString() ?? "";
+            
+            
+        }
+    }
+    
+    private void HandleClearColumnsFilter(eOrder_Details_ExtendedColumns name)
+    {
+        if (string.IsNullOrWhiteSpace(nameOrderIdFilter))
+        {
+            filters[name] = string.Empty;
+           
+        }
+    }
+    long? nrRecordsLoaded = null;
+    private async Task LoadData()
+    {
+
+        var url = $"/api/AdvancedSearch_{database}_{table}/GetAll";
+        ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
+        var data = HttpClient_WebApi.GetFromJsonAsAsyncEnumerable<Order_Details_Extended>(url);
+        ArgumentNullException.ThrowIfNull(data);
+        int i = 0;
+        loading = true;
+        await foreach (var item in data)
+        {
+            if (item == null) continue;
+            i++;
+            dataArr.Add(new DataWithNumber<Order_Details_Extended>(i, item));
+            if ((i < 500 && i % 100 == 0) || (i > 500 && i % 1000 == 0))
+            {
+                Console.WriteLine($"i={i}");
+                nrRecordsLoaded = i;
+
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(2_000);
+            }
+        }
+        nrRecordsLoaded = i;
+
+        await InvokeAsync(StateHasChanged);
+        loading= false;
+    }
+}

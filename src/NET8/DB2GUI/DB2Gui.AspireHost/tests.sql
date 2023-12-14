@@ -13,7 +13,7 @@ dotnet ef dbcontext scaffold "Trusted_Connection=Yes;Data Source=.;Initial Catal
 --USE [tests]
 --go
 
-create table test(
+create table Test(
 id int,
 name varchar(200)
 )
