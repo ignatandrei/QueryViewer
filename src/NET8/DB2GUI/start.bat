@@ -1,2 +1,2 @@
 rem wt new-tab --title webapi -d ExampleWebAPI PowerShell -noexit -c "dotnet watch run --no-hot-reload"  ; new-tab --title react -d "examplecrats" PowerShell -noexit -c "npm start"; new-tab --title generator -d GeneratorPowershell PowerShell -noexit -c "gci"; new-tab --title react -d "examplecrats" PowerShell -c "code ."
-wt new-tab --title webapi -d DB2Gui.AspireHost PowerShell -noexit -c "dotnet watch run --no-hot-reload"  ; new-tab --title generator -noexit -d GeneratorFromDB PowerShell 
+wt new-tab --title webapi -d DB2Gui.AspireHost -p PowerShell -noexit ; new-tab --title generator -noexit -d GeneratorPowershell -p PowerShell 
