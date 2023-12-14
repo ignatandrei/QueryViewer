@@ -2,19 +2,19 @@
 @inject NavigationManager navigationManager
 
 
-<FluentBreadcrumb>    
-    @for(int it=0;it<splitUrl.Count;it++)
+<FluentBreadcrumb>
+    @for (int it = 0; it < splitUrl.Count; it++)
     {
         var i = it;
-        var data= splitUrl[i];
-        
+        var data = splitUrl[i];
+
         <FluentBreadcrumbItem Href="@splitUrl[i].fullUrl">
             <FluentIcon Value="@splitUrl[i].icon" Color="@Color.Neutral" Slot="start" />
             @splitUrl[i].title
         </FluentBreadcrumbItem>
-        
+
     }
-    
+
 
 </FluentBreadcrumb>
 
@@ -23,40 +23,63 @@
     Icon iconDefault = new Icons.Regular.Size16.PresenceUnknown();
     List<DataBreadcumb> splitUrl = new() { ("Home", "/", new Icons.Regular.Size16.Home()) };
     string url = "";
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await Task.Delay(100);
-        url= navigationManager.ToBaseRelativePath(navigationManager.Uri);
+        // Subscribe to the event
+        navigationManager.LocationChanged += LocationChanged;
+        base.OnInitialized();
+    }
+
+    void LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+
+        ChangeData();
+        Console.WriteLine($"Notified of navigation to {e.Location}" + splitUrl.Count);
+
+    }
+    protected override Task OnInitializedAsync()
+    {
+        ChangeData();
+        return base.OnInitializedAsync();
+    }
+
+
+
+    void ChangeData()
+    {
+        splitUrl = new() { ("Home", "/", new Icons.Regular.Size16.Home()) };
+        url = navigationManager.ToBaseRelativePath(navigationManager.Uri);
         Icon icon = new Icons.Regular.Size16.PresenceUnknown();
-        foreach (var item in url.Split('/'))
+        var splt = url.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        for (var it = 0; it < splt.Length; it++)
         {
+            var item = splt[it];
+            var i = it+1;
             Icon iconUrl = iconDefault;
-            if (item != "")
+
+            switch (i)
             {
-                switch (url.Length+1)
-                {
-                    case 1:
-                        icon = new Icons.Regular.Size16.DatabaseStack();
-                        break;
-                    case 2:
-                        icon = new Icons.Regular.Size16.Database();
-                        break;
-                    case 3:
-                        icon = new Icons.Regular.Size16.Table();
-                        break;
-                    case 4:
-                        icon = new Icons.Regular.Size16.TableEdit();
-                        break;
-                    default:
-                        break;
-                }
-                splitUrl.Add((item, splitUrl.Last().fullUrl + item + "/",icon));
+                case 1:
+                    icon = new Icons.Regular.Size16.DatabaseStack();
+                    break;
+                case 2:
+                    icon = new Icons.Regular.Size16.Database();
+                    break;
+                case 3:
+                    icon = new Icons.Regular.Size16.Table();
+                    break;
+                case 4:
+                    icon = new Icons.Regular.Size16.TableEdit();
+                    break;
+                default:
+                    break;
             }
+            splitUrl.Add((item, splitUrl.Last().fullUrl + item + "/", icon));
         }
-        
-        
+
+        InvokeAsync(StateHasChanged);
 
 
-        
+
     }
 }
