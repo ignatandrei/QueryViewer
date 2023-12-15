@@ -1,10 +1,12 @@
 <VSTemplate Version="2.0.0" Type="ProjectGroup"
     xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
     <TemplateData>
-        <Name>GeneratorFromDB 2023.12.9.2128</Name>
-        <Description>Version 2023.12.9.2128 . See https://github.com/ignatandrei/queryViewer/</Description>
+        <Name>GeneratorFromDB 2023.12.15.143053</Name>
+        <Description>Version 2023.12.15.143053 . See https://github.com/ignatandrei/queryViewer/</Description>
         <Icon>Icon.ico</Icon>
         <ProjectType>CSharp</ProjectType>
+		 <LanguageTag>csharp</LanguageTag>
+		 
     </TemplateData>
 	
     <TemplateContent>
@@ -12,14 +14,12 @@
 			<CustomParameter Name="$orig$" Value="$safeprojectname$"/>
 			
 		</CustomParameters>
-		
-        <ProjectCollection>
+		<BuildOnLoad>true</BuildOnLoad>		
+			<ProjectCollection>
+			<SolutionFolder Name="GenericProps">	
 			
+			</SolutionFolder>	
             <SolutionFolder Name="RunGeneratorPowershellOnceDBChanges">	
-<Folder Name="Props" TargetFolderName="." >
-		<ProjectItem TargetFileName="Directory.Build.props" ReplaceParameters="true">Directory.Build.props</ProjectItem>
-		<ProjectItem TargetFileName="Directory.Packages.props" ReplaceParameters="true">Directory.Packages.props</ProjectItem>
-</Folder>			
 				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorPowershell" CopyParameters="true">
                     GeneratorPowershell\MyTemplate.vstemplate
                 </ProjectTemplateLink>							
