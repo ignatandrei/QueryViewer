@@ -1,28 +1,39 @@
 ﻿@page "/databases/{database}/tables"
 @inject WebAPIInteraction interaction
-
+@inject IDialogService DialogService
 <h1>Tables</h1>
 
 
-    @if (tables == null)
+@if (tables == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    int i= 0;
+    int i = 0;
     foreach (var t in tables.Keys)
     {
-        var nr= ++i;
+        var nr = ++i;
         var c = t;
+
         var data = $"databases/{database}/tables/{c}";
-        <NavLink class="nav-link" href="@data">
+        <div>
             <FluentIcon Value="@(new Icons.Regular.Size24.Table())" />
-            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@(nr)) @c 
-        </NavLink>
-        
-        @(tables[c] == null ? "" : " rows : "+tables[c].ToString())
-        <br />
+        @if (tables[c].HasValue)
+        {
+            <NavLink class="nav-link" href="@data">
+                
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>@(nr)) @c
+            </NavLink>
+        }
+        else
+        {
+            @(nr) @c 
+        }
+       
+        @(tables[c] == null ? "" : " rows : " + tables[c].ToString())
+        </div>
+
     }
 }
 
@@ -35,7 +46,7 @@ else
     [Inject(Key = "db")]
     public HttpClient? HttpClient_WebApi { get; set; } = null;
 
-    public Dictionary<string,long?>? tables = null;
+    public Dictionary<string, long?>? tables = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,15 +66,27 @@ else
         var tasks = tables.Keys
             .Select(it => interaction.GetTableCount(database, it).AddData(it))
             .ToArray();
-        await Task.WhenAll(tasks);
-        foreach (var t in tasks)
+        try
         {
-            if(t.IsCompletedSuccessfully)
-                tables[t.Result.data] = t.Result.res;
+            await Task.WhenAll(tasks);
+            foreach (var t in tasks)
+            {
+                if (t.IsCompletedSuccessfully)
+                    tables[t.Result.data] = t.Result.res;
+            }
+
+            await InvokeAsync(StateHasChanged);
         }
-                
-        await InvokeAsync(StateHasChanged);
-        
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            await ShowErrorAsync("Error loading data", ex);
+        }
         await base.OnAfterRenderAsync(firstRender);
+    }
+    private async Task ShowErrorAsync(string message, Exception ex)
+    {
+        var dialog = await DialogService.ShowErrorAsync(message);
+        Console.WriteLine(ex);
     }
 }
