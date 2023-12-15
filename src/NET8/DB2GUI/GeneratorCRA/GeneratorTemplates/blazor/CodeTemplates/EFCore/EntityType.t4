@@ -15,7 +15,7 @@
 <#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
 <#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
 <#
-        //modified 2023-09-03
+        //modified 2023.12.15
     if (EntityType.IsSimpleManyToManyJoinEntityType())
     {
         // Don't scaffold these

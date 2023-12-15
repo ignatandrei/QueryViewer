@@ -1,4 +1,4 @@
-//modified 2023-09-03
+//modified 2023.12.15
 <#@ template hostSpecific="true" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
