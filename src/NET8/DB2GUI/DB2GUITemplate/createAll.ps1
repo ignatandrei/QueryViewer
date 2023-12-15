@@ -53,6 +53,8 @@ $xmlDoc.OuterXml | Out-File $FileLocation
 # $xmlDoc.Save(source.extension.vsixmanifest1)
 New-item –ItemType "directory" GeneratorFromDBTemp
 Copy-Item -Path GeneratorFromDB\* -Destination GeneratorFromDBTemp\ -Force -Recurse
+Remove-Item -Path .\GeneratorFromDBTemp\ExampleAngular -Force -Recurse -ErrorAction SilentlyContinue 
+Remove-Item -Path .\GeneratorFromDBTemp\examplecrats -Force -Recurse -ErrorAction SilentlyContinue 
 push-location 
 cd GeneratorFromDBTemp
 $FileLocation = "GeneratorAll.vstemplate"
@@ -191,8 +193,8 @@ AddFiles "ExampleWebAPI"
 AddFiles "ExampleBlazor"
 AddFiles "GeneratorPowershell"
 AddFiles "GeneratorFromDB"
-AddFiles "examplecrats"
-AddFiles "ExampleAngular"
+# AddFiles "examplecrats"
+# AddFiles "ExampleAngular"
 AddFiles "GeneratorCRA"
 
 
