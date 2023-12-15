@@ -107,7 +107,20 @@ Get-ChildItem  -Directory -Recurse -Filter ".angular" | Remove-Item -Recurse
 Write-Host "modify .cs files"
 gci *.cs -r | % { 
 	$content  = Get-Content $_.FullName 
+	$newContent = $content -replace 'ExampleBlazor','$safeprojectname$'
 	$newContent = $content -replace 'Example','$safeprojectname$'
+	if ($content -ne $newContent) {
+		Set-Content -Path  $_.FullName -Value $newContent
+		# Write-Host 'replacing ' $_.FullName 
+		
+	}
+		
+}
+
+Write-Host "modify .razor files"
+gci *.razor -r | % { 
+	$content  = Get-Content $_.FullName 
+	$newContent = $content -replace 'ExampleBlazor','$safeprojectname$'	
 	if ($content -ne $newContent) {
 		Set-Content -Path  $_.FullName -Value $newContent
 		# Write-Host 'replacing ' $_.FullName 

@@ -12,8 +12,14 @@
 			<CustomParameter Name="$orig$" Value="$safeprojectname$"/>
 			
 		</CustomParameters>
+		
         <ProjectCollection>
-            <SolutionFolder Name="RunGeneratorPowershellOnceDBChanges">				
+			
+            <SolutionFolder Name="RunGeneratorPowershellOnceDBChanges">	
+<Folder Name="Props" TargetFolderName="." >
+		<ProjectItem TargetFileName="Directory.Build.props" ReplaceParameters="true">Directory.Build.props</ProjectItem>
+		<ProjectItem TargetFileName="Directory.Packages.props" ReplaceParameters="true">Directory.Packages.props</ProjectItem>
+</Folder>			
 				<ProjectTemplateLink ProjectName="$safeprojectname$.GeneratorPowershell" CopyParameters="true">
                     GeneratorPowershell\MyTemplate.vstemplate
                 </ProjectTemplateLink>							
