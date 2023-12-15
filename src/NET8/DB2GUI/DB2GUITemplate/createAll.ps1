@@ -81,10 +81,11 @@ copy-item -Path ..\ExampleModels\* 			-Destination GeneratorFromDBTemp\ExampleMo
 copy-item -Path ..\ExampleControllers\* 	-Destination GeneratorFromDBTemp\ExampleControllers\ 						-Force -Recurse
 copy-item -Path ..\ExampleContext\*	 		-Destination GeneratorFromDBTemp\ExampleContext\ 							-Force -Recurse
 copy-item -Path ..\ExampleWebAPI\* 			-Destination GeneratorFromDBTemp\ExampleWebAPI\ 							-Force -Recurse
+copy-item -Path ..\ExampleBlazor\* 			-Destination GeneratorFromDBTemp\ExampleBlazor\ 							-Force -Recurse
 copy-item -Path ..\GeneratorPowershell\* 	-Destination GeneratorFromDBTemp\GeneratorPowershell\ 						-Force -Recurse
 copy-item -Path ..\GeneratorFromDB\* 		-Destination GeneratorFromDBTemp\GeneratorFromDB\ 							-Force -Recurse
-copy-item -Path ..\examplecrats\* 		    -Destination GeneratorFromDBTemp\examplecrats\ 	-Exclude node_modules		-Force -Recurse
-copy-item -Path ..\ExampleAngular\*         -Destination GeneratorFromDBTemp\ExampleAngular\ -Exclude node_modules,.angular	-Force -Recurse
+# copy-item -Path ..\examplecrats\* 		    -Destination GeneratorFromDBTemp\examplecrats\ 	-Exclude node_modules		-Force -Recurse
+# copy-item -Path ..\ExampleAngular\*         -Destination GeneratorFromDBTemp\ExampleAngular\ -Exclude node_modules,.angular	-Force -Recurse
 copy-item -Path ..\GeneratorCRA\* 		    -Destination GeneratorFromDBTemp\GeneratorCRA\ 								-Force -Recurse
 
 
@@ -132,10 +133,11 @@ gci create.ps1 -r | % {
 	$content  = Get-Content $_.FullName 
 	$newContent = $content
 	$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.crats'	
-	$newContent = $newContent -replace 'ExampleAngular','$ext_safeprojectname$.Angular'	
+	# $newContent = $newContent -replace 'ExampleAngular','$ext_safeprojectname$.Angular'	
 	$newContent = $newContent -replace 'ExampleModels','$ext_safeprojectname$.Models'	
 	$newContent = $newContent -replace 'ExampleContext','$ext_safeprojectname$.Context'	
 	$newContent = $newContent -replace 'ExampleControllers','$ext_safeprojectname$.Controllers'	
+	$newContent = $newContent -replace 'ExampleBlazor','$ext_safeprojectname$.Blazor'
 	#$newContent = $newContent -replace 'examplecrats','$ext_safeprojectname$.crats'	
 
 	if ($content -ne $newContent) {
@@ -186,6 +188,7 @@ AddFiles "ExampleModels"
 AddFiles "ExampleControllers"
 AddFiles "ExampleContext" 	
 AddFiles "ExampleWebAPI"
+AddFiles "ExampleBlazor"
 AddFiles "GeneratorPowershell"
 AddFiles "GeneratorFromDB"
 AddFiles "examplecrats"
