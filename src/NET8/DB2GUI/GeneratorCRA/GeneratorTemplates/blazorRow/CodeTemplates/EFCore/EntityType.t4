@@ -41,17 +41,23 @@
 
 @if (TheRow == null)
 {
-    <p><em>Loading @table row with ID = @ID</em></p>
+    <p><em>Loading @table row with ID = @rowId</em></p>
 }
 else
 {
-
-<# foreach(var prop in properties){ #>
-	<#=prop.Name#> 
+<FluentStack Orientation="Orientation.Vertical"
+                
+                 VerticalGap="20"
+                 >
+    <# foreach(var prop in properties){ #>
+    <span class="demopanel">	<#=prop.Name#> :@TheRow.<#=prop.Name#> </span>
+    
 
 <# }//foreach prop
-
 #>
+    
+</FluentStack>
+
 }
 
 @code {
@@ -68,10 +74,14 @@ else
     public string? rowId { get; set; } = null;
 
     public <#= nameTable #>? TheRow { get; set; } = null;
-    public <#=keyType#>? ID {
-        get
-        {
-            return <#=keyType#>.Parse(rowId??"");
-        }
+    protected override async Task OnInitializedAsync()
+    {
+        ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
+        ArgumentNullException.ThrowIfNull(database);
+        ArgumentNullException.ThrowIfNull(table);
+        ArgumentNullException.ThrowIfNull(rowId);
+        var url = $"api/AdvancedSearch_{database}_{table}/GetSingle?id={rowId}";
+        TheRow = await HttpClient_WebApi.GetFromJsonAsync<<#=nameTable#>>(url);
+        await base.OnInitializedAsync();
     }
 }
