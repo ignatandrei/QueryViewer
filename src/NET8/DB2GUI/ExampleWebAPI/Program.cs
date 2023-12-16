@@ -1,16 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Drawing;
-using NetCore2BlocklyNew;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Generated;
-using System.Text.Json;
-using ExampleWebAPI;
-using System.Xml.Linq;
 
 class Program
 {
-    //to register all contexts
     static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +18,33 @@ class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        var h = builder.Services.AddHealthChecks();                        
+        builder.Services
+            .AddHealthChecksUI(setupSettings: setup =>
+            {
+                setup.AddHealthCheckEndpoint("All", "/healthz");
+                setup.MaximumHistoryEntriesPerEndpoint(100);
+                setup.SetEvaluationTimeInSeconds(60);
+            })
+            .AddInMemoryStorage();
+        var connectionStringsSection = builder.Configuration.GetSection("ConnectionStrings");
+
+        if (connectionStringsSection.Exists())
+        {
+            var connectionStrings = connectionStringsSection.AsEnumerable();
+
+            foreach (var connectionString in connectionStrings)
+            {
+                var key = connectionString.Key;
+                var value = connectionString.Value;
+                if(value!=null)
+                    h.AddSqlServer(connectionString:value,name: key);
+                
+            }
+        }
+
+
+        
         List<Type> typesContext = new();
         //this line register contexts
         foreach (IRegisterContext item in UtilsControllers.registerContexts)
@@ -41,6 +58,7 @@ class Program
                 .AllowAnyHeader()
                 .AllowAnyMethod()
         ));
+        //this line register DB contexts
         builder.Services.AddTransient((ctx) =>
         {
             Func<string, DbContext?> a = (string dbName) =>
@@ -71,7 +89,18 @@ class Program
 
         app.UseAuthorization();
         app.MapControllers();
+        app.UseAMS();
         app.UseBlocklyAutomation();
+        app
+            .UseRouting()
+            .UseEndpoints(config => {
+                config.MapHealthChecks("/healthz", new HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                config.MapHealthChecksUI();
+                });
 
         app.Run();
 

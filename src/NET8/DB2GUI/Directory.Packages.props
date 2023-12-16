@@ -3,6 +3,11 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="AMSWebAPI" Version="2023.5.21.1551" />
+    <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.UI" Version="8.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="5.1.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.0" />

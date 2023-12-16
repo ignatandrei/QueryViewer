@@ -3,7 +3,9 @@
     var hostAPI=config["HOSTAPI"];
     var swagger=hostAPI+"swagger";
     var visualAPI = hostAPI + "BlocklyAutomation";
-    var health = hostAPI + "healthchecks-ui";
+    var healthUi = hostAPI + "healthchecks-ui";
+    var healthz = hostAPI + "healthz";
+    var healthchecksApi= hostAPI + "healthchecks-api";
     var ams = hostAPI + "ams";
 
     Console.WriteLine("swagger:"+swagger);
@@ -15,10 +17,17 @@
         <FluentNavLink Href="weather" Icon="@Icon.FromImageUrl("/images/weather.svg")" IconColor="Color.Accent">Weather</FluentNavLink> *@
         <FluentNavLink Href="/databases" Icon="@(new Icons.Regular.Size16.DatabaseStack())" IconColor="Color.Accent">Databases</FluentNavLink>
         <FluentDivider></FluentDivider>
-        <FluentNavLink Href="@swagger" Icon="@(new Icons.Regular.Size16.Link())" IconColor="Color.Accent">Swagger</FluentNavLink>
-        <FluentNavLink Href="@visualAPI" Icon="@(new Icons.Regular.Size16.SearchVisual())" IconColor="Color.Accent">VisualAPI</FluentNavLink>
-        <FluentNavLink Href="@visualAPI" Icon="@(new Icons.Regular.Size16.Heart())" IconColor="Color.Accent">Health</FluentNavLink>
-        <FluentNavLink Href="@visualAPI" Icon="@(new Icons.Regular.Size16.CalendarInfo())" IconColor="Color.Accent">Version</FluentNavLink>
+        <FluentNavLink Target="_blank" Href="@swagger" Icon="@(new Icons.Regular.Size16.Link())" IconColor="Color.Accent">Swagger</FluentNavLink>
+        <FluentNavLink Target="_blank" Href="@visualAPI" Icon="@(new Icons.Regular.Size16.SearchVisual())" IconColor="Color.Accent">VisualAPI</FluentNavLink>
+        
+        <FluentNavLink Target="_blank" Href="@ams" Icon="@(new Icons.Regular.Size16.CalendarInfo())" IconColor="Color.Accent">Version</FluentNavLink>
+        <FluentNavGroup  Title="Health" Icon="@(new Icons.Regular.Size16.Heart())">
+            <FluentNavLink Target="_blank" Href="@healthUi" Icon="@(new Icons.Regular.Size16.HeartCircle())" IconColor="Color.Accent">UI</FluentNavLink>
+            <FluentNavLink Target="_blank" Href="@healthz" Icon="@(new Icons.Regular.Size16.HeartCircleHint())" IconColor="Color.Accent">healthz</FluentNavLink>
+            <FluentNavLink Target="_blank" Href="@healthchecksApi" Icon="@(new Icons.Regular.Size16.HeartOff())" IconColor="Color.Accent">API</FluentNavLink>
+            
+        </FluentNavGroup>
+
 
     </FluentNavMenu>
 
