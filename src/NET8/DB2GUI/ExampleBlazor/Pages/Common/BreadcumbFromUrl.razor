@@ -1,6 +1,6 @@
 ﻿@using DataBreadcumb = (string title, string fullUrl, Icon icon);
 @inject NavigationManager navigationManager
-
+@inject IWebAssemblyHostEnvironment HostEnvironment
 
 <FluentBreadcrumb>
     @for (int it = 0; it < splitUrl.Count; it++)
@@ -21,7 +21,7 @@
 
 @code {
     Icon iconDefault = new Icons.Regular.Size16.PresenceUnknown();
-    List<DataBreadcumb> splitUrl = new() { ("Home", "/", new Icons.Regular.Size16.Home()) };
+    List<DataBreadcumb> splitUrl = new();
     string url = "";
     protected override void OnInitialized()
     {
@@ -47,14 +47,20 @@
 
     void ChangeData()
     {
-        splitUrl = new() { ("Home", "/", new Icons.Regular.Size16.Home()) };
+        string baseAddress = HostEnvironment.BaseAddress;
+        if (!baseAddress.EndsWith("/"))
+            baseAddress += "/";
+
+
+        splitUrl = new() { ("Home", baseAddress, new Icons.Regular.Size16.Home()) };
+
         url = navigationManager.ToBaseRelativePath(navigationManager.Uri);
         Icon icon = new Icons.Regular.Size16.PresenceUnknown();
         var splt = url.Split('/', StringSplitOptions.RemoveEmptyEntries);
         for (var it = 0; it < splt.Length; it++)
         {
             var item = splt[it];
-            var i = it+1;
+            var i = it + 1;
             Icon iconUrl = iconDefault;
 
             switch (i)
@@ -80,7 +86,7 @@
                 default:
                     break;
             }
-            splitUrl.Add((item , splitUrl.Last().fullUrl + item  +"/", icon));
+            splitUrl.Add((item, splitUrl.Last().fullUrl + item + "/", icon));
         }
 
         InvokeAsync(StateHasChanged);

@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IConfiguration Configuration
+@inject IWebAssemblyHostEnvironment HostEnvironment
 <FluentLayout>
     <FluentHeader>
         ExampleBlazor
@@ -25,7 +26,7 @@
             <a href="https://www.fluentui-blazor.net" target="_blank">Documentation and demos</a>
         </div>
         <div class="link2">
-            API: @Configuration["HOSTAPI"]
+            API: @Configuration["HOSTAPI"] hosted on @HostEnvironment.BaseAddress
         </div>
 
 

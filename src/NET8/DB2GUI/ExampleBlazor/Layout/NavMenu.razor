@@ -1,31 +1,35 @@
 ﻿@inject IConfiguration config
+@inject IWebAssemblyHostEnvironment HostEnvironment
 @{
-    var hostAPI=config["HOSTAPI"];
-    var swagger=hostAPI+"swagger";
+    var baseAddress = HostEnvironment.BaseAddress;
+    if (!baseAddress.EndsWith("/"))
+        baseAddress += "/";
+    var db = baseAddress + "databases";
+    var hostAPI = config["HOSTAPI"];
+    var swagger = hostAPI + "swagger";
     var visualAPI = hostAPI + "BlocklyAutomation";
     var healthUi = hostAPI + "healthchecks-ui";
     var healthz = hostAPI + "healthz";
-    var healthchecksApi= hostAPI + "healthchecks-api";
+    var healthchecksApi = hostAPI + "healthchecks-api";
     var ams = hostAPI + "ams";
 
-    Console.WriteLine("swagger:"+swagger);
 }
 <nav>
     <FluentNavMenu Width="250" Collapsible="true" Title="Custom navigation menu">
-        <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icon.FromImageUrl("/images/home.svg")" IconColor="Color.Accent">Home</FluentNavLink>
+        <FluentNavLink Href="@baseAddress" Match="NavLinkMatch.All" Icon="@Icon.FromImageUrl(baseAddress+"images/home.svg")" IconColor="Color.Accent">Home</FluentNavLink>
         @* <FluentNavLink Href="counter" Icon="@Icon.FromImageUrl("/images/counter.svg")" IconColor="Color.Accent">Counter</FluentNavLink>
         <FluentNavLink Href="weather" Icon="@Icon.FromImageUrl("/images/weather.svg")" IconColor="Color.Accent">Weather</FluentNavLink> *@
-        <FluentNavLink Href="/databases" Icon="@(new Icons.Regular.Size16.DatabaseStack())" IconColor="Color.Accent">Databases</FluentNavLink>
+        <FluentNavLink Href="@db" Icon="@(new Icons.Regular.Size16.DatabaseStack())" IconColor="Color.Accent">Databases</FluentNavLink>
         <FluentDivider></FluentDivider>
         <FluentNavLink Target="_blank" Href="@swagger" Icon="@(new Icons.Regular.Size16.Link())" IconColor="Color.Accent">Swagger</FluentNavLink>
         <FluentNavLink Target="_blank" Href="@visualAPI" Icon="@(new Icons.Regular.Size16.SearchVisual())" IconColor="Color.Accent">VisualAPI</FluentNavLink>
-        
+
         <FluentNavLink Target="_blank" Href="@ams" Icon="@(new Icons.Regular.Size16.CalendarInfo())" IconColor="Color.Accent">Version</FluentNavLink>
-        <FluentNavGroup  Title="Health" Icon="@(new Icons.Regular.Size16.Heart())">
+        <FluentNavGroup Title="Health" Icon="@(new Icons.Regular.Size16.Heart())">
             <FluentNavLink Target="_blank" Href="@healthUi" Icon="@(new Icons.Regular.Size16.HeartCircle())" IconColor="Color.Accent">UI</FluentNavLink>
             <FluentNavLink Target="_blank" Href="@healthz" Icon="@(new Icons.Regular.Size16.HeartCircleHint())" IconColor="Color.Accent">healthz</FluentNavLink>
             <FluentNavLink Target="_blank" Href="@healthchecksApi" Icon="@(new Icons.Regular.Size16.HeartOff())" IconColor="Color.Accent">API</FluentNavLink>
-            
+
         </FluentNavGroup>
 
 

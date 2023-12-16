@@ -63,6 +63,10 @@ else
     {
         if (database == null || tables == null || tables.Count == 0)
             return;
+        if(tables.All(it=>it.Value.HasValue)){
+            Console.WriteLine("all tables loaded");
+            return;
+        }
         var tasks = tables.Keys
             .Select(it => interaction.GetTableCount(database, it).AddData(it))
             .ToArray();
