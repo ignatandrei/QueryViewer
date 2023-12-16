@@ -1,5 +1,5 @@
 <#@ template hostSpecific="true" #>
-<#@ output extension="_page.razor" #>
+<#@ output extension="_list_page.razor" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
 <#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>

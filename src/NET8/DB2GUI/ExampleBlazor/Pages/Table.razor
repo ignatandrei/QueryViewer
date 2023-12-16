@@ -57,7 +57,8 @@ else
 
         string nameTableRazor = textInfo.ToTitleCase(table);
         Console.WriteLine(nameTableRazor);
-        componentTypeName = $"ExampleBlazor.Pages.Generated.Models.{database}.{nameTableRazor}_Page";
+        
+        componentTypeName = $"ExampleBlazor.Pages.Generated.Models.{database}.{nameTableRazor}_List_Page";
         componentType = Type.GetType(componentTypeName);
         var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
         if (data != null) 
