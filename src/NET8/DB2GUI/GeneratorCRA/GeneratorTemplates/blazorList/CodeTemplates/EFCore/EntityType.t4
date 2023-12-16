@@ -110,7 +110,7 @@
         <# } else  { #>
             <# if(isPK){ #>
             
-            <NavLink Href='@string.Format("databases/{0}/tables/{1}/rows/{2}",database,table, context.data.<#= field.Name #>)'>@context.data.IDDepartment</NavLink>
+            <NavLink Href='@string.Format("databases/{0}/tables/{1}/rows/{2}",database,table, context.data.<#= field.Name #>)'>@context.data.<#= field.Name #></NavLink>
             <# } else { #>
             <div>@context.data.<#= field.Name #></div>
             <# } #>
@@ -186,7 +186,23 @@ foreach(var field in fieldsNavig) {
     #>
                     case e<#= nameTable #>Columns.<#= field.Name #>:
                         arr = arr
-                        .Where(x => x.data.<#= field.Name #>.ToString().Contains(item.Value, StringComparison.CurrentCultureIgnoreCase))
+                        .Where(x => 
+                        
+                        {
+                            try
+                            {
+                                return x.data.<#= field.Name #>.ToString().Contains(item.Value, StringComparison.CurrentCultureIgnoreCase);
+
+                            }
+                            catch
+                            {
+                                return false;
+                            }
+                        }
+                        
+                        
+                        )
+
                         .ToArray();
                         break;
 <# } //end foreach field

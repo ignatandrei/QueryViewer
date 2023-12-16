@@ -90,7 +90,7 @@ function Generate{
 
 Generate "blazorList"  "../ExampleBlazor/Pages/Generated/" $project 
 
-# Generate "blazorRow"  "../ExampleBlazor/Pages/Generated/" $project 
+Generate "blazorRow"  "../ExampleBlazor/Pages/Generated/" $project 
 
 #blazor do not admit lowercase razor files
 $TextInfo = (Get-Culture).TextInfo

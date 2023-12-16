@@ -35,10 +35,33 @@
     var namePK=lambda.Substring(dot);
     var keyType=code.Reference(key.GetKeyType());   
     var properties = EntityType.GetProperties().ToArray();
+
+     var fieldsNavig = new List<(string nameNavig,string nameEntityNavig,string keyType,string nameProp)>();
+    foreach (var navigation in EntityType.GetNavigations())
+    {
+         if (navigation.IsCollection)
+            continue;
+        var targetTypeNavig = navigation.TargetEntityType.Name;
+        var navigationName= navigation.Name;
+        var keyNavig = navigation.TargetEntityType.FindPrimaryKey();
+        var hasOneKeynavig = (keyNavig != null && keyNavig.Properties != null && keyNavig.Properties.Count ==1);
+        
+        if(hasOneKeynavig){
+            var pk=keyNavig.Properties[0].FindContainingPrimaryKey() ;   
+            var keyTypeNavig=code.Reference(pk.GetKeyType());   
+            //var inv= navigation.Inverse;
+            //if(inv==null) continue;
+            var nameProp= navigation.ForeignKey.Properties[0].Name;
+
+            fieldsNavig.Add((navigationName,targetTypeNavig,keyTypeNavig,nameProp));            
+        }
+            
+    }
+
     
 #>
 @using global::Generated
-
+@inject NavigationManager navigationManager
 @if (TheRow == null)
 {
     <p><em>Loading @table row with ID = @rowId</em></p>
@@ -49,9 +72,17 @@ else
                 
                  VerticalGap="20"
                  >
-    <# foreach(var prop in properties){ #>
-    <span class="demopanel">	<#=prop.Name#> :@TheRow.<#=prop.Name#> </span>
+    <# foreach(var prop in properties){ 
+      var isNavig = fieldsNavig.Any(it=>it.nameProp==prop.Name);
+    #>
     
+    <# if(isNavig){ 
+        var navigData= fieldsNavig.First(it=>it.nameProp==prop.Name);
+    #>
+    <FluentButton OnClick='()=>GotoTableRow("<#=navigData.nameEntityNavig #>",TheRow.<#=prop.Name#>.ToString())'><#=navigData.nameEntityNavig #> : @TheRow.<#=prop.Name#></FluentButton>
+    <# }else{ #>
+    <span class="demopanel">	<#=prop.Name#> :@TheRow.<#=prop.Name#> </span>    
+    <# } #>
 
 <# }//foreach prop
 #>
@@ -74,6 +105,13 @@ else
     public string? rowId { get; set; } = null;
 
     public <#= nameTable #>? TheRow { get; set; } = null;
+
+    private void GotoTableRow(string table, string rowId)
+    {
+        navigationManager.NavigateTo(string.Format("databases/{0}/tables/{1}/rows/{2}", database, table, rowId),true);
+        
+    }
+
     protected override async Task OnInitializedAsync()
     {
         ArgumentNullException.ThrowIfNull(HttpClient_WebApi);

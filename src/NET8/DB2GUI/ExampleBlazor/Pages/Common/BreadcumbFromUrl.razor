@@ -71,10 +71,16 @@
                 case 4:
                     icon = new Icons.Regular.Size16.TableEdit();
                     break;
+                case 5:
+                    icon = new Icons.Regular.Size16.WindowMultiple();
+                    break;
+                case 6:
+                    icon = new Icons.Regular.Size16.ArrowRight();
+                    break;
                 default:
                     break;
             }
-            splitUrl.Add((item, splitUrl.Last().fullUrl + item + "/", icon));
+            splitUrl.Add((item , splitUrl.Last().fullUrl + item  +"/", icon));
         }
 
         InvokeAsync(StateHasChanged);
