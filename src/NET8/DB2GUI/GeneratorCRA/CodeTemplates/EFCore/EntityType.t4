@@ -1,0 +1,497 @@
+//modified 2023.12.15
+<#@ template hostSpecific="true" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.Extensions.DependencyInjection.Abstractions" #>
+<#@ parameter name="EntityType" type="Microsoft.EntityFrameworkCore.Metadata.IEntityType" #>
+<#@ parameter name="Options" type="Microsoft.EntityFrameworkCore.Scaffolding.ModelCodeGenerationOptions" #>
+<#@ parameter name="NamespaceHint" type="System.String" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
+<#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
+<#
+    if (EntityType.IsSimpleManyToManyJoinEntityType())
+    {
+        // Don't scaffold these
+        return "";
+    }
+
+    var services = (IServiceProvider)Host;
+    var annotationCodeGenerator = services.GetRequiredService<IAnnotationCodeGenerator>();
+    var code = services.GetRequiredService<ICSharpHelper>();
+
+    var usings = new List<string>
+    {
+        "System",
+        "System.Collections.Generic"
+    };
+
+    if (Options.UseDataAnnotations)
+    {
+        usings.Add("System.ComponentModel.DataAnnotations");
+        usings.Add("System.ComponentModel.DataAnnotations.Schema");
+        usings.Add("Microsoft.EntityFrameworkCore");
+    }
+    var key = EntityType.FindPrimaryKey();
+    var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+    string namePK="";
+    if(hasOneKey){ 
+        
+        Console.WriteLine(code == null);
+
+        var lambda= code.Lambda(key.Properties, "e") ;
+        Console.WriteLine(lambda == null);
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        Console.WriteLine(pk == null) ;
+        var keyType=pk.GetKeyType();        
+        Console.WriteLine(keyType == null);
+        var dot=lambda.IndexOf(".");
+        namePK=lambda.Substring(dot+1);
+
+    }
+
+    if (!string.IsNullOrEmpty(NamespaceHint))
+    {
+#>
+namespace <#= NamespaceHint #>;
+
+<#
+    }
+
+    if (!string.IsNullOrEmpty(EntityType.GetComment()))
+    {
+#>
+/// <summary>
+/// <#= code.XmlComment(EntityType.GetComment()) #>
+/// </summary>
+<#
+    }
+
+    if (Options.UseDataAnnotations)
+    {
+        foreach (var dataAnnotation in EntityType.GetDataAnnotations(annotationCodeGenerator))
+        {
+#>
+<#= code.Fragment(dataAnnotation) #>
+<#
+        }
+    }
+#>
+<#
+var properties=EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1).ToArray();
+var firstPropertyObject=properties[0]; 
+#>
+public partial class Search<#= EntityType.Name #>:  GeneratorFromDB.Search<e<#= EntityType.Name #>Columns,<#= EntityType.Name #>>
+{
+    //private <#= Options.ContextName #> _context;
+    //public Search<#= EntityType.Name #>(<#= Options.ContextName #> context){
+    //    _context= context;
+    //}
+public static Search<#= EntityType.Name #> FromSearch(GeneratorFromDB.SearchCriteria sc, e<#= EntityType.Name #>Columns colToSearch, string value)
+    {
+        var search = new Search<#= EntityType.Name #>();
+        var orderBy = new GeneratorFromDB.OrderBy<e<#= EntityType.Name #>Columns>();
+        <# if(hasOneKey) { #>
+        orderBy.FieldName = e<#= EntityType.Name #>Columns.<#= namePK #> ;;
+        <# } else { #>
+            orderBy.FieldName = colToSearch;
+        <# } ;// has one key #>
+
+        orderBy.Asc = false;
+        search.OrderBys = new[] { orderBy };
+        search.PageNumber = 1;
+        search.PageSize = int.MaxValue - 1;
+        var s = new GeneratorFromDB.SearchField<e<#= EntityType.Name #>Columns>();
+        s.Criteria = sc;
+        s.FieldName = colToSearch;
+        s.Value = value;
+        search.SearchFields = new[] { s };
+        return search;
+    }
+   public override IOrderedQueryable<<#= EntityType.Name #>> TransformToOrder(IQueryable<<#= EntityType.Name #>> data){
+        if(OrderBys == null || OrderBys.Length ==0){
+            OrderBys =new GeneratorFromDB.OrderBy<e<#= EntityType.Name #>Columns>[1];
+            OrderBys[0]= new GeneratorFromDB.OrderBy<e<#= EntityType.Name #>Columns>()
+            {
+                //maybe find PK ...
+                FieldName = e<#= EntityType.Name #>Columns.<#= firstPropertyObject.Name #>,
+                Asc=false
+            };
+        }
+        var order = OrderBys[0]!;
+        IOrderedQueryable<<#= EntityType.Name #>> ret;
+        //TODO: maybe utilize EF.Property ? 
+        switch(order.FieldName){
+        <# foreach (var prop in properties){ #>
+            case e<#= EntityType.Name #>Columns.<#= prop.Name #>:
+                if(order.Asc)
+                    ret = data.OrderBy(it=>it.<#= prop.Name #>);
+                else
+                    ret = data.OrderByDescending(it=>it.<#= prop.Name #>);
+                
+                break;
+
+        <# } // foreach property #>
+            default:
+                throw new ArgumentException(" cannot order <#= EntityType.Name #> by "+ order.FieldName);
+            
+        }
+        for(var i=1;i<OrderBys.Length;i++){
+            order=OrderBys[i];
+            switch(order.FieldName){
+        <# foreach (var prop in properties){ #>
+            case e<#= EntityType.Name #>Columns.<#= prop.Name #>:
+                if(order.Asc)
+                    ret = ret.ThenBy(it=>it.<#= prop.Name #>);
+                else
+                    ret = ret.ThenByDescending(it=>it.<#= prop.Name #>);
+                
+                break;
+        <# } // foreach property #>
+            default:
+                throw new ArgumentException(" cannot order <#= EntityType.Name #> by "+ order.FieldName);
+            
+        }
+        }
+        return ret;
+        
+    }
+    public override  IQueryable<<#= EntityType.Name #>> TransformToWhere(IQueryable<<#= EntityType.Name #>> data){
+        if(SearchFields == null || SearchFields.Length ==0)        
+            return data;
+        var returnValue = data;
+        foreach(var s in SearchFields){
+            switch(s.FieldName ){
+                case e<#= EntityType.Name #>Columns.None :
+                    continue;
+        <# foreach (var prop in properties){ 
+        var hasLess = 0;
+        var hasString=0;
+        var hasDateTime=0;
+        var hasArray=0;
+        var propType=code.Reference(prop.ClrType);
+        if(propType.Contains("[]"))
+            hasArray=1;
+        var needsNullable = Options.UseNullableReferenceTypes && prop.IsNullable && !prop.ClrType.IsValueType;
+        var isNullable = prop.IsNullable ;
+        var propTypeNotNull= propType.Replace("?","");
+
+if ("float" == propTypeNotNull ||  "byte" == propTypeNotNull || "string" == propTypeNotNull || "short" == propTypeNotNull || "int" == propTypeNotNull || "long" == propTypeNotNull  || "double" == propTypeNotNull || "DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull || "decimal" == propTypeNotNull)
+    hasLess=1;
+
+if ("string" == propType) 
+    hasString=1;
+
+if ("DateTime" == propTypeNotNull || "System.DateTime" == propTypeNotNull )
+    hasDateTime=1;
+
+if(hasArray == 1) //for the moment, we do not search for arrays
+    continue;
+        #>
+            
+            case e<#= EntityType.Name #>Columns.<#= prop.Name #>:
+                //<#= propType #> isNullable <#= isNullable  #>
+                if(s.Value == null)
+        {
+            <# if (isNullable || hasString == 1) { #>
+                switch(s.Criteria){
+                    case GeneratorFromDB.SearchCriteria.Equal:
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #>==null);
+                        continue;
+                    case GeneratorFromDB.SearchCriteria.Different:
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #>!=null);
+                        continue;
+                    default:
+                        throw new ArgumentException($"null cannot have {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
+                    }
+                
+            
+            <# } else { #>
+                throw new ArgumentException("<#= EntityType.Name #>.<#= prop.Name #> cannot be null");
+            <# } // end if from needs nullable and has string #>
+            <# var hasValueDefined=false; #>
+        }//end if s.value is null -search for null
+        //if we are here, s.Value is not null
+        { //use this to define value in smaller scope
+        <# if ("bool" == propTypeNotNull || "DateTime" == propTypeNotNull || "double" == propTypeNotNull || "float" == propTypeNotNull ||  "byte" == propTypeNotNull  || propTypeNotNull == "short" || propTypeNotNull == "long" || propTypeNotNull == "int" || propTypeNotNull == "decimal") 
+        { hasValueDefined=true;
+        #>
+                var valueArray = s.Value
+                    .Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(it=><#=propTypeNotNull#>.Parse(it))
+                    .ToArray();
+                var value = valueArray[0];
+        <# } //endif many numeric #>
+        <# if (propType == "string") 
+        {  hasValueDefined=true; 
+        #>
+                var value = s.Value;
+                var valueArray= s.Value?.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .ToArray();
+                ;
+        <# } //endif string #>  
+        <# if(!hasValueDefined) { #>
+        //hoping will convert
+        <#=propType#> value;
+        try{
+            value =(<#=propType#>)((dynamic)s.Value);
+        }
+        catch(Exception ex){
+            throw new ArgumentException("cannot convert to <#=propType#> :"+s.Value);
+        }
+        <#= propType #>[] valueArray=null;
+        <# } //endif !hasValueDefined #>  
+        switch(s.Criteria){
+
+            case GeneratorFromDB.SearchCriteria.Between:
+                if(valueArray?.Length != 2){
+                    throw new ArgumentException("between must have 2 args, separated by comma => value is:" + s.Value);
+                }
+                <# if(hasString == 1) { #>
+                    returnValue =returnValue.Where(it=>String.Compare(it.<#= prop.Name #>,valueArray[0]) >= 0  && String.Compare(it.<#= prop.Name #>,valueArray[1]) <= 0);
+                <# } else if(hasLess == 1){ #>
+                    returnValue =returnValue.Where(it=>it.<#= prop.Name #> >= valueArray[0] && it.<#= prop.Name #> <= valueArray[1]);
+                <# } else { #>
+                    throw new ArgumentException("cannot have between for <#=propType#> <#=prop.Name#>");
+                <# } //endif !hasString #>  
+                continue;
+            case GeneratorFromDB.SearchCriteria.NotBetween:
+            
+            if(valueArray?.Length != 2){
+                    throw new ArgumentException("not between must have 2 args, separated by comma => value is:" + s.Value);
+                }
+                <# if(hasString == 1) { #>
+                    returnValue =returnValue.Where(it=>String.Compare(it.<#= prop.Name #>,valueArray[0]) < 0  || String.Compare(it.<#= prop.Name #>,valueArray[1]) > 0);
+                <# } else if ( hasLess == 1) { #>
+                    returnValue =returnValue.Where(it=>it.<#= prop.Name #> < valueArray[0] || it.<#= prop.Name #> > valueArray[1]);
+                <# } else { #>
+                    throw new ArgumentException("cannot apply NotBetween to <#=propType#> <#=prop.Name#>" );
+                <# } //endif  #>  
+                continue;
+            case GeneratorFromDB.SearchCriteria.InArray:
+            <# if(isNullable && hasString != 1) { #>
+            returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null && valueArray!.Contains(it.<#= prop.Name #>.Value));
+                <# } else { #>
+            returnValue =returnValue.Where(it=> valueArray!.Contains(it.<#= prop.Name #>));
+                <# } //endif #>  
+                continue;
+            case GeneratorFromDB.SearchCriteria.NotInArray:
+            <# if(isNullable && hasString != 1) { #>
+            returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null && !valueArray!.Contains(it.<#= prop.Name #>.Value));
+                <# } else { #>
+            returnValue =returnValue.Where(it=> !valueArray!.Contains(it.<#= prop.Name #>));
+                <# } //endif #>  
+                continue;
+            case GeneratorFromDB.SearchCriteria.Equal:
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #>==value);
+                continue;
+            case GeneratorFromDB.SearchCriteria.Different:
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #>!=value);
+                continue;
+            <# if( hasLess == 1 ) { #>
+
+            case GeneratorFromDB.SearchCriteria.Less:
+                        <# if(  "string" == propTypeNotNull) { #>
+                            returnValue =returnValue.Where(it=>String.Compare(it.<#= prop.Name #>,value) < 0 );
+                        <# } else { #>
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #><value);
+                        <# } // if string #>
+                        
+                        continue;
+                    case GeneratorFromDB.SearchCriteria.LessOrEqual:
+                        <# if(  "string" == propTypeNotNull) { #>
+                            returnValue =returnValue.Where(it=>String.Compare(it.<#= prop.Name #>,value) <= 0 );
+                        <# } else { #>
+                        
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #><=value);
+                        <# } // if string #>
+                        
+                        continue;
+                    case GeneratorFromDB.SearchCriteria.Greater:
+                        <# if(  "string" == propTypeNotNull) { #>
+                            returnValue =returnValue.Where(it=>String.Compare(it.<#= prop.Name #>,value) > 0 );
+                        <# } else { #>
+                        
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #>>value);
+                        <# } // if string #>
+                        continue;
+                    case GeneratorFromDB.SearchCriteria.GreaterOrEqual:
+                        <# if(  "string" == propTypeNotNull) { #>
+                            returnValue =returnValue.Where(it=>String.Compare(it.<#= prop.Name #>,value) >= 0 );
+                        <# } else { #>
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #>>=value);
+                        <# } // if string #>
+                        continue;
+            <# } //end if has less #>
+            <# if (hasString == 1) { #>
+                    case GeneratorFromDB.SearchCriteria.Contains:
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null && it.<#= prop.Name #>.Contains(value));
+                        continue;
+                    case GeneratorFromDB.SearchCriteria.StartsWith:
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null &&  it.<#= prop.Name #>.StartsWith(value));
+                        continue;
+                    case GeneratorFromDB.SearchCriteria.EndsWith:
+                        returnValue =returnValue.Where(it=>it.<#= prop.Name #> != null && it.<#= prop.Name #>.EndsWith(value));
+                        continue;
+                    /*case SearchCriteria.Contains:
+                        returnValue =returnValue.Where(it=> it.<#= prop.Name #> != null && it.<#= prop.Name #>.Contains(value));
+                        continue;
+                    */
+            <# } //end if has string #>
+            <# if (hasDateTime == 1) { #>
+            case GeneratorFromDB.SearchCriteria.EqualYear:
+            {//for variable year
+                var year=  value.Year;
+                var yearStart=new DateTime(year,1,1);
+                var yearEnd=new DateTime(year+1,1,1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #>>=yearStart && it.<#= prop.Name #><yearEnd);
+                }//end for variable year
+                continue;
+            case GeneratorFromDB.SearchCriteria.DifferentYear:
+            {//for variable year
+                var year=  value.Year;
+                var yearStart=new DateTime(year,1,1);
+                var yearEnd=new DateTime(year+1,1,1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #><yearStart || it.<#= prop.Name #>>=yearEnd);
+                }//end for variable year
+                continue;
+            case GeneratorFromDB.SearchCriteria.GreaterYear:
+            {//for variable year
+                var year=  value.Year;
+                
+                var yearStart=new DateTime(year+1,1,1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #> > yearStart);
+                }//end for variable year
+                continue;
+            case GeneratorFromDB.SearchCriteria.GreaterOrEqualYear:
+            {//for variable year
+                var year=  value.Year;
+                
+                var yearStart=new DateTime(year,1,1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #> > yearStart);
+                }//end for variable year
+                continue;
+                    
+            case GeneratorFromDB.SearchCriteria.LessYear:
+            {//for variable year
+                var year=  value.Year;
+                
+                var yearEnd=new DateTime(year,1,1).AddMicroseconds(-1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #> <= yearEnd);
+                }//end for variable year
+                continue;
+            case GeneratorFromDB.SearchCriteria.LessOrEqualYear:
+            {//for variable year
+                var year=  value.Year;
+                
+                var yearEnd=new DateTime(year+1,1,1).AddMicroseconds(-1);
+                returnValue =returnValue.Where(it=>it.<#= prop.Name #> <= yearEnd);
+                }//end for variable year
+                continue;
+
+            <# } //end if hasDateTime #>
+                                    
+
+            default:
+                throw new ArgumentException($"not found Criteria {(int)s.Criteria} {s.Criteria} for {s.FieldName}");
+        }//end switch after s.Criteria
+
+                //continue;
+        } //end use this to define value in smaller scope
+            
+        <# } // foreach property #>
+        }//end switch  
+       }//end foreach
+    return returnValue;
+    //throw new NotImplementedException("not");
+    }
+
+<#
+    var firstProperty = true;
+    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        if (!firstProperty)
+        {
+            WriteLine("");
+        }
+
+        usings.AddRange(code.GetRequiredUsings(property.ClrType));
+
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        var needsInitializer = Options.UseNullableReferenceTypes && !property.IsNullable && !property.ClrType.IsValueType;
+#>
+    public <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }<#= needsInitializer ? " = null!;" : "" #>
+<#
+        firstProperty = false;
+    }
+
+    foreach (var navigation in EntityType.GetNavigations())
+    {
+        WriteLine("");
+
+        if (Options.UseDataAnnotations)
+        {
+            foreach (var dataAnnotation in navigation.GetDataAnnotations(annotationCodeGenerator))
+            {
+#>
+    <#= "//" + code.Fragment(dataAnnotation) #>
+<#
+            }
+        }
+
+        var targetType = navigation.TargetEntityType.Name;
+        if (navigation.IsCollection)
+        {
+#>
+//    public virtual ICollection<<#= targetType #>> <#= navigation.Name #> { get; } = new List<<#= targetType #>>();
+<#
+        }
+        else
+        {
+            var needsNullable = Options.UseNullableReferenceTypes && !(navigation.ForeignKey.IsRequired && navigation.IsOnDependent);
+            var needsInitializer = Options.UseNullableReferenceTypes && navigation.ForeignKey.IsRequired && navigation.IsOnDependent;
+#>
+    // public virtual <#= targetType #><#= needsNullable ? "?" : "" #> <#= navigation.Name #> { get; set; }<#= needsInitializer ? " = null!;" : "" #>
+<#
+        }
+    }
+
+    foreach (var skipNavigation in EntityType.GetSkipNavigations())
+    {
+        WriteLine("");
+
+        if (Options.UseDataAnnotations)
+        {
+            foreach (var dataAnnotation in skipNavigation.GetDataAnnotations(annotationCodeGenerator))
+            {
+#>
+    <#= "//"+code.Fragment(dataAnnotation) #>
+<#
+            }
+        }
+#>
+    // public virtual ICollection<<#= skipNavigation.TargetEntityType.Name #>> <#= skipNavigation.Name #> { get; } = new List<<#= skipNavigation.TargetEntityType.Name #>>();
+<#
+    }
+#>
+}
+<#
+    var previousOutput = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+    WriteLine("//2.this was autogenerated by a tool. Do not modify! Use partial");
+    foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
+    {
+#>
+using <#= ns #>;
+<#
+    }
+
+    WriteLine("");
+
+    GenerationEnvironment.Append(previousOutput);
+#>

@@ -57,10 +57,25 @@ public interface I_<#= EntityType.Name #>_Table
         <#
     } // foreach property 
 #>
+    public string ToFullPropertyString();
+		
 }
 
 public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
 {
+    public string ToFullPropertyString(){
+        string data="";
+        <#
+    foreach (var property in EntityType.GetProperties())
+    {
+    #>
+        data += "<#= property.Name #>=" +this.<#=property.Name#>;
+    <#
+    } // foreach property 
+    #>
+        return data;
+    }
+
     public static MetaTable metaData = new("<#= EntityType.Name #>");
     static <#= EntityType.Name #>_Table (){
         MetaColumn mc=null;
@@ -134,6 +149,20 @@ public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
 }
 public partial class <#= EntityType.Name #> : I_<#= EntityType.Name #>_Table
 {
+
+    public string ToFullPropertyString(){
+        string data="";
+        <#
+    foreach (var property in EntityType.GetProperties())
+    {
+    #>
+        data += "<#= property.Name #>=" +this.<#=property.Name#>;
+    <#
+    } // foreach property 
+    #>
+        return data;
+    }
+
      public void CopyFrom(I_<#= EntityType.Name #>_Table other)  {
 <#
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))

@@ -1,0 +1,700 @@
+//modified 2023.12.15
+<#@ template hostSpecific="true" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.Extensions.DependencyInjection.Abstractions" #>
+<#@ parameter name="Model" type="Microsoft.EntityFrameworkCore.Metadata.IModel" #>
+<#@ parameter name="Options" type="Microsoft.EntityFrameworkCore.Scaffolding.ModelCodeGenerationOptions" #>
+<#@ parameter name="NamespaceHint" type="System.String" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Infrastructure" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Scaffolding" #>
+<#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
+<#
+    if (!ProductInfo.GetVersion().StartsWith("8.0"))
+    {
+        Warning("Your templates were created using an older version of Entity Framework. Additional features and bug fixes may be available. See https://aka.ms/efcore-docs-updating-templates for more information.");
+    }
+
+    var services = (IServiceProvider)Host;
+    var providerCode = services.GetRequiredService<IProviderConfigurationCodeGenerator>();
+    var annotationCodeGenerator = services.GetRequiredService<IAnnotationCodeGenerator>();
+    var code = services.GetRequiredService<ICSharpHelper>();
+
+    var usings = new List<string>
+    {
+        "System",
+        "System.Collections.Generic",
+        "Microsoft.EntityFrameworkCore",
+        "GeneratorFromDB"
+    };
+
+    if (NamespaceHint != Options.ModelNamespace
+        && !string.IsNullOrEmpty(Options.ModelNamespace))
+    {
+        usings.Add(Options.ModelNamespace);
+    }
+
+    if (!string.IsNullOrEmpty(NamespaceHint))
+    {
+#>
+namespace <#= NamespaceHint #>;
+
+<#
+    }
+#>
+public partial class <#= Options.ContextName #> : DbContext
+{
+<#
+    if (!Options.SuppressOnConfiguring)
+    {
+#>
+    public <#= Options.ContextName #>()
+    {
+    }
+
+<#
+    }
+#>
+    public <#= Options.ContextName #>(DbContextOptions<<#= Options.ContextName #>> options)
+        : base(options)
+    {
+    }
+
+<#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+#>
+    public virtual DbSet<<#= entityType.Name #>> <#= entityType.GetDbSetName() #> { get; set; }
+    //public virtual DbSet<<#= entityType.Name #>_Table> <#= entityType.GetDbSetName() #>_Table { get; set; }
+
+<#
+    }
+
+    if (!Options.SuppressOnConfiguring)
+    {
+#>
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+<#
+    if (!Options.SuppressConnectionStringWarning)
+    {
+#>
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+<#
+    }
+#>
+        => optionsBuilder<#= code.Fragment(providerCode.GenerateUseProvider(Options.ConnectionString), indent: 3) #>;
+
+<#
+    }
+
+#>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+<#
+    var anyConfiguration = false;
+
+    var modelFluentApiCalls = Model.GetFluentApiCalls(annotationCodeGenerator);
+    if (modelFluentApiCalls != null)
+    {
+        usings.AddRange(modelFluentApiCalls.GetRequiredUsings());
+#>
+        modelBuilder<#= code.Fragment(modelFluentApiCalls, indent: 3) #>;
+<#
+        anyConfiguration = true;
+    }
+
+    StringBuilder mainEnvironment;
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+        // Save all previously generated code, and start generating into a new temporary environment
+        mainEnvironment = GenerationEnvironment;
+        GenerationEnvironment = new StringBuilder();
+
+        if (anyConfiguration)
+        {
+            WriteLine("");
+        }
+
+        var anyEntityTypeConfiguration = false;
+#>
+        modelBuilder.Entity<<#= entityType.Name #>>(entity =>
+        {
+<#
+        var key = entityType.FindPrimaryKey();
+        if (key != null)
+        {
+            var keyFluentApiCalls = key.GetFluentApiCalls(annotationCodeGenerator);
+            if (keyFluentApiCalls != null
+                || (!key.IsHandledByConvention() && !Options.UseDataAnnotations))
+            {
+                if (keyFluentApiCalls != null)
+                {
+                    usings.AddRange(keyFluentApiCalls.GetRequiredUsings());
+                }
+#>
+            entity.HasKey(<#= code.Lambda(key.Properties, "e") #>)<#= code.Fragment(keyFluentApiCalls, indent: 4) #>;
+<#
+                anyEntityTypeConfiguration = true;
+            }
+        }
+
+        var entityTypeFluentApiCalls = entityType.GetFluentApiCalls(annotationCodeGenerator)
+            ?.FilterChain(c => !(Options.UseDataAnnotations && c.IsHandledByDataAnnotations));
+        if (entityTypeFluentApiCalls != null)
+        {
+            usings.AddRange(entityTypeFluentApiCalls.GetRequiredUsings());
+
+            if (anyEntityTypeConfiguration)
+            {
+                WriteLine("");
+            }
+#>
+            entity<#= code.Fragment(entityTypeFluentApiCalls, indent: 4) #>;
+<#
+            anyEntityTypeConfiguration = true;
+        }
+
+        foreach (var index in entityType.GetIndexes()
+            .Where(i => !(Options.UseDataAnnotations && i.IsHandledByDataAnnotations(annotationCodeGenerator))))
+        {
+            if (anyEntityTypeConfiguration)
+            {
+                WriteLine("");
+            }
+
+            var indexFluentApiCalls = index.GetFluentApiCalls(annotationCodeGenerator);
+            if (indexFluentApiCalls != null)
+            {
+                usings.AddRange(indexFluentApiCalls.GetRequiredUsings());
+            }
+#>
+            entity.HasIndex(<#= code.Lambda(index.Properties, "e") #>, <#= code.Literal(index.GetDatabaseName()) #>)<#= code.Fragment(indexFluentApiCalls, indent: 4) #>;
+<#
+            anyEntityTypeConfiguration = true;
+        }
+
+        var firstProperty = true;
+        foreach (var property in entityType.GetProperties())
+        {
+            var propertyFluentApiCalls = property.GetFluentApiCalls(annotationCodeGenerator)
+                ?.FilterChain(c => !(Options.UseDataAnnotations && c.IsHandledByDataAnnotations)
+                    && !(c.Method == "IsRequired" && Options.UseNullableReferenceTypes && !property.ClrType.IsValueType));
+            if (propertyFluentApiCalls == null)
+            {
+                continue;
+            }
+
+            usings.AddRange(propertyFluentApiCalls.GetRequiredUsings());
+
+            if (anyEntityTypeConfiguration && firstProperty)
+            {
+                WriteLine("");
+            }
+#>
+            entity.Property(e => e.<#= property.Name #>)<#= code.Fragment(propertyFluentApiCalls, indent: 4) #>;
+<#
+            anyEntityTypeConfiguration = true;
+            firstProperty = false;
+        }
+
+        foreach (var foreignKey in entityType.GetForeignKeys())
+        {
+            var foreignKeyFluentApiCalls = foreignKey.GetFluentApiCalls(annotationCodeGenerator)
+                ?.FilterChain(c => !(Options.UseDataAnnotations && c.IsHandledByDataAnnotations));
+            if (foreignKeyFluentApiCalls == null)
+            {
+                continue;
+            }
+
+            usings.AddRange(foreignKeyFluentApiCalls.GetRequiredUsings());
+
+            if (anyEntityTypeConfiguration)
+            {
+                WriteLine("");
+            }
+            if(foreignKey.PrincipalToDependent != null){            
+
+#>
+            entity.HasOne(d => d.<#= foreignKey.DependentToPrincipal.Name #>).<#= foreignKey.IsUnique ? "WithOne" : "WithMany" #>(p => p.<#= foreignKey.PrincipalToDependent.Name #>)<#= code.Fragment(foreignKeyFluentApiCalls, indent: 4) #>;
+<#
+            }
+            anyEntityTypeConfiguration = true;
+        }
+
+        foreach (var skipNavigation in entityType.GetSkipNavigations().Where(n => n.IsLeftNavigation()))
+        {
+            if (anyEntityTypeConfiguration)
+            {
+                WriteLine("");
+            }
+
+            var left = skipNavigation.ForeignKey;
+            var leftFluentApiCalls = left.GetFluentApiCalls(annotationCodeGenerator, useStrings: true);
+            var right = skipNavigation.Inverse.ForeignKey;
+            var rightFluentApiCalls = right.GetFluentApiCalls(annotationCodeGenerator, useStrings: true);
+            var joinEntityType = skipNavigation.JoinEntityType;
+
+            if (leftFluentApiCalls != null)
+            {
+                usings.AddRange(leftFluentApiCalls.GetRequiredUsings());
+            }
+
+            if (rightFluentApiCalls != null)
+            {
+                usings.AddRange(rightFluentApiCalls.GetRequiredUsings());
+            }
+#>
+            entity.HasMany(d => d.<#= skipNavigation.Name #>).WithMany(p => p.<#= skipNavigation.Inverse.Name #>)
+                .UsingEntity<Dictionary<string, object>>(
+                    <#= code.Literal(joinEntityType.Name) #>,
+                    r => r.HasOne<<#= right.PrincipalEntityType.Name #>>().WithMany()<#= code.Fragment(rightFluentApiCalls, indent: 6) #>,
+                    l => l.HasOne<<#= left.PrincipalEntityType.Name #>>().WithMany()<#= code.Fragment(leftFluentApiCalls, indent: 6) #>,
+                    j =>
+                    {
+<#
+            var joinKey = joinEntityType.FindPrimaryKey();
+            var joinKeyFluentApiCalls = joinKey.GetFluentApiCalls(annotationCodeGenerator);
+
+            if (joinKeyFluentApiCalls != null)
+            {
+                usings.AddRange(joinKeyFluentApiCalls.GetRequiredUsings());
+            }
+#>
+                        j.HasKey(<#= code.Arguments(joinKey.Properties.Select(e => e.Name)) #>)<#= code.Fragment(joinKeyFluentApiCalls, indent: 7) #>;
+<#
+            var joinEntityTypeFluentApiCalls = joinEntityType.GetFluentApiCalls(annotationCodeGenerator);
+            if (joinEntityTypeFluentApiCalls != null)
+            {
+                usings.AddRange(joinEntityTypeFluentApiCalls.GetRequiredUsings());
+#>
+                        j<#= code.Fragment(joinEntityTypeFluentApiCalls, indent: 7) #>;
+<#
+            }
+
+            foreach (var index in joinEntityType.GetIndexes())
+            {
+                var indexFluentApiCalls = index.GetFluentApiCalls(annotationCodeGenerator);
+                if (indexFluentApiCalls != null)
+                {
+                    usings.AddRange(indexFluentApiCalls.GetRequiredUsings());
+                }
+#>
+                        j.HasIndex(<#= code.Literal(index.Properties.Select(e => e.Name).ToArray()) #>, <#= code.Literal(index.GetDatabaseName()) #>)<#= code.Fragment(indexFluentApiCalls, indent: 7) #>;
+<#
+            }
+#>
+                    });
+<#
+            anyEntityTypeConfiguration = true;
+        }
+#>
+        });
+<#
+        // If any signicant code was generated, append it to the main environment
+        if (anyEntityTypeConfiguration)
+        {
+            mainEnvironment.Append(GenerationEnvironment);
+            anyConfiguration = true;
+        }
+
+        // Resume generating code into the main environment
+        GenerationEnvironment = mainEnvironment;
+    }
+
+    foreach (var sequence in Model.GetSequences())
+    {
+        var needsType = sequence.Type != typeof(long);
+        var needsSchema = !string.IsNullOrEmpty(sequence.Schema) && sequence.Schema != sequence.Model.GetDefaultSchema();
+        var sequenceFluentApiCalls = sequence.GetFluentApiCalls(annotationCodeGenerator);
+#>
+        modelBuilder.HasSequence<#= needsType ? $"<{code.Reference(sequence.Type)}>" : "" #>(<#= code.Literal(sequence.Name) #><#= needsSchema ? $", {code.Literal(sequence.Schema)}" : "" #>)<#= code.Fragment(sequenceFluentApiCalls, indent: 3) #>;
+<#
+    }
+
+    if (anyConfiguration)
+    {
+        WriteLine("");
+    }
+#>
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}
+
+//added new
+public partial class <#= Options.ContextName #> : DbContext
+{
+    public static MetaDB  metaData = new("<#= Options.ContextName #>");
+    [System.Runtime.CompilerServices.ModuleInitializer]
+    public static void <#= Options.ContextName #>_AddTables(){
+<#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+    #>
+        metaData.AddTable(<#=entityType.Name#>_Table.metaData);
+    <#
+    } //end foreach entity type in static constructor
+#>
+    AllDB.Singleton.AddDb(metaData);
+    }
+<#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+        var key = entityType.FindPrimaryKey();
+var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+
+#>
+
+        public async Task<<#= entityType.Name #>[]> <#= entityType.Name #>Find_Array( Search<#= entityType.Name #>? search){
+ 
+        IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
+        if(search == null){
+            return await data.ToArrayAsync();
+        }
+        data = search.TransformToWhere(data);        
+        IQueryable<<#= entityType.Name #>> ret= search.TransformToOrder(data);
+        if(search.PageNumber>1)
+            ret= ret.Skip((search.PageNumber-1)*search.PageSize);
+            
+        ret=ret.Take(search.PageSize);
+        return await ret.ToArrayAsync();
+    }
+
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>GetAll(){
+        return this.<#= entityType.Name #>Find_AsyncEnumerable(null);
+    }
+        public async  Task<<#= entityType.Name #>> <#= entityType.Name #>Save(<#= entityType.Name #> val){
+
+        var data= await <#= entityType.Name #>SaveMultiple(val);
+        if(data == null)
+            return null;
+
+        return data[0];
+                
+    }
+    public async  Task<<#= entityType.Name #>[]> <#= entityType.Name #>SaveMultiple(params <#= entityType.Name #>[] values){
+
+        if(values == null)
+            return null;
+        if(values.Length == 0)
+            return values;
+        foreach(var value in values){
+            this.<#= entityType.Name #>.Add(value);
+        }
+        await SaveChangesAsync();
+        return values;
+
+                
+    }
+
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch(GeneratorFromDB.SearchCriteria sc, e<#= entityType.Name #>Columns colToSearch, string value){
+        
+ var search = Search<#= entityType.Name #>.FromSearch(sc,colToSearch,value);
+ /*
+        var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
+        <# if(hasOneKey  ) { 
+        //TODO: find name of PK different
+            var lambda= code.Lambda(key.Properties, "e") ;
+            var dot=lambda.IndexOf(".");
+            var namePK="e"+ entityType.Name + "Columns"+ lambda.Substring(dot);
+        #>
+            orderBy.FieldName = <#= namePK #>;
+        <# } else { #>
+            orderBy.FieldName = colToSearch;
+        <# } ;// has one key #>
+        orderBy.Asc = false;
+        search.OrderBys = new[] { orderBy };
+        search.PageNumber = 1;
+        search.PageSize = int.MaxValue-1;
+        var s = new GeneratorFromDB.SearchField<e<#= entityType.Name #>Columns>();
+        s.Criteria = sc;
+        s.FieldName = colToSearch;
+        s.Value = value;
+        search.SearchFields = new[] { s };
+        */
+        var data = this.<#= entityType.Name #>Find_AsyncEnumerable(search);
+        return data;
+    }   
+/*
+    public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
+ 
+        IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
+        if(search == null){
+            return data.AsAsyncEnumerable();
+        }
+        data = search.TransformToWhere(data);        
+        IQueryable<<#= entityType.Name #>> =search.TransformToOrder(data);
+        if(search.PageSize>1)
+            ret= ret.Skip((search.PageNumber-1)*search.PageSize);
+            
+        ret=ret.Take(search.PageSize);
+        return ret.AsAsyncEnumerable();
+    }
+*/
+    public Task<long> <#= entityType.Name #>Count( Search<#= entityType.Name #>? search){
+     
+        IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
+        if(search != null){
+            data = search.TransformToWhere(data);        
+        }        
+        return data.LongCountAsync();
+    }
+    
+
+<# if(hasOneKey ){
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        var s= code.Lambda(key.Properties, "e") ;
+    #>
+    //oneKey
+    
+    public  async Task<bool> <#= entityType.Name #>Delete(<#= code.Reference(pk.GetKeyType()) #> id){
+
+        var item = await <#= entityType.Name #>GetSingle(id);
+        if(item == null)
+            return false;
+       this.<#= entityType.Name #>.Remove(item);
+        await this.SaveChangesAsync();
+        return true; 
+    }
+    public  async Task<bool> <#= entityType.Name #>Modify(<#= entityType.Name #> val ){
+        //do the attach
+        /* var item = await <#= entityType.Name #>GetSingle(val.??ID?????);
+        if(item == null)
+            return false;
+        item.CopyFrom(val);        
+        await this.SaveChangesAsync();
+        */
+        this.<#= entityType.Name #>.Update(val);
+        await this.SaveChangesAsync();
+        return true; 
+    }
+    
+
+
+
+    public Task<<#= entityType.Name #>?> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
+        return this.<#= entityType.Name #>.FirstOrDefaultAsync(<#= s #> == id);
+    }
+<# } // has onekey #>
+    
+
+    public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
+        IQueryable<<#= entityType.Name #>> data= this.<#= entityType.Name #> ;
+        if(search == null){
+            <# if(hasOneKey){ 
+                var pk=key.Properties[0].FindContainingPrimaryKey() ;
+                var s= code.Lambda(key.Properties, "e") ;
+            #>
+            return data.OrderByDescending(<#=s#>).AsAsyncEnumerable();
+            <# } else { #>
+            return data.AsAsyncEnumerable();
+            <# } // has onekey #>
+        }
+        data = search.TransformToWhere(data); 
+        
+        IQueryable<<#= entityType.Name #>> ret= search.TransformToOrder(data);
+        if(search.PageNumber>1)
+            ret=ret.Skip((search.PageNumber-1)*search.PageSize);
+            
+        ret=ret.Take(search.PageSize);
+        return ret.AsAsyncEnumerable();
+    
+    }
+<#
+}//foreach 
+#>
+
+}
+public interface I_InsertData<#= Options.ContextName #>{
+<#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+#>
+        Task<<#= entityType.Name #>_Table?> Insert<#= entityType.Name #>(<#= entityType.Name #>_Table value);
+        Task<<#= entityType.Name #>_Table[]> Insert<#= entityType.Name #>s(params <#= entityType.Name #>_Table[] values);
+
+<#
+}//foreach 
+#>
+    }
+
+public class InsertData<#= Options.ContextName #>: I_InsertData<#= Options.ContextName #>{
+
+        private <#= Options.ContextName #> _context;
+        public InsertData<#= Options.ContextName #>(<#= Options.ContextName #> context){
+            _context=context;
+        }
+<#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+#>        public async Task<<#= entityType.Name #>_Table?> Insert<#= entityType.Name #>(<#= entityType.Name #>_Table value){
+            if (value == null)
+                return null;
+
+            <#= entityType.Name #> val = (<#= entityType.Name #>)value!;
+            _context.<#= entityType.Name #>.Add(val);
+            await _context.SaveChangesAsync();
+            return (<#= entityType.Name #>_Table)val! ;
+
+        }
+        public async Task<<#= entityType.Name #>_Table[]> Insert<#= entityType.Name #>s(params <#= entityType.Name #>_Table[] values){
+        
+        if (values == null || values.Length == 0)
+            return new <#= entityType.Name #>_Table[0];
+
+        <#= entityType.Name #>[] vals = values.Select(it=>(<#= entityType.Name #>)it!).ToArray();
+        _context.<#= entityType.Name #>.AddRange(vals);
+        await _context.SaveChangesAsync();
+        return vals.Select(it => (<#= entityType.Name #>_Table)it!  ).ToArray();
+    }
+    
+<#
+}//foreach entity type
+#>    
+}//end class InsertData<#= Options.ContextName #>
+<#
+    foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
+    {
+    var key = entityType.FindPrimaryKey();
+var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+    
+#>
+
+   public interface ISearchData<#= entityType.Name #> {
+        IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search);
+    
+    public Task<long> GetAllCount();
+    public Task<long> GetAllCount(Search<#= entityType.Name #>? search);
+
+    <# if(hasOneKey ){
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        var s= code.Lambda(key.Properties, "e") ;
+    #>
+    //oneKey    
+    public Task<<#= entityType.Name #>?> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id);
+<# } // has onekey #>
+    
+    <#
+    foreach (var property in entityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+    #>
+
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value);
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearchNull_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc);
+    <# } //property #>
+    } //interface searchdata   
+
+   public class SearchData<#= entityType.Name #>: ISearchData<#= entityType.Name #>{
+        private <#= Options.ContextName #> context;
+        public SearchData<#= entityType.Name #> (<#= Options.ContextName #> context) {
+            this.context=context;
+        }
+           
+        public async Task<long> GetAllCount(){
+            return await context.<#= entityType.Name #>Count(null);
+        }
+        public async Task<long> GetAllCount(Search<#= entityType.Name #>? search){
+            return await context.<#= entityType.Name #>Count(search);
+        }
+        public IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>Find_AsyncEnumerable(Search<#= entityType.Name #>? search){
+            return context.<#= entityType.Name #>Find_AsyncEnumerable(search);
+        }
+    <# if(hasOneKey ){
+        var pk=key.Properties[0].FindContainingPrimaryKey() ;
+        var s= code.Lambda(key.Properties, "e") ;
+    #>
+    //oneKey    
+    public Task<<#= entityType.Name #>?> <#= entityType.Name #>GetSingle(<#= code.Reference(pk.GetKeyType()) #> id){
+            return context.<#= entityType.Name #>GetSingle(id);
+    }
+<# } // has onekey #>
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch(GeneratorFromDB.SearchCriteria sc, e<#= entityType.Name #>Columns colToSearch, string? value){
+        var search =Search<#= entityType.Name #>.FromSearch(sc,colToSearch,value);
+    /*
+            var search = new Search<#= entityType.Name #>();
+            var orderBy = new GeneratorFromDB.OrderBy<e<#= entityType.Name #>Columns>();
+                  <# if(hasOneKey  ) { 
+        //TODO: find name of PK different
+            var lambda= code.Lambda(key.Properties, "e") ;
+            var dot=lambda.IndexOf(".");
+            var namePK="e"+ entityType.Name + "Columns"+ lambda.Substring(dot);
+        #>
+            orderBy.FieldName = <#= namePK #>;
+        <# } else { #>
+            orderBy.FieldName = colToSearch;
+        <# } ;// has one key #>
+  
+            orderBy.Asc = false;
+            search.OrderBys = new[] { orderBy };
+            search.PageNumber = 1;
+            search.PageSize = int.MaxValue;
+            var s = new GeneratorFromDB.SearchField<e<#= entityType.Name #>Columns>();
+            s.Criteria = sc;
+            s.FieldName = colToSearch;
+            s.Value = value;
+            search.SearchFields = new[] { s };
+       */
+            var data = this.<#= entityType.Name #>Find_AsyncEnumerable(search);
+            return data;
+        }
+
+    
+    <#
+    foreach (var property in entityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
+    {
+        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
+        var val="value";
+        if(property.IsNullable )
+            val="value?";
+    #>
+    //<#=property.IsNullable #>
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearch_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc,  <#= code.Reference(property.ClrType) #> value){
+         return <#= entityType.Name #>SimpleSearch(sc,e<#= entityType.Name #>Columns.<#= property.Name #>,<#=val#>.ToString());
+
+    
+    }
+    public  IAsyncEnumerable<<#= entityType.Name #>> <#= entityType.Name #>SimpleSearchNull_<#= property.Name #>(GeneratorFromDB.SearchCriteria sc){
+        return <#= entityType.Name #>SimpleSearch(sc,e<#= entityType.Name #>Columns.<#= property.Name #>,null);
+
+    }
+
+
+    <# } //property #>
+    } //class searchdata
+
+
+
+
+    <# } //entity #>
+
+   
+
+
+//end added new
+
+
+
+
+<#
+    mainEnvironment = GenerationEnvironment;
+    GenerationEnvironment = new StringBuilder();
+    WriteLine("//1.this was autogenerated by a tool. Do not modify! Use partial");
+    foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
+    {
+#>
+using <#= ns #>;
+<#
+    }
+
+    WriteLine("");
+
+    GenerationEnvironment.Append(mainEnvironment);
+#>

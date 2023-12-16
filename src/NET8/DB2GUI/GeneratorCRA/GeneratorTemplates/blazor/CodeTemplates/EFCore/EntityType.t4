@@ -27,11 +27,18 @@
     var code = services.GetRequiredService<ICSharpHelper>();
     string nameTable= EntityType.Name;
     var tableFields = EntityType.GetProperties().ToArray();
+    foreach (var navigation in EntityType.GetNavigations())
+    {
+         if (navigation.IsCollection)
+            continue;
+        var targetType = navigation.TargetEntityType.Name;
+        var navigationName= navigation.Name;
+    }
     
 #>
 @using global::Generated
 
-<FluentButton Loading="@loading"
+<FluentButton @ref="grid<#=nameTable#>" Loading="@loading"
               OnClick="@LoadData" Appearance="Appearance.Accent">LoadData @nrRecordsLoaded / @totalRecords</FluentButton>
 
 @if (ExistsFilter())
@@ -42,7 +49,7 @@
 }
 
 
-<FluentDataGrid Items="@dataForQuery" Virtualize="true" GenerateHeader="GenerateHeaderOption.Sticky">
+<FluentDataGrid ResizableColumns=true Items="@dataForQuery" Virtualize="true" GenerateHeader="GenerateHeaderOption.Sticky" >
     <PropertyColumn Property="@(p => p.number)" Sortable="true"  IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending" >
        
     </PropertyColumn>
@@ -53,7 +60,7 @@
         <ColumnOptions>
             <#= field.Name #> => @filters[e<#= nameTable #>Columns.<#= field.Name #>]
             <div class="search-box">
-                <FluentSearch type="search" Autofocus=true @bind-Value=filters[e<#= nameTable #>Columns.<#= field.Name #>] @oninput='(e)=>HandleColumnsFilter(e<#= nameTable #>Columns.<#= field.Name #>,e)' @bind-Value:after='()=>HandleClearColumnsFilter(e<#= nameTable #>Columns.<#= field.Name #>)' Placeholder="Order Id..." />
+                <FluentSearch type="search" Autofocus=true @bind-Value=filters[e<#= nameTable #>Columns.<#= field.Name #>] @oninput='(e)=>HandleColumnsFilter(e<#= nameTable #>Columns.<#= field.Name #>,e)' @bind-Value:after='()=>HandleClearColumnsFilter(e<#= nameTable #>Columns.<#= field.Name #>)' Placeholder="<#= field.Name #>..." />
             </div>
         </ColumnOptions>
         <ChildContent>
@@ -177,10 +184,14 @@
         ArgumentNullException.ThrowIfNull(data);
         int i = 0;
         loading = true;
+        
         await foreach (var item in data)
         {
             if (item == null) continue;
             i++;
+            if(i ==1){
+                dataArr = [];
+            }
             dataArr.Add(new DataWithNumber<<#= nameTable #>>(i, item));
             if ((i<100 && i%10==0) || (i>100 && i < 900 && i % 100 == 0) || (i > 900 && i % 1000 == 0))
             {

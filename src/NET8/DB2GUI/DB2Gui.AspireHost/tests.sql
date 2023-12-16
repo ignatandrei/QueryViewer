@@ -85,3 +85,10 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Employee_Department]') AND parent_object_id = OBJECT_ID(N'[dbo].[Employee]'))
 ALTER TABLE [dbo].[Employee] CHECK CONSTRAINT [FK_Employee_Department]
 GO
+
+SET IDENTITY_INSERT [dbo].[Employee] ON
+INSERT [dbo].[Employee] ([IDEmployee], [Name],[IDDepartment],[Salary]) VALUES (1, N'Andrei Ignat',2,100)
+INSERT [dbo].[Employee] ([IDEmployee], [Name],[IDDepartment],[Salary]) VALUES (2, N'Test',3,200)
+SET IDENTITY_INSERT [dbo].[Employee] OFF
+GO
+
