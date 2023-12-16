@@ -1,0 +1,77 @@
+<#@ template hostSpecific="true" #>
+<#@ output extension="_row.razor" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.Extensions.DependencyInjection.Abstractions" #>
+<#@ parameter name="EntityType" type="Microsoft.EntityFrameworkCore.Metadata.IEntityType" #>
+<#@ parameter name="Options" type="Microsoft.EntityFrameworkCore.Scaffolding.ModelCodeGenerationOptions" #>
+<#@ parameter name="NamespaceHint" type="System.String" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
+<#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
+<#
+        //modified 2023.12.15
+    if (EntityType.IsSimpleManyToManyJoinEntityType())
+    {
+        // Don't scaffold these
+        return "";
+    }
+
+    var services = (IServiceProvider)Host;
+    var annotationCodeGenerator = services.GetRequiredService<IAnnotationCodeGenerator>();
+    var code = services.GetRequiredService<ICSharpHelper>();
+    var key = EntityType.FindPrimaryKey();
+    var EntityhasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+   
+    string nameTable= EntityType.Name;
+    if(!EntityhasOneKey) return (nameTable + " has not ONE PK") ;
+    var lambda= code.Lambda(key.Properties, "e") ;
+    var dot=lambda.IndexOf(".");
+    var namePK=lambda.Substring(dot);
+    var keyType=code.Reference(key.GetKeyType());   
+    var properties = EntityType.GetProperties().ToArray();
+    
+#>
+@using global::Generated
+
+@if (TheRow == null)
+{
+    <p><em>Loading @table row with ID = @ID</em></p>
+}
+else
+{
+
+<# foreach(var prop in properties){ #>
+	<#=prop.Name#> 
+
+<# }//foreach prop
+
+#>
+}
+
+@code {
+    [Inject(Key = "db")]
+    public HttpClient? HttpClient_WebApi { get; set; } = null;
+
+    [Parameter]
+    public string? database { get; set; } = null;
+
+    [Parameter]
+    public string? table { get; set; } = null;
+
+    [Parameter]
+    public string? rowId { get; set; } = null;
+
+    public <#= nameTable #>? TheRow { get; set; } = null;
+    public <#=keyType#>? ID {
+        get
+        {
+            return <#=keyType#>.Parse(rowId??"");
+        }
+    }
+}

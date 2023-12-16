@@ -1,0 +1,72 @@
+﻿@page "/databases/{database}/tables/{table}/rows/{rowId}"
+@using System.Globalization
+@inherits LayoutComponentBase
+@inject WebAPIInteraction interaction
+<h3>@rowId</h3>
+@if (columns == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    
+    
+    
+    @if(componentType != null)
+    {
+        <DynamicComponent Type="@componentType" Parameters="@parameters" />
+    }
+    else
+    {
+        <span>Not found razor @componentTypeName</span>
+    }
+
+
+}
+
+
+@code {
+    [Parameter]
+    public string? database { get; set; } = null;
+
+    [Parameter]
+    public string? table { get; set; } = null;
+
+    [Parameter]
+    public string? rowId { get; set; } = null;
+
+    public long? nrRecords { get; set; } = null;
+    [Inject(Key = "db")]
+    public HttpClient? HttpClient_WebApi { get; set; } = null;
+
+    private Type? componentType = null;  
+    private string componentTypeName = string.Empty;
+    private Dictionary<string, object> parameters = new();
+    FluentGrid? myGrid;
+
+    public IQueryable<MetaColumn>? columns = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
+        ArgumentNullException.ThrowIfNull(database);
+        ArgumentNullException.ThrowIfNull(table);
+        
+        parameters.Add("database", database);
+        parameters.Add("table", table);
+        parameters.Add("rowId", (rowId??""));
+        var textInfo = new CultureInfo("en-US", false).TextInfo;
+        // blazor do not admit lowercase razor files
+
+        string nameTableRazor = textInfo.ToTitleCase(table);
+        Console.WriteLine(nameTableRazor);
+        
+        componentTypeName = $"ExampleBlazor.Pages.Generated.Models.{database}.{nameTableRazor}_Row";
+        componentType = Type.GetType(componentTypeName);
+        var data = await HttpClient_WebApi.GetFromJsonAsync<MetaColumn[]>($"api/MetaData/Columns/{database}/{table}");
+        if (data != null) 
+        {
+            columns = data.AsQueryable();
+        }
+    } 
+}

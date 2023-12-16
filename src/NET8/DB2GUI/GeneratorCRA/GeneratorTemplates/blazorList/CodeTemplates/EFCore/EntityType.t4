@@ -25,6 +25,15 @@
     var services = (IServiceProvider)Host;
     var annotationCodeGenerator = services.GetRequiredService<IAnnotationCodeGenerator>();
     var code = services.GetRequiredService<ICSharpHelper>();
+    	
+        var key= EntityType.FindPrimaryKey();
+		var EntityhasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+		string nameKey= string.Empty;
+		if(EntityhasOneKey){
+			var lambda= code.Lambda(key.Properties, "e") ;
+			var dot=lambda.IndexOf(".");
+			nameKey=lambda.Substring(dot);    	
+		};
     string nameTable= EntityType.Name;
     var tableFields = EntityType.GetProperties().ToArray();
     var fieldsNavig = new List<(string nameNavig,string nameEntityNavig,string keyType,string nameProp)>();
@@ -32,19 +41,19 @@
     {
          if (navigation.IsCollection)
             continue;
-        var targetType = navigation.TargetEntityType.Name;
+        var targetTypeNavig = navigation.TargetEntityType.Name;
         var navigationName= navigation.Name;
-        var key = navigation.TargetEntityType.FindPrimaryKey();
-        var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+        var keyNavig = navigation.TargetEntityType.FindPrimaryKey();
+        var hasOneKeynavig = (keyNavig != null && keyNavig.Properties != null && keyNavig.Properties.Count ==1);
         
-        if(hasOneKey){
-            var pk=key.Properties[0].FindContainingPrimaryKey() ;   
-            var keyType=code.Reference(pk.GetKeyType());   
+        if(hasOneKeynavig){
+            var pk=keyNavig.Properties[0].FindContainingPrimaryKey() ;   
+            var keyTypeNavig=code.Reference(pk.GetKeyType());   
             //var inv= navigation.Inverse;
             //if(inv==null) continue;
             var nameProp= navigation.ForeignKey.Properties[0].Name;
 
-            fieldsNavig.Add((navigationName,targetType,keyType,nameProp));            
+            fieldsNavig.Add((navigationName,targetTypeNavig,keyTypeNavig,nameProp));            
         }
             
     }

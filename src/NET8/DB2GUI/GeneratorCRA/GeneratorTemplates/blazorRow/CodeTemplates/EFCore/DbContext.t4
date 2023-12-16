@@ -1,0 +1,29 @@
+//modified 2023.12.15
+<#@ output extension=".cs" #>
+<#@ template hostSpecific="true" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Design" #>
+<#@ assembly name="Microsoft.EntityFrameworkCore.Relational" #>
+<#@ assembly name="Microsoft.Extensions.DependencyInjection.Abstractions" #>
+
+<#@ parameter name="Model" type="Microsoft.EntityFrameworkCore.Metadata.IModel" #>
+<#@ parameter name="Options" type="Microsoft.EntityFrameworkCore.Scaffolding.ModelCodeGenerationOptions" #>
+
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.ComponentModel.DataAnnotations" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore" #>
+<#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
+
+<#
+  
+    var services = (IServiceProvider)Host;
+    var code = services.GetRequiredService<ICSharpHelper>();
+
+#>
+

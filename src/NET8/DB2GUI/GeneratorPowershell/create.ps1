@@ -88,7 +88,9 @@ function Generate{
 
 # Generate "angular"  "../ExampleAngular/src/app/Admin/Generated/" $project
 
-Generate "blazor"  "../ExampleBlazor/Pages/Generated/" $project 
+# Generate "blazorList"  "../ExampleBlazor/Pages/Generated/" $project 
+
+Generate "blazorRow"  "../ExampleBlazor/Pages/Generated/" $project 
 
 #blazor do not admit lowercase razor files
 $TextInfo = (Get-Culture).TextInfo
