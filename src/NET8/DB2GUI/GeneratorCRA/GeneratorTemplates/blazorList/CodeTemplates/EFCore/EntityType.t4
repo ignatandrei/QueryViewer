@@ -32,7 +32,7 @@
 		if(EntityhasOneKey){
 			var lambda= code.Lambda(key.Properties, "e") ;
 			var dot=lambda.IndexOf(".");
-			nameKey=lambda.Substring(dot);    	
+			nameKey=lambda.Substring(dot+1);    	
 		};
     string nameTable= EntityType.Name;
     var tableFields = EntityType.GetProperties().ToArray();
@@ -81,6 +81,7 @@
     foreach(var field in tableFields) {
         var navigField = fieldsNavig.FirstOrDefault(it=>it.nameProp==field.Name);
         var isNavig = fieldsNavig.Any(it=>it.nameProp==field.Name);
+        var isPK=(nameKey==field.Name);
     #>
     <TemplateColumn Title="<#= field.Name #>" SortBy="@sortBy<#= field.Name #>">
         <ColumnOptions>
@@ -107,7 +108,12 @@
             }
         
         <# } else  { #>
+            <# if(isPK){ #>
+            
+            <NavLink Href='@string.Format("databases/{0}/tables/{1}/rows/{2}",database,table, context.data.<#= field.Name #>)'>@context.data.IDDepartment</NavLink>
+            <# } else { #>
             <div>@context.data.<#= field.Name #></div>
+            <# } #>
         <# } ;// navig field condition #>
         </ChildContent>
         
