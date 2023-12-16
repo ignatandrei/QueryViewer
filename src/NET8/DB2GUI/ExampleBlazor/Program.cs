@@ -11,6 +11,10 @@ var hostApi = builder.Configuration["HOSTAPI"];
 if (string.IsNullOrEmpty(hostApi)) 
 {
     hostApi = builder.HostEnvironment.BaseAddress;
+    if(!hostApi.EndsWith("/"))
+    {
+        hostApi += "/";
+    }
     var dict = new Dictionary<string, string?> { { "HOSTAPI", hostApi } };
     builder.Configuration.AddInMemoryCollection(dict.ToArray());
 }

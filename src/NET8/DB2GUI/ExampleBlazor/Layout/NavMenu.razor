@@ -1,10 +1,25 @@
-﻿@* To get access to all Fluent UI System icons, install the Microsoft.FluentUI.AspNetCore.Compoents.Icon package *@
-@* See all the diffeent ways on how to use icons at https://www.fluentui-blazor.net/Icon *@
+﻿@inject IConfiguration config
+@{
+    var hostAPI=config["HOSTAPI"];
+    var swagger=hostAPI+"swagger";
+    var visualAPI = hostAPI + "BlocklyAutomation";
+    var health = hostAPI + "healthchecks-ui";
+    var ams = hostAPI + "ams";
+
+    Console.WriteLine("swagger:"+swagger);
+}
 <nav>
     <FluentNavMenu Width="250" Collapsible="true" Title="Custom navigation menu">
         <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icon.FromImageUrl("/images/home.svg")" IconColor="Color.Accent">Home</FluentNavLink>
         @* <FluentNavLink Href="counter" Icon="@Icon.FromImageUrl("/images/counter.svg")" IconColor="Color.Accent">Counter</FluentNavLink>
         <FluentNavLink Href="weather" Icon="@Icon.FromImageUrl("/images/weather.svg")" IconColor="Color.Accent">Weather</FluentNavLink> *@
         <FluentNavLink Href="/databases" Icon="@(new Icons.Regular.Size16.DatabaseStack())" IconColor="Color.Accent">Databases</FluentNavLink>
+        <FluentDivider></FluentDivider>
+        <FluentNavLink Href="@swagger" Icon="@(new Icons.Regular.Size16.Link())" IconColor="Color.Accent">Swagger</FluentNavLink>
+        <FluentNavLink Href="@visualAPI" Icon="@(new Icons.Regular.Size16.SearchVisual())" IconColor="Color.Accent">VisualAPI</FluentNavLink>
+        <FluentNavLink Href="@visualAPI" Icon="@(new Icons.Regular.Size16.Heart())" IconColor="Color.Accent">Health</FluentNavLink>
+        <FluentNavLink Href="@visualAPI" Icon="@(new Icons.Regular.Size16.CalendarInfo())" IconColor="Color.Accent">Version</FluentNavLink>
+
     </FluentNavMenu>
+
 </nav>

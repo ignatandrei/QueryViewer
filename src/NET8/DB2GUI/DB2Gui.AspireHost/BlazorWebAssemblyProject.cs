@@ -35,11 +35,14 @@ public static class BlazorWebAssemblyProjectExtensions
                         dict = JsonSerializer.Deserialize<Dictionary<string,object>>(fileContent!);
 
                     ArgumentNullException.ThrowIfNull(dict);
-                    dict["HOSTAPI"] = end.First().UriString;                    
+                    var val = end.First().UriString;
+                    if(!val.EndsWith("/"))
+                        val+="/";
+                    dict["HOSTAPI"] = val;                    
                     JsonSerializerOptions opt = new JsonSerializerOptions(JsonSerializerOptions.Default)
                             { WriteIndented=true};
                     File.WriteAllText(file,JsonSerializer.Serialize(dict,opt));
-                    ctx.EnvironmentVariables["HOSTAPI"]=end.First().UriString;
+                    ctx.EnvironmentVariables["HOSTAPI"]= val;
                     
                 }
                     
