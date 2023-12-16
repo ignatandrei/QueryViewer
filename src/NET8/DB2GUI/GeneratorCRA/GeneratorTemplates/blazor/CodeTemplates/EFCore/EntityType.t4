@@ -27,7 +27,7 @@
     var code = services.GetRequiredService<ICSharpHelper>();
     string nameTable= EntityType.Name;
     var tableFields = EntityType.GetProperties().ToArray();
-    var fieldsNavig = new List<(string nameNavig,string nameEntityNavig,string keyType)>();
+    var fieldsNavig = new List<(string nameNavig,string nameEntityNavig,string keyType,string nameProp)>();
     foreach (var navigation in EntityType.GetNavigations())
     {
          if (navigation.IsCollection)
@@ -36,10 +36,15 @@
         var navigationName= navigation.Name;
         var key = navigation.TargetEntityType.FindPrimaryKey();
         var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+        
         if(hasOneKey){
             var pk=key.Properties[0].FindContainingPrimaryKey() ;   
             var keyType=code.Reference(pk.GetKeyType());   
-            fieldsNavig.Add((navigationName,targetType,keyType));            
+            //var inv= navigation.Inverse;
+            //if(inv==null) continue;
+            var nameProp= navigation.ForeignKey.Properties[0].Name;
+
+            fieldsNavig.Add((navigationName,targetType,keyType,nameProp));            
         }
             
     }
@@ -65,6 +70,8 @@
     </PropertyColumn>
     <#
     foreach(var field in tableFields) {
+        var navigField = fieldsNavig.FirstOrDefault(it=>it.nameProp==field.Name);
+        var isNavig = fieldsNavig.Any(it=>it.nameProp==field.Name);
     #>
     <TemplateColumn Title="<#= field.Name #>" SortBy="@sortBy<#= field.Name #>">
         <ColumnOptions>
@@ -74,7 +81,25 @@
             </div>
         </ColumnOptions>
         <ChildContent>
-        <div>@context.data.<#= field.Name #></div>
+        <# if(isNavig){ #> 
+            @if (context.data.<#=navigField.nameNavig#> != null)
+            {
+              
+            <text>
+                    @context.data.<#=navigField.nameNavig#>.ToFullPropertyString()
+            </text>
+
+            }
+            else
+            {
+                <text>
+                    <FluentButton size="smallest"  OnClick="()=>Load<#=navigField.nameEntityNavig#>(context.data.<#=navigField.nameProp#>)">Load @context.data.<#=navigField.nameProp#></FluentButton>
+                </text>
+            }
+        
+        <# } else  { #>
+            <div>@context.data.<#= field.Name #></div>
+        <# } ;// navig field condition #>
         </ChildContent>
         
 
@@ -104,12 +129,12 @@
     public bool loading = false;
     <#
 foreach(var field in fieldsNavig) {
-    var nameProp= field.nameNavig.Replace("Navigation","");
+    var nameProp= field.nameProp;
 #>
     //a <#=field.nameNavig#>,<#=field.nameEntityNavig#>,<#=field.keyType#>
-    public async Task<bool> Load<#=field.nameEntityNavig#>(<#=field.keyType#> id)
+    public async Task<bool> Load<#=field.nameEntityNavig#>(<#=field.keyType#>? id)
     {
-
+        if(id==null) return false;
         var url = $"api/AdvancedSearch_{database}_<#=field.nameEntityNavig#>/GetSingle?id={id}";
         ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
         var data = await HttpClient_WebApi.GetFromJsonAsync<<#=field.nameEntityNavig#>>(url);
