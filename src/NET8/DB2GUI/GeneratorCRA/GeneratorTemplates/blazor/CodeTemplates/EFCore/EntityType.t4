@@ -27,18 +27,28 @@
     var code = services.GetRequiredService<ICSharpHelper>();
     string nameTable= EntityType.Name;
     var tableFields = EntityType.GetProperties().ToArray();
+    var fieldsNavig = new List<(string nameNavig,string nameEntityNavig,string keyType)>();
     foreach (var navigation in EntityType.GetNavigations())
     {
          if (navigation.IsCollection)
             continue;
         var targetType = navigation.TargetEntityType.Name;
         var navigationName= navigation.Name;
+        var key = navigation.TargetEntityType.FindPrimaryKey();
+        var hasOneKey = (key != null && key.Properties != null && key.Properties.Count ==1);
+        if(hasOneKey){
+            var pk=key.Properties[0].FindContainingPrimaryKey() ;   
+            var keyType=code.Reference(pk.GetKeyType());   
+            fieldsNavig.Add((navigationName,targetType,keyType));            
+        }
+            
     }
+    
     
 #>
 @using global::Generated
 
-<FluentButton @ref="grid<#=nameTable#>" Loading="@loading"
+<FluentButton  Loading="@loading"
               OnClick="@LoadData" Appearance="Appearance.Accent">LoadData @nrRecordsLoaded / @totalRecords</FluentButton>
 
 @if (ExistsFilter())
@@ -49,7 +59,7 @@
 }
 
 
-<FluentDataGrid ResizableColumns=true Items="@dataForQuery" Virtualize="true" GenerateHeader="GenerateHeaderOption.Sticky" >
+<FluentDataGrid @ref="grid<#=nameTable#>" ResizableColumns=true Items="@dataForQuery" Virtualize="true" GenerateHeader="GenerateHeaderOption.Sticky" >
     <PropertyColumn Property="@(p => p.number)" Sortable="true"  IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending" >
        
     </PropertyColumn>
@@ -89,9 +99,38 @@
     public long? totalRecords { get; set; } = null;
 
     List<DataWithNumber<<#= nameTable #>>> dataArr = [];
-
+    private FluentDataGrid<DataWithNumber<<#= nameTable #>>>? grid<#= nameTable #>;
     public long recordFiltered  => Filtered.LongLength;
     public bool loading = false;
+    <#
+foreach(var field in fieldsNavig) {
+    var nameProp= field.nameNavig.Replace("Navigation","");
+#>
+    //a <#=field.nameNavig#>,<#=field.nameEntityNavig#>,<#=field.keyType#>
+    public async Task<bool> Load<#=field.nameEntityNavig#>(<#=field.keyType#> id)
+    {
+
+        var url = $"api/AdvancedSearch_{database}_<#=field.nameEntityNavig#>/GetSingle?id={id}";
+        ArgumentNullException.ThrowIfNull(HttpClient_WebApi);
+        var data = await HttpClient_WebApi.GetFromJsonAsync<<#=field.nameEntityNavig#>>(url);
+        if (data == null) return false;
+        var arrID = dataArr
+            .Where(it => it.data.<#=nameProp#> == id)
+            .ToArray();
+        foreach (var item in arrID)
+            item.data.<#=field.nameNavig#> = data;
+
+
+        await grid<#= nameTable #>!.RefreshDataAsync();
+
+        return true;
+    }
+   
+<#
+	} //end foreach field
+#>
+    
+    
     private DataWithNumber<<#= nameTable #>>[] Filtered
     {
         get
