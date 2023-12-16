@@ -61,7 +61,7 @@
     
 #>
 @using global::Generated
-
+@inject NavigationManager navigationManager
 <FluentButton  Loading="@loading"
               OnClick="@LoadData" Appearance="Appearance.Accent">LoadData @nrRecordsLoaded / @totalRecords</FluentButton>
 
@@ -92,6 +92,8 @@
         </ColumnOptions>
         <ChildContent>
         <# if(isNavig){ #> 
+            
+            <FluentButton   size="smallest" OnClick='()=>GotoTableRow("<#=navigField.nameEntityNavig #>",context.data.<#=navigField.nameProp#>.ToString())'> Goto <#=navigField.nameEntityNavig #> : @context.data.<#=navigField.nameProp#></FluentButton>
             @if (context.data.<#=navigField.nameNavig#> != null)
             {
               
@@ -142,6 +144,13 @@
     private FluentDataGrid<DataWithNumber<<#= nameTable #>>>? grid<#= nameTable #>;
     public long recordFiltered  => Filtered.LongLength;
     public bool loading = false;
+
+    
+    private void GotoTableRow(string table, string rowId)
+    {
+        navigationManager.NavigateTo(string.Format("databases/{0}/tables/{1}/rows/{2}", database, table, rowId),true);
+        
+    }
     <#
 foreach(var field in fieldsNavig) {
     var nameProp= field.nameProp;
