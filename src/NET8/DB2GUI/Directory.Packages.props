@@ -14,6 +14,9 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.2.0" />
+    <PackageVersion Include="NetCoreUsefullEndpoints" Version="7.2023.916.1715" />
+    <PackageVersion Include="RSCG_TimeBombComment" Version="2023.10.21.806" />
+    <PackageVersion Include="RSCG_WebAPIExports" Version="2023.8.16.1958" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />

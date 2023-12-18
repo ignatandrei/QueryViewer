@@ -26,6 +26,7 @@
 	<ItemGroup>
 		<PackageReference Include="Aspire.Hosting" />
 		<PackageReference Include="Microsoft.Data.SqlClient" />
+		<PackageReference Include="RSCG_TimeBombComment" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\DB2GUI.ServiceDefaults\DB2GUI.ServiceDefaults.csproj" />

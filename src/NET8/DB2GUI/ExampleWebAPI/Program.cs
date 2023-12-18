@@ -1,7 +1,6 @@
-
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -86,7 +85,8 @@ class Program
         }
 
         app.UseHttpsRedirection();
-
+        app.MapUsefullAll();
+        app.MapHostedServices(app.Services.GetServices<IHostedService>().ToArray());
         app.UseAuthorization();
         app.MapControllers();
         app.UseAMS();
@@ -102,7 +102,7 @@ class Program
                 config.MapHealthChecksUI();
                 });
 
-        app.Run();
+        await app.RunAsync(UsefullExtensions.UsefullExtensions.cts.Token);
 
     }
 }

@@ -1,4 +1,8 @@
 ﻿DeleteDockerContainers();
+
+//TODO 2023-01-01 remove dependency on 
+//https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json
+//by updating AspireHost
 var builder = DistributedApplication.CreateBuilder(args);
 
 var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>",1433);

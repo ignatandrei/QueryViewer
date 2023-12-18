@@ -8,5 +8,6 @@ global using AMSWebAPI;
 global using AMS_Base;
 global using HealthChecks.UI.Client;
 global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+global using UsefullExtensions;
 
 [assembly: VersionReleased(Name = "FutureRelease", ISODateTime = "9999-04-16", recordData = RecordData.Merges)]

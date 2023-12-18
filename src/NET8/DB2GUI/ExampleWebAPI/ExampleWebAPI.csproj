@@ -19,6 +19,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
     <PackageReference Include="NetCore2Blockly" />
+    <PackageReference Include="NetCoreUsefullEndpoints" />
+    <PackageReference Include="RSCG_TimeBombComment" />
+    <PackageReference Include="RSCG_WebAPIExports" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
