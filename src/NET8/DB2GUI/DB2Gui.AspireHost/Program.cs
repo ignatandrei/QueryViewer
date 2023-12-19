@@ -1,6 +1,6 @@
 ﻿DeleteDockerContainers();
 
-//TODO 2023-01-01 remove dependency on 
+//TODO 2024-03-01 remove dependency on 
 //https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json
 //by updating AspireHost
 var builder = DistributedApplication.CreateBuilder(args);
@@ -22,28 +22,28 @@ var api = builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebA
     //.WithReference(rb.AddDatabase("pubs"), "PubsDBContext")
     //.WithReference(rb.AddDatabase("NotCreated"), "NotCreated")
     ;
- 
+
 
 builder.AddWebAssemblyProject<Projects.ExampleBlazor>(nameof(Projects.ExampleBlazor), api);
 
 
-    //builder.AddProject<Projects.ExampleBlazorApp>(nameof(Projects.ExampleBlazorApp))
+//builder.AddProject<Projects.ExampleBlazor>(nameof(Projects.ExampleBlazor))
 
-    //    .WithReference(api.GetEndpoint("http"))
+//    .WithReference(api.GetEndpoint("http"))
 
-    //    .WithEnvironment(ctx=>)
-    ////.WithReference(api);
-    //;
-    //    //.WithEnvironment(ctx =>
-    //    //{
-    //    //    if (api.Resource.TryGetAllocatedEndPoints(out var end))
-    //    //    {
-    //    //        if (end.Any())
-    //    //            ctx.EnvironmentVariables["HOSTAPI"] = end.First().UriString;
-    //    //    }
+//    .WithEnvironment(ctx =>)
+//.WithReference(api);
+;
+//.WithEnvironment(ctx =>
+//{
+//    if (api.Resource.TryGetAllocatedEndPoints(out var end))
+//    {
+//        if (end.Any())
+//            ctx.EnvironmentVariables["HOSTAPI"] = end.First().UriString;
+//    }
 
-    //    //})
-    ;
+//})
+;
 //builder.AddExecutable("notepad.exe","notepad.exe",Environment.CurrentDirectory);
 var app = builder.Build();
 //Expected allocated endpoints!

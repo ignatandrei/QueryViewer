@@ -14,8 +14,8 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.2.0" />
-    <PackageVersion Include="NetCoreUsefullEndpoints" Version="7.2023.916.1715" />
-    <PackageVersion Include="RSCG_TimeBombComment" Version="2023.10.21.806" />
+    <PackageVersion Include="NetCoreUsefullEndpoints" Version="7.2023.1216.1825" />
+    <PackageVersion Include="RSCG_TimeBombComment" Version="2023.12.19.1802" />
     <PackageVersion Include="RSCG_WebAPIExports" Version="2023.8.16.1958" />
     <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
@@ -43,13 +43,13 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.1.1" />
+    <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.2.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="8.0.0-preview.1.23557.2" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.7.0" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.7.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.6.0-beta.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.7.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.6.0-beta.2" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.6.0-beta.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.7.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.5.1" />
     <PackageVersion Include="Aspire.Hosting" Version="8.0.0-preview.2.23567.5" />
     <!--https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json-->
