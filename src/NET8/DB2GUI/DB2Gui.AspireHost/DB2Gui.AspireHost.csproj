@@ -32,5 +32,6 @@
 	  <ProjectReference Include="..\DB2GUI.ServiceDefaults\DB2GUI.ServiceDefaults.csproj" />
 	  <ProjectReference Include="..\ExampleBlazor\ExampleBlazor.csproj" />
 	  <ProjectReference Include="..\ExampleWebAPI\ExampleWebAPI.csproj" />
+	  <ProjectReference Include="..\GeneratorPowershell\GeneratorPowershell.csproj" />
 	</ItemGroup>
 </Project>

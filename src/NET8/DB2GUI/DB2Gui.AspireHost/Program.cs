@@ -27,23 +27,11 @@ var api = builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebA
 builder.AddWebAssemblyProject<Projects.ExampleBlazor>(nameof(Projects.ExampleBlazor), api);
 
 
-//builder.AddProject<Projects.ExampleBlazor>(nameof(Projects.ExampleBlazor))
-
-//    .WithReference(api.GetEndpoint("http"))
-
-//    .WithEnvironment(ctx =>)
-//.WithReference(api);
-;
-//.WithEnvironment(ctx =>
-//{
-//    if (api.Resource.TryGetAllocatedEndPoints(out var end))
-//    {
-//        if (end.Any())
-//            ctx.EnvironmentVariables["HOSTAPI"] = end.First().UriString;
-//    }
-
-//})
-;
+builder.AddProject<Projects.GeneratorPowershell>(nameof(Projects.GeneratorPowershell))
+    .WithEnvironment(c => c.EnvironmentVariables.Add("waitSeconds", "60"))
+    
+    ;
+    
 //builder.AddExecutable("notepad.exe","notepad.exe",Environment.CurrentDirectory);
 var app = builder.Build();
 //Expected allocated endpoints!

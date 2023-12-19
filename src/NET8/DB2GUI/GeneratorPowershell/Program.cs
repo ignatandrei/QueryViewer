@@ -1,5 +1,15 @@
 ﻿using Spectre.Console;
 using System.Diagnostics;
+var wait = Environment.GetEnvironmentVariable("waitSeconds");
+if(wait != null)
+{
+    if(int.TryParse(wait, out var waitSec))
+    {
+        AnsiConsole.MarkupLine($"[blue]Wait {waitSec} seconds[/]");
+        await Task.Delay(waitSec*1000);
+    }
+}
+
 var pathGenerateFromDB = Environment.CurrentDirectory;
 var directory = (pathGenerateFromDB);
 if (directory.EndsWith(@"bin\Debug\net7.0"))
