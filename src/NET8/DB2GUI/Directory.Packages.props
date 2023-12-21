@@ -51,7 +51,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.6.0-beta.2" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.7.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.5.1" />
-    <PackageVersion Include="Aspire.Hosting" Version="8.0.0-preview.2.23567.5" />
+    <PackageVersion Include="Aspire.Hosting" Version="8.0.0-preview.2.23619.3" />
     <!--https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json-->
     <!-- https://github.com/dotnet/aspire/issues/948 -->
   </ItemGroup>

@@ -4,8 +4,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <PropertyGroup>
-        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <!-- <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles> -->
         <!-- <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)GeneratedX</CompilerGeneratedFilesOutputPath> -->
-        <CompilerGeneratedFilesOutputPath>obj/GeneratedX</CompilerGeneratedFilesOutputPath>
+        <!-- <CompilerGeneratedFilesOutputPath>obj/GeneratedX</CompilerGeneratedFilesOutputPath> -->
     </PropertyGroup>
 </Project>
