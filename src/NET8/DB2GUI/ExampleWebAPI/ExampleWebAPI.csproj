@@ -38,6 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DB2GUI.ServiceDefaults\DB2GUI.ServiceDefaults.csproj" />
 	  <ProjectReference Include="..\ExampleContext\ExampleContext.csproj" />
 	  <ProjectReference Include="..\ExampleControllers\ExampleControllers.csproj" />
 	  <ProjectReference Include="..\ExampleModels\ExampleModels.csproj" />

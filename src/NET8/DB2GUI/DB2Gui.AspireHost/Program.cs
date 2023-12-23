@@ -1,8 +1,5 @@
 ﻿DeleteDockerContainers();
 
-//TODO 2024-03-01 remove dependency on 
-//https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8/nuget/v3/index.json
-//by updating AspireHost
 var builder = DistributedApplication.CreateBuilder(args);
 
 var rb= builder.AddSqlServerContainer("Db2Gui", "<YourStrong@Passw0rd>",1433);
@@ -17,10 +14,6 @@ var api = builder.AddProject<Projects.ExampleWebAPI>(nameof(Projects.ExampleWebA
         ctx.EnvironmentVariables[connectionStringName + "NorthwindDBContext"] = cn + $";database=northwind;";
         ctx.EnvironmentVariables[connectionStringName + "PubsDBContext"] = cn + $";database=pubs;";
     })
-    //.WithReference(rb.AddDatabase("tests"), "ApplicationDBContext")
-    //.WithReference(rb.AddDatabase("northwind"), "NorthwindDBContext")
-    //.WithReference(rb.AddDatabase("pubs"), "PubsDBContext")
-    //.WithReference(rb.AddDatabase("NotCreated"), "NotCreated")
     ;
 
 

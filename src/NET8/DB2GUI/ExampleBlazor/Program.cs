@@ -1,5 +1,8 @@
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+//Microsoft.Extensions.Hosting.Extensions.ConfigureOpenTelemetry(new ProxyHost(builder));
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 

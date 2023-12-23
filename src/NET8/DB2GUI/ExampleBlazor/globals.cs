@@ -7,3 +7,4 @@ global using Microsoft.FluentUI.AspNetCore.Components;
 global using System.Net.Http.Json;
 global using ExampleBlazor.Classes;
 global using System.Globalization;
+global using Microsoft.Extensions.Hosting;

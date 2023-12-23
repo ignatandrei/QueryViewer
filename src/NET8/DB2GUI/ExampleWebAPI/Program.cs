@@ -3,7 +3,7 @@ class Program
     static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        builder.AddServiceDefaults();
         // Add services to the container.
         var assControllers = typeof(UtilsControllers).Assembly;
 
