@@ -47,6 +47,9 @@
 			<ProjectTemplateLink ProjectName="$safeprojectname$.WebAPI" CopyParameters="true">
 				ExampleWebAPI\MyTemplate.vstemplate
 			</ProjectTemplateLink>
+			<ProjectTemplateLink ProjectName="DB2GUI.ServiceDefaults" CopyParameters="true">
+				DB2GUI.ServiceDefaults\MyTemplate.vstemplate
+			</ProjectTemplateLink>
 				
 			<!--
                 

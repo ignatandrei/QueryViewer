@@ -89,6 +89,7 @@ copy-item -Path ..\GeneratorFromDB\* 		-Destination GeneratorFromDBTemp\Generato
 # copy-item -Path ..\examplecrats\* 		    -Destination GeneratorFromDBTemp\examplecrats\ 	-Exclude node_modules		-Force -Recurse
 # copy-item -Path ..\ExampleAngular\*         -Destination GeneratorFromDBTemp\ExampleAngular\ -Exclude node_modules,.angular	-Force -Recurse
 copy-item -Path ..\GeneratorCRA\* 		    -Destination GeneratorFromDBTemp\GeneratorCRA\ 								-Force -Recurse
+copy-item -Path ..\DB2GUI.ServiceDefaults\* -Destination GeneratorFromDBTemp\DB2GUI.ServiceDefaults\ 					-Force -Recurse
 
 
 
@@ -209,6 +210,7 @@ AddFiles "GeneratorFromDB"
 # AddFiles "examplecrats"
 # AddFiles "ExampleAngular"
 AddFiles "GeneratorCRA"
+AddFiles "DB2GUI.ServiceDefaults"
 
 
 
