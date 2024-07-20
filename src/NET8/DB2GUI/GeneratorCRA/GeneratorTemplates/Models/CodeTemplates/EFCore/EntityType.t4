@@ -46,20 +46,6 @@
 namespace <#= NamespaceHint #>;
 
 //ADDED by code generator
-public interface I_<#= EntityType.Name #>_Table 
-{
-<#
-    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
-    {
-        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
-        #>
-        <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }
-        <#
-    } // foreach property 
-#>
-    public string ToFullPropertyString();
-		
-}
 
 public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
 {
@@ -177,19 +163,6 @@ public partial class <#= EntityType.Name #> : I_<#= EntityType.Name #>_Table
 
 }
 
-//for <#= EntityType.Name #> 
-public enum e<#= EntityType.Name #>Columns {
-    None = 0
-<#
-    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
-    {
-        #>
-        ,<#= property.Name #> 
-        <#
-    } // foreach property 
-#>
-}
-
 //finish ADDED by code generator
 
 <#
@@ -214,7 +187,8 @@ public enum e<#= EntityType.Name #>Columns {
         }
     }
 #>
-
+[RSCG_TemplatingCommon.IGenerateDataFromClass("ClassToInterface")]
+[RSCG_TemplatingCommon.IGenerateDataFromClass("EnumFromClass")]
 public partial class <#= EntityType.Name #>
 {
 <#

@@ -5,7 +5,8 @@
     
     <Nullable>enable</Nullable>
   </PropertyGroup>
-	<ItemGroup>
+
+  <ItemGroup>
 
 			<PackageReference Include="Microsoft.CodeAnalysis.Common" />
 
@@ -38,6 +39,7 @@
 	  <NoWarn>1701;1702;8600;8618</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
+		<AdditionalFiles Include="Templating\EnumFromClass.txt" />
 		<AdditionalFiles Include="Templating\ClassToInterface.txt" />
 	</ItemGroup>
 </Project>
