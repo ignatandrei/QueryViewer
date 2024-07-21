@@ -47,7 +47,7 @@ namespace <#= NamespaceHint #>;
 
 //ADDED by code generator
 
-public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
+public partial class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
 {
     public string ToFullPropertyString(){
         string data="";
@@ -92,15 +92,6 @@ public class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
     }
 #> //done with foreach property in static constructor
     }
-<#
-    foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
-    {
-        var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
-        #>
-        public <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }
-        <#
-    } // foreach property 
-#>
      public void CopyFrom(I_<#= EntityType.Name #>_Table other)  {
 <#
     foreach (var property in EntityType.GetProperties().OrderBy(p => p.GetColumnOrder() ?? -1))
@@ -189,6 +180,7 @@ public partial class <#= EntityType.Name #> : I_<#= EntityType.Name #>_Table
 #>
 [RSCG_TemplatingCommon.IGenerateDataFromClass("ClassToInterface")]
 [RSCG_TemplatingCommon.IGenerateDataFromClass("EnumFromClass")]
+[RSCG_TemplatingCommon.IGenerateDataFromClass("ClassToTable")]
 public partial class <#= EntityType.Name #>
 {
 <#

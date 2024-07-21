@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templating\ClassToTable.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
 
 			<PackageReference Include="Microsoft.CodeAnalysis.Common" />
 
@@ -39,6 +43,7 @@
 	  <NoWarn>1701;1702;8600;8618</NoWarn>
 	</PropertyGroup>
 	<ItemGroup>
+		<AdditionalFiles Include="Templating\ClassToTable.txt" />
 		<AdditionalFiles Include="Templating\EnumFromClass.txt" />
 		<AdditionalFiles Include="Templating\ClassToInterface.txt" />
 	</ItemGroup>
