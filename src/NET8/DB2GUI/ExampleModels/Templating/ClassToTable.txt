@@ -32,9 +32,24 @@ namespace {{data.nameSpace}} {
 		//{{prop.PropertyType}} {{prop.PropertyName}} {{isPublicGet}} {{isPublicSet}} {{isPublic}}
 		public {{prop.PropertyType}} {{prop.PropertyName}} {{$getSet}}
 		{{ end }}
-				
+public void CopyFrom(I_{{data.className}}_Table other)  {
+        {{ 
+			for prop in data.properties 
+			if prop.IsInterface
+				continue
+			  end
+			  if prop.IsClass
+				if ! prop.IsString
+					continue
+				end
+			  end
 
-	}//end interface
+		}}
+			this.{{prop.PropertyName}} = other.{{prop.PropertyName}};
+		{{ end }}
+}
+
+	}//end clss
 	
 
 }//end namespace

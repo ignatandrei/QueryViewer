@@ -9,7 +9,6 @@ if(wait != null)
         await Task.Delay(waitSec*1000);
     }
 }  
-
 var pathGenerateFromDB = Environment.CurrentDirectory;
 var directory = (pathGenerateFromDB);
 if (directory.EndsWith(@"bin\Debug\net7.0"))
