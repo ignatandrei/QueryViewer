@@ -30,7 +30,7 @@ namespace {{data.nameSpace}} {
 		}}
 		//{{prop.IsString}} {{prop.IsClass}} {{prop.IsInterface}} {{prop.IsArray}}
 		//{{prop.PropertyType}} {{prop.PropertyName}} {{isPublicGet}} {{isPublicSet}} {{isPublic}}
-		public {{prop.PropertyType}} {{prop.PropertyName}} {{$getSet}}
+		// public {{prop.PropertyType}} {{prop.PropertyName}} {{$getSet}}
 		{{ end }}
 public void CopyFrom(I_{{data.className}}_Table other)  {
         {{ 

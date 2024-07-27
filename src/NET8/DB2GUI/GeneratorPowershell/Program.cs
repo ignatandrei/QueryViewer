@@ -8,7 +8,7 @@ if(wait != null)
         AnsiConsole.MarkupLine($"[blue]Wait {waitSec} seconds[/]");
         await Task.Delay(waitSec*1000);
     }
-}  
+}
 var pathGenerateFromDB = Environment.CurrentDirectory;
 var directory = (pathGenerateFromDB);
 if (directory.EndsWith(@"bin\Debug\net7.0"))
