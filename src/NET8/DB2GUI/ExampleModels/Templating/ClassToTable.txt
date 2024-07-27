@@ -32,6 +32,23 @@ namespace {{data.nameSpace}} {
 		//{{prop.PropertyType}} {{prop.PropertyName}} {{isPublicGet}} {{isPublicSet}} {{isPublic}}
 		// public {{prop.PropertyType}} {{prop.PropertyName}} {{$getSet}}
 		{{ end }}
+
+		public static explicit operator {{data.className}}_Table?({{data.className}} obj) { 
+        if(obj == null)
+            return null;
+            //System.Diagnostics.Debugger.Break();
+         var ret= new {{data.className}}_Table();
+         ret.CopyFrom(obj as I_{{data.className}}_Table );
+         return ret;
+     }
+     public static explicit operator {{data.className}}?({{data.className}}_Table obj) { 
+        if(obj == null)
+            return null;
+            //System.Diagnostics.Debugger.Break();
+         var ret= new {{data.className}}();
+         ret.CopyFrom(obj as I_{{data.className}}_Table) ;
+         return ret;
+     }
 public void CopyFrom(I_{{data.className}}_Table other)  {
         {{ 
 			for prop in data.properties 

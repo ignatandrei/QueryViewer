@@ -94,25 +94,6 @@ public partial class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Tab
     } // foreach property 
     #>
 
-    public static explicit operator <#= EntityType.Name #>_Table?(<#= EntityType.Name #> obj) { 
-        if(obj == null)
-            return null;
-            //System.Diagnostics.Debugger.Break();
-         var ret= new <#= EntityType.Name #>_Table();
-         ret.CopyFrom(obj as I_<#= EntityType.Name #>_Table );
-         return ret;
-     }
-     public static explicit operator <#= EntityType.Name #>?(<#= EntityType.Name #>_Table obj) { 
-        if(obj == null)
-            return null;
-            //System.Diagnostics.Debugger.Break();
-         var ret= new <#= EntityType.Name #>();
-         ret.CopyFrom(obj as I_<#= EntityType.Name #>_Table) ;
-         return ret;
-     }
-
-
-
 }
 
 [RSCG_IFormattableCommon.AddIFormattable]
