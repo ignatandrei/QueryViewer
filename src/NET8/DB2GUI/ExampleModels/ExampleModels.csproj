@@ -24,6 +24,10 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 
+		<PackageReference Include="RSCG_IFormattable" />
+
+		<PackageReference Include="RSCG_IFormattableCommon" />
+
 		<PackageReference Include="RSCG_Templating" />
 
 		<PackageReference Include="RSCG_TemplatingCommon" />

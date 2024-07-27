@@ -9,14 +9,16 @@
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.7.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.10.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="5.1.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.7" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.9.2" />
     <PackageVersion Include="NetCoreUsefullEndpoints" Version="8.2024.627.800" />
+    <PackageVersion Include="RSCG_IFormattable" Version="2024.713.1446" />
+    <PackageVersion Include="RSCG_IFormattableCommon" Version="2024.713.1446" />
     <PackageVersion Include="RSCG_Templating" Version="2024.720.1603" />
     <PackageVersion Include="RSCG_TemplatingCommon" Version="2024.720.1603" />
     <PackageVersion Include="RSCG_TimeBombComment" Version="2023.12.19.1802" />

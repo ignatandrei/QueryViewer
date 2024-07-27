@@ -46,20 +46,11 @@
 namespace <#= NamespaceHint #>;
 
 //ADDED by code generator
-
+[RSCG_IFormattableCommon.AddIFormattable]
 public partial class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Table
 {
     public string ToFullPropertyString(){
-        string data="";
-        <#
-    foreach (var property in EntityType.GetProperties())
-    {
-    #>
-        data += "<#= property.Name #>=" +this.<#=property.Name#>;
-    <#
-    } // foreach property 
-    #>
-        return data;
+        return ToString("G");
     }
 
     public static MetaTable metaData = new("<#= EntityType.Name #>");
@@ -123,20 +114,13 @@ public partial class <#= EntityType.Name #>_Table : I_<#= EntityType.Name #>_Tab
 
 
 }
+
+[RSCG_IFormattableCommon.AddIFormattable]
 public partial class <#= EntityType.Name #> : I_<#= EntityType.Name #>_Table
 {
 
     public string ToFullPropertyString(){
-        string data="";
-        <#
-    foreach (var property in EntityType.GetProperties())
-    {
-    #>
-        data += "<#= property.Name #>=" +this.<#=property.Name#>;
-    <#
-    } // foreach property 
-    #>
-        return data;
+        return this.ToString("G");
     }
 
      public void CopyFrom(I_<#= EntityType.Name #>_Table other)  {
